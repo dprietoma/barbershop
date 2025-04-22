@@ -1,0 +1,9 @@
+.container {
+ background-color: #1C1C1E;
+ height: 325px;
+}
+
+img {
+    height: 301px;
+    border-radius: 5 5 5 5;
+}

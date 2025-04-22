@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './carousel-indicators.component.css'
 })
 export class CarouselIndicatorsComponent {
-
 }
