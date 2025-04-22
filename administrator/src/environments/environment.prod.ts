@@ -21,4 +21,4 @@ export const environment = {
 
 // Initialize Firebase
 const app = initializeApp(environment.firebaseConfig);
-const analytics = getAnalytics(app);
+//const analytics = getAnalytics(app);
