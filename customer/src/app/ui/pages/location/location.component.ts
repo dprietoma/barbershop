@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-location',
@@ -9,4 +11,8 @@ import { Component } from '@angular/core';
 })
 export class LocationComponent {
 
+  constructor(private router: Router){}
+  navigateToHome(){
+    this.router.navigate(['/home']);
+  }
 }

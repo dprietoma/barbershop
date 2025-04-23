@@ -1,48 +1,53 @@
-
-  
-  <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 position-relative z-1">
-    <div class="row gap-4 justify-content-center">
-      <div class="card mb-3" style="max-width: 540px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp"
-                 alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">
-                Este es un ejemplo de contenido más largo para ver cómo queda.
-              </p>
-              <p class="card-text">
-                <small class="text-muted">Última actualización hace 3 min</small>
-              </p>
-              <button type="button" class="btn btn-primary">Primary</button>
-            </div>
-          </div>
-        </div>
+<div class="container-fluid d-flex flex-column align-items-center min-vh-100 position-relative z-1 py-4">
+  <div class="text-center mb-4">
+    <h2 class="display-5 fw-bold text-dark typeLetter">Agenda tu estilo con un solo clic ✂️</h2>
+    <p class="text-muted">Explora nuestros barberos y selecciona tu horario ideal</p>
+  </div>
+  <div class="d-flex flex-row flex-wrap justify-content-center gap-4 w-100">
+    <div class="card testimonial-card" style="max-width: 23rem;">
+      <div class="card-up aqua-gradient"></div>
+      <div class="avatar mx-auto white">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logo.png?alt=media&token=684c6309-e318-40dd-8159-efba13a0d21b"
+          class="rounded-circle img-fluid" alt="Barber avatar">
       </div>
-  
-      <div class="card mb-3" style="max-width: 540px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp"
-                 alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">
-                Otro ejemplo de card con el mismo diseño.
-              </p>
-              <p class="card-text">
-                <small class="text-muted">Última actualización hace 3 min</small>
-              </p>
-              <button type="button" class="btn btn-primary">Primary</button>
-            </div>
-          </div>
+      <div class="card-body text-center">
+        <h4 class="card-title fw-bold typeLetter">Cristian J Barber Shop</h4>
+        <h6 class="card-title fw-bold typeLetter">Style & Elegance</h6>
+        <hr>
+        <p class="text-direction">
+          <i class="bi bi-geo-alt-fill fs-3 text-primary"></i>
+          Carrera 81c #4a Sur - Bogotá
+        </p>
+        <div class="modal-footer">
+          <button (click)="navigateToHome()" class="btn btn-primary">
+            <strong>Agendar</strong>
+          </button>
         </div>
       </div>
     </div>
+    <div class="card testimonial-card" style="max-width: 23rem;">
+      <div class="card-up aqua-gradient-amate"></div>
+      <div class="avatar mx-auto white">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logo.png?alt=media&token=684c6309-e318-40dd-8159-efba13a0d21b"
+          class="rounded-circle img-fluid" alt="Barber avatar">
+      </div>
+      <div class="card-body text-center">
+        <h4 class="card-title fw-bold typeLetter">Amate</h4>
+        <h6 class="card-title fw-bold typeLetter">Arte y Cuidado Personal</h6>
+        <hr>
+        <p class="text-direction">
+          <i class="bi bi-geo-alt-fill fs-3 text-primary"></i>
+          Carrera 81c #4a Sur - Bogotá
+        </p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">
+            <strong>Agendar</strong>
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
-  
+</div>

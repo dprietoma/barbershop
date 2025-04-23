@@ -1,20 +1,34 @@
-.video-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: -1;
-  
-    .video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-  
-  .z-1 {
-    z-index: 1;
-  }
-  
+body {
+  background-color: #f5f7fa;
+}
+
+.testimonial-card .card-up {
+  height: 120px;
+  overflow: hidden;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+}
+
+.aqua-gradient {
+  background: linear-gradient(40deg, #2096ff, #05ffa3) !important;
+}
+.aqua-gradient-amate {
+  background: linear-gradient(40deg, #ff70a6, #f5dae8) !important;
+}
+
+.testimonial-card .avatar {
+  width: 120px;
+  margin-top: -60px;
+  overflow: hidden;
+  border: 5px solid #fff;
+  border-radius: 50%;
+}
+
+.typeLetter {
+  font-family: 'Dancing Script';
+}
+.text-direction{
+  font-family: 'Nunito-Italic';
+  font-family: 23px;
+  font-weight: 600;
+}

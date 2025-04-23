@@ -1,0 +1,24 @@
+:root {
+  --background-color: #F6F6F7;
+  
+  --primary-default: #FF7423;
+  --primary-light: #F679521A;
+  
+  --secondary-green: #34C759;
+  --secondary-yellow: #FFC107;
+  --secondary-like: #F96C6C;
+  
+  --gray-default: #666666;
+  --gray-dark: #222222;
+  --gray-light: #E1E1E3;
+  
+  --events-default: #297EFF;
+  --events-success: #34C759;
+  --events-failure: #DE3B3B;
+  --events-warning: #FFC107;
+  
+  --black-color: #000000;
+  --white-color: #FFFFFF;
+  --login-color: #FDF3CD;
+  --profile-txt-color: #0062cc;
+}
