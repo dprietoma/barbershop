@@ -4,10 +4,24 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  standalone: true, 
+  standalone: true,
   imports: [RouterOutlet],
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'customer';
+  title = 'Customer';
+  titleTheme = 'Modo Oscuro'
+  isDarkMode = false;
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    const body = document.body;
+
+    if (this.isDarkMode) {
+      body.classList.add('dark-theme');
+    } else {
+      this.titleTheme = "Modo Claro"
+      body.classList.remove('dark-theme');
+    }
+  }
 }

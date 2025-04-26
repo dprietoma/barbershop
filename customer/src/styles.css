@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
-@import '../src/styles/colors.css'; 
+@import '../src/styles/colors.css';
+
 @font-face {
     font-family: 'Nunito-Regular';
     font-style: normal;
@@ -28,14 +29,48 @@
     font-weight: 700;
     src: url('styles/fonts/Twinkling.ttf') format('truetype');
 }
+
 @font-face {
     font-family: 'Nunito-Sans';
     font-style: normal;
     font-weight: 700;
     src: url('styles/fonts/Nunito-Sans.ttf') format('truetype');
 }
-body {
-    font-size: 16px;
-    font-family: 'Poppins', 'Roboto', 'Open Sans', sans-serif;
-    line-height: 1.6;
+
+
+/* styles.css o styles.scss */
+
+/* Tema Claro */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --heading-color: #222222;
+    --link-color: #0066cc;
 }
+
+/* Tema Oscuro */
+.dark-theme {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --heading-color: #dddddd;
+    --link-color: #3399ff;
+}
+
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+}
+
+.dark-theme {
+    --background-color: #121212;
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+.btn {
+    padding: .55rem 1.5rem .45rem;
+  }
