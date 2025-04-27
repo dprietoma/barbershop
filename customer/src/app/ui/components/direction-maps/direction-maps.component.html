@@ -1,0 +1,48 @@
+<div class="container mt-2">
+    <h2 class="fw-bold">Dirección</h2>
+
+    <div class="d-flex align-items-start gap-3">
+        <div>
+            <p class="mb-0"><strong>Carrera 81c #4a Sur, Bogotá</strong></p>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Carrera+81c+#4a+Sur,+Bogotá" target="_blank"
+                class="text-decoration-underline"><strong>Ver dirección</strong></a>
+        </div>
+        <div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Carrera+81c+#4a+Sur,+Bogotá" target="_blank">
+                <img src="https://d1itoeljuz09pk.cloudfront.net/recursos/image-position.png" alt="Mapa"
+                    class="rounded shadow-sm">
+            </a>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div class="d-flex align-items-center justify-content-between" (click)="toggleHorario()" style="cursor: pointer;">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-clock"></i>
+            <span><strong>Abierto hoy 09:00 AM - 08:00 PM</strong></span>
+        </div>
+        <i class="bi" [ngClass]="horarioExpandido ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </div>
+    @if (horarioExpandido) {
+    <div class="mt-3">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Apertura</th>
+                    <th>Cierre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (horario of horarios; track $index) {
+                <tr>
+                    <td>{{ horario.dia }}</td>
+                    <td>{{ horario.apertura }}</td>
+                    <td>{{ horario.cierre }}</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+
+</div>

@@ -1,0 +1,15 @@
+img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.table {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+}
+
+.table td, .table th {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+}

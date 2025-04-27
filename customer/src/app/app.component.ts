@@ -18,9 +18,10 @@ export class AppComponent {
     const body = document.body;
 
     if (this.isDarkMode) {
+      this.titleTheme = "Modo Claro"
       body.classList.add('dark-theme');
     } else {
-      this.titleTheme = "Modo Claro"
+      this.titleTheme = "Modo Oscuro"
       body.classList.remove('dark-theme');
     }
   }

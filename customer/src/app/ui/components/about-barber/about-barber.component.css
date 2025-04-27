@@ -1,0 +1,9 @@
+.card {
+    background-color: var(--background-color) !important;
+    color: var(--text-color);
+  }
+  .card-header{
+    font-family: 'Nunito-Sans';
+    font-size: 25px;
+    font-weight: 700;
+  }
