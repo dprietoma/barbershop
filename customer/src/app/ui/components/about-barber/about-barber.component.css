@@ -2,8 +2,53 @@
     background-color: var(--background-color) !important;
     color: var(--text-color);
   }
+  blockquote{
+     background-color: var(--background-color) !important;
+    color: var(--text-color);
+  }
   .card-header{
     font-family: 'Nunito-Sans';
     font-size: 25px;
     font-weight: 700;
+  }
+  .blockquote-custom {
+    position: relative;
+    font-size: 1.1rem;
+    border-radius: 20px;
+    padding: 20px;
+  }
+  
+  .blockquote-custom-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -40px;
+    left: 19px;
+  }
+  
+  .blockquote-custom .text-content {
+    max-height: 80px;
+    padding-right: 10px;
+  }
+  
+  .blockquote-custom .text-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .blockquote-custom .text-content::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+  }
+  
+  .blockquote-custom .text-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .card {
+    border: solid 2px var(--primary-default);
+    border-radius: 20px;
   }
