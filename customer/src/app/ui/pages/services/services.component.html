@@ -1,1 +1,63 @@
-<p>services works!</p>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <section class="mx-auto my-5" style="max-width: 23rem;">
+          <div class="card">
+            <div class="card-body d-flex flex-row">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logo.png?alt=media&token=684c6309-e318-40dd-8159-efba13a0d21b"
+                class="rounded-circle me-3"
+                height="80px"
+                width="80px"
+                alt="avatar"
+              />
+              <div>
+                <h5 class="card-title font-weight-bold mb-2"><strong>Corte y Barba</strong></h5>
+                <p class="card-text mt-2 d-flex align-items-center">
+                  <i class="bi bi-clock fs-3 me-2"></i>
+                  <strong>90 min</strong>
+                </p>
+              </div>
+            </div>
+  
+            <!-- Carrusel -->
+            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826"
+                    class="d-block w-100 custom-img"
+                    alt="Imagen 1"
+                  />
+                </div>
+              </div>
+            </div>
+  
+            <!-- Cuerpo inferior -->
+            <div class="card-body">
+              <p class="card-text" [class.collapse]="!isCollapsed" [class.show]="isCollapsed" id="collapseContent">
+                Recently, we added several exotic new dishes to our restaurant menu. They come from
+                countries such as Mexico, Argentina, and Spain. Come to us, have some wine and enjoy
+                our juicy meals from around the world.
+              </p>
+  
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="mb-0"><strong>$ 30000</strong></p>
+  
+                <button
+                  type="button"
+                  class="btn btn-link link-danger p-0"
+                  (click)="toggleCollapse()"
+                >
+                  <strong>{{ isCollapsed ? 'Leer menos' : 'Leer más' }}</strong>
+                </button>
+  
+                <button type="button" class="btn btn-primary"><strong>Reservar</strong></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  

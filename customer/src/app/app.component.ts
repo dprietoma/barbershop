@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -8,21 +8,53 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Customer';
-  titleTheme = 'Modo Oscuro'
+  titleTheme = 'Modo Oscuro';
   isDarkMode = false;
+
+  ngOnInit() {
+    this.loadTheme();
+  }
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     const body = document.body;
-
     if (this.isDarkMode) {
-      this.titleTheme = "Modo Claro"
+      this.titleTheme = "Modo Claro";
       body.classList.add('dark-theme');
+      body.classList.remove('light-theme');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('theme', 'dark');
+      }
     } else {
-      this.titleTheme = "Modo Oscuro"
+      this.titleTheme = "Modo Oscuro";
       body.classList.remove('dark-theme');
+      body.classList.add('light-theme');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('theme', 'light');
+      }
+    }
+  }
+
+  loadTheme() {
+    if (typeof window !== 'undefined') {
+      const theme = localStorage.getItem('theme');
+      const body = document.body;
+
+      if (theme === 'dark') {
+        this.isDarkMode = true;
+        this.titleTheme = 'Modo Claro';
+        body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
+      } else {
+        this.isDarkMode = false;
+        this.titleTheme = 'Modo Oscuro';
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+      }
     }
   }
 }
+
+
