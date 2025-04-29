@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
@@ -5,13 +6,14 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule],
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   title = 'Customer';
   titleTheme = 'Modo Oscuro';
   isDarkMode = false;
+  isMenuOpen = false;
 
   ngOnInit() {
     this.loadTheme();
