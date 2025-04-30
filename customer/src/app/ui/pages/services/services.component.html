@@ -1,47 +1,62 @@
 <div class="container">
-    <div class="row">
-        <div class="col-sm-4">
-            <section class="mx-auto my-5" style="max-width: 23rem;">
-                <div class="card">
-                    <div class="card-body d-flex flex-row">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logo.png?alt=media&token=684c6309-e318-40dd-8159-efba13a0d21b"
-                            class="rounded-circle me-3" height="80px" width="80px" alt="avatar" />
-                        <div>
-                            <h5 class="card-title font-weight-bold mb-2"><strong>Corte y Barba</strong></h5>
-                            <p class="card-text mt-2 d-flex align-items-center">
-                                <i class="bi bi-clock fs-3 me-2"></i>
-                                <strong>90 min</strong>
+    <div class="row mb-3 mt-5" >
+        <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
+            @for (item of servicios; track $index) {
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826"
+                                    class="custom-img" alt="Imagen 1" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <h5>{{item.nombre}}</h5>
+                            <p class="card-text">
+                                {{item.descripcion}}
                             </p>
                         </div>
-                    </div>
-                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826"
-                                    class="d-block w-100 custom-img" alt="Imagen 1" />
+                        <div class="col-md-6 col-lg-3 col-xl-3  border-sm-start-none border-start">
+                            <div class="d-flex flex-row align-items-center">
+                                <h4 class="mb-1 me-1">{{item.precio | currency:'$':'symbol':'1.0-0'}} </h4>
+
+                            </div>
+                            <h6 class="text-success">{{item.duracion}} Min </h6>
+                            <div class="d-flex flex-column  mt-3">
+                                <button data-mdb-button-init data-mdb-ripple-init
+                                    class="btn btn-outline-primary btn-sm mt-2 custom-btn" type="button">
+                                    <i class="bi bi-plus fs-3"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text" [class.collapse]="!isCollapsed" [class.show]="isCollapsed"
-                            id="collapseContent">
-                            Recently, we added several exotic new dishes to our restaurant menu. They come from
-                            countries such as Mexico, Argentina, and Spain. Come to us, have some wine and enjoy
-                            our juicy meals from around the world.
-                        </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="mb-0"><strong>$ 30000</strong></p>
-                            <button type="button" class="btn btn-link link-primary p-0" (click)="toggleCollapse()">
-                                <strong>{{ isCollapsed ? 'Leer menos' : 'Leer más' }}</strong>
-                            </button>
-                            <button type="button" class="btn btn-secondary">
-                                <strong>Reservar</strong>
-                            </button>
-
-                        </div>
-                    </div>
                 </div>
-            </section>
+            </div>
+            }
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="true" href="#">Active</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
