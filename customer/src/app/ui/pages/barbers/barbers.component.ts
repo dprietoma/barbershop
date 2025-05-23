@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { SteppersComponent } from '../../components/steppers/steppers.component';
+import { Router } from '@angular/router';
+import { OrderStateService } from '../../utils/order-state.service';
 
 @Component({
   selector: 'app-barbers',
-  imports: [CommonModule],
+  imports: [CommonModule, SteppersComponent],
   templateUrl: './barbers.component.html',
   styleUrl: './barbers.component.css'
 })
 export class BarbersComponent implements OnInit {
+  Stepper: number = 2;
   barberos = [
     {
       id: 1,
@@ -90,17 +94,18 @@ export class BarbersComponent implements OnInit {
       imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
     }
   ];
-
   horas = {
-    manana: [] as string[],
-    tarde: [] as string[],
-    noche: [] as string[]
+    manana: ['09:00 AM', '10:00 AM'] as string[],
+    tarde: ['02:00 PM', '05: 00 PM'] as string[],
+    noche: ['06:00 PM', '07:00 PM'] as string[]
   };
-
   barberoSeleccionado: any = null;
   mesActual = new Date();
   semanaVisible: Date[] = [];
   diaSeleccionado: Date | null = null;
+  constructor(private router: Router, public order: OrderStateService) {
+
+  }
 
   ngOnInit() {
     this.generarSemana(this.mesActual);
@@ -108,14 +113,19 @@ export class BarbersComponent implements OnInit {
 
   seleccionar(barbero: any) {
     this.barberoSeleccionado = barbero;
+    this.order.setBarbero(this.barberoSeleccionado);
+    this.Stepper = 3;
+  }
+  selectDate(hora: string) {
+    this.order.setHora(hora);
+    this.router.navigate(['/confirmation'])
   }
 
   generarSemana(baseDate: Date) {
     const start = new Date(baseDate);
-    start.setDate(start.getDate() - 3); // Inicia 3 días antes de la fecha base
-
+    start.setDate(start.getDate() - 3);
     this.semanaVisible = Array.from({ length: 14 }, (_, i) => {
-      const dia = new Date(start); // copiar fecha base
+      const dia = new Date(start);
       dia.setDate(start.getDate() + i);
       return dia;
     });
@@ -137,8 +147,7 @@ export class BarbersComponent implements OnInit {
 
   seleccionarDia(dia: Date) {
     this.diaSeleccionado = dia;
-
-    // Ejemplo: solo el 13 de mayo tiene horarios
+    this.order.setFecha(this.diaSeleccionado as any);
     if (dia.toDateString() === new Date(2025, 4, 4).toDateString()) {
       this.horas = {
         manana: ['10:00 AM', '10:40 AM'],

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrl: './location.component.css'
 })
 export class LocationComponent {
+  
 
   constructor(private router: Router){}
   navigateToHome(){

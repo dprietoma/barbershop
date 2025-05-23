@@ -1,0 +1,123 @@
+<app-steppers [currentStep]="4"></app-steppers>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <strong>TU RESERVA</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <app-appointment [serviciosSeleccionados]="order.serviciosSeleccionados"
+                                [totalServicios]="order.totalServicios"
+                                [barberoSeleccionado]="order.barberoSeleccionado" [fechaReserva]="order.fechaReserva"
+                                [horaReserva]="order.horaReserva" [showService]="true"></app-appointment>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-header">
+                    <strong>NECESITAMOS ALGUNOS DATOS</strong>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="formDataPeople" (ngSubmit)="onReserve()" class="row g-3 needs-validation ">
+                        <div class="col-md-12">
+                            <label for="validationCustom01" class="form-label"><strong>Nombre Completo*</strong></label>
+                            <input type="text" class="form-control" id="validationCustom01" formControlName="name"
+                                [ngClass]="{
+                            'is-valid': formDataPeople.get('name')?.valid &&
+                            formDataPeople.get('name')?.touched,
+                            'is-invalid': formDataPeople.get('name')?.invalid &&
+                            formDataPeople.get('name')?.touched
+                            }" />
+                            <div class="valid-feedback">¡Se ve bien!</div>
+                            <div class="invalid-feedback">
+                                El nombre es obligatorio, sin espacios al inicio/final ni caracteres especiales.
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="validationCustom03" class="form-label"> <strong>Correo
+                                    Electrónico*</strong></label>
+                            <input type="text" class="form-control" id="validationCustom03" formControlName="email"
+                                [ngClass]="{
+                            'is-valid': formDataPeople.get('email')?.valid &&
+                            formDataPeople.get('email')?.touched,
+                            'is-invalid': formDataPeople.get('email')?.invalid &&
+                            formDataPeople.get('email')?.touched
+                            }" />
+                            <div class="valid-feedback">¡Se ve bien!</div>
+                            <div class="invalid-feedback">
+                                El correo es obligatorio y debe tener un formato válido.
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"> <strong>País*</strong> </label>
+                            <select class="form-select" id="validationCustom04" formControlName="country" [ngClass]="{
+                            'is-valid': formDataPeople.get('country')?.valid &&
+                            formDataPeople.get('country')?.touched,
+                            'is-invalid': formDataPeople.get('country')?.invalid &&
+                            formDataPeople.get('country')?.touched
+                            }">
+                                @for (item of listIndicatorCountry; track $index) {
+                                <option [value]="item.code">
+                                    {{ item.code + ' '+ item.name }}
+                                </option>
+
+                                }
+                            </select>
+                            <div class="valid-feedback">¡Se ve bien!</div>
+                            <div class="invalid-feedback">El país es obligatorio.</div>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="validationCustom05" class="form-label"><strong>Teléfono Celular*</strong>
+                            </label>
+                            <input type="text" class="form-control" id="validationCustom05" formControlName="number"
+                                [ngClass]="{
+                            'is-valid': formDataPeople.get('number')?.valid &&
+                            formDataPeople.get('number')?.touched,
+                            'is-invalid': formDataPeople.get('number')?.invalid &&
+                            formDataPeople.get('number')?.touched
+                            }" />
+                            <div class="valid-feedback">¡Se ve bien!</div>
+                            <div class="invalid-feedback">
+                                El número es obligatorio, debe tener 10 dígitos y comenzar con 3.
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="validationCustom06" class="form-label"><strong>Cédula*</strong> </label>
+                            <input type="text" class="form-control" id="validationCustom06" formControlName="numDoc"
+                                [ngClass]="{
+                            'is-valid': formDataPeople.get('numDoc')?.valid && 
+                            formDataPeople.get('numDoc')?.touched,
+                            'is-invalid': formDataPeople.get('numDoc')?.invalid && 
+                            formDataPeople.get('numDoc')?.touched
+                            }" />
+                            <div class="valid-feedback">¡Se ve bien!</div>
+                            <div class="invalid-feedback">
+                                El número es obligatorio, debe tener 10 dígitos y comenzar con 1.
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit">Enviar</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <app-detail-order [serviciosSeleccionados]="order.serviciosSeleccionados"
+                [totalServicios]="order.totalServicios" [barberoSeleccionado]="order.barberoSeleccionado"
+                [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva" [titulo]="'TU ORDEN'"
+                [viewButton]="false">
+            </app-detail-order>
+        </div>
+    </div>
+</div>

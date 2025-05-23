@@ -1,0 +1,25 @@
+<div class="border p-3 rounded">
+    <div class="d-flex justify-content-between mb-2" *ngIf="showService">
+        <div><strong>Servicio:</strong></div>
+        <div class="text-end">{{ getNombresServicios() }}</div>
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+        <div><strong>Colaborador:</strong></div>
+        <div class="text-end">{{ barberoSeleccionado()?.nombre }}</div>
+    </div>
+
+    <div class="d-flex justify-content-between mb-2">
+        <div><strong>Fecha de reserva:</strong></div>
+        <div class="text-end">{{ fechaReserva() }}</div>
+    </div>
+
+    <div class="d-flex justify-content-between mb-2">
+        <div><strong>Hora de reserva:</strong></div>
+        <div class="text-end">{{ horaReserva() }}</div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <div><strong>Tiempo:</strong></div>
+        <div class="text-end">{{ getTimeServices() }}</div>
+    </div>
+</div>

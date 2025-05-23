@@ -1,15 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { SteppersComponent } from '../../components/steppers/steppers.component';
+import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
+import { OrderStateService } from '../../utils/order-state.service';
 
 @Component({
   selector: 'app-services',
-  imports: [CommonModule],
+  imports: [CommonModule, SteppersComponent, DetailOrderComponent],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css',
 })
-export class ServicesComponent  {
+export class ServicesComponent {
   private router = inject(Router);
+ isSeleccionado = computed(() => {
+  const set = new Set(this.serviciosSeleccionados().map(s => s.nombre));
+  return (nombre: string) => set.has(nombre);
+});
+  serviciosSeleccionados = signal<any[]>([]);
+  serviceTotal = computed(() =>
+    this.serviciosSeleccionados().reduce((total, s) => total + s.precio, 0)
+  );
   servicios = [
     {
       nombre: 'Corte y Barba',
@@ -60,66 +71,34 @@ export class ServicesComponent  {
       duracion: 15,
       imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
     },
-    {
-      nombre: 'Limpieza Facial Exprés',
-      descripcion: 'Rápida limpieza facial para revitalizar tu piel después del corte.',
-      precio: 18000,
-      duracion: 30,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Corte Premium',
-      descripcion: 'Corte con asesoría de estilo, productos premium y finalización con cera o pomada.',
-      precio: 35000,
-      duracion: 75,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Peinado y Estilizado',
-      descripcion: 'Secado, planchado o peinado con productos fijadores para eventos especiales.',
-      precio: 20000,
-      duracion: 30,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    }
   ];
   barberoSeleccionado: any = null;
   isCollapsed = false;
-  serviciosSeleccionados: any[] = [];
-
+  constructor(public order: OrderStateService) { }
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }
 
   toggleServicio(servicio: any) {
-    const index = this.serviciosSeleccionados.findIndex(
-      (s) => s.nombre === servicio.nombre
-    );
-
-    if (index > -1) {
-      // Ya está seleccionado → lo quitamos
-      this.serviciosSeleccionados.splice(index, 1);
-    } else {
-      // No está seleccionado → lo agregamos
-      this.serviciosSeleccionados.push(servicio);
-    }
+    this.order.toggleServicio(servicio);
   }
-
-  estaSeleccionado(servicio: any): boolean {
-    return this.serviciosSeleccionados.some(
-      (s) => s.nombre === servicio.nombre
-    );
-  }
-
-  navigateToBarbers(){
-    this.router.navigate(['/barbers']);
-  }
-
-  
-
   get totalServicios(): number {
-    return this.serviciosSeleccionados.reduce(
+    return this.serviciosSeleccionados().reduce(
       (total, s) => total + s.precio,
       0
     );
   }
+
+  estaSeleccionado(servicio: any): boolean {
+
+    return this.serviciosSeleccionados().some(
+      (s) => s.nombre === servicio.nombre
+    );
+  }
+
+
+  navigateToBarbers() {
+    this.router.navigate(['/barbers']);
+  }
+
 }

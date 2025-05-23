@@ -1,108 +1,28 @@
 <div class="container">
+    <app-steppers [currentStep]="1"></app-steppers>
     <div class="row mb-3 mt-5">
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
             @for (item of servicios; track $index) {
-            <div class="card mb-2">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
-                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826"
-                                    class="custom-img" alt="Imagen 1" />
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-6">
-                            <h5>{{item.nombre}}</h5>
-                            <p class="card-text">
-                                {{item.descripcion}}
-                            </p>
-                        </div>
-                        <div class="col-md-6 col-lg-3 col-xl-3  border-sm-start-none border-start">
-                            <div class="d-flex flex-row align-items-center">
-                                <h4 class="mb-1 me-1">{{item.precio | currency:'$':'symbol':'1.0-0'}} </h4>
+            <div class="barbero-card mb-3">
+                <div class="barbero-img" [style.backgroundImage]="'url(' + item.imagen + ')'"></div>
+                <div class="barbero-info">
+                    <h5>{{ item.nombre }}</h5>
+                    <small>{{ item.descripcion }}</small>
+                    <h6 class="text-success"> {{item.precio | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
+                    </h6>
 
-                            </div>
-                            <h6 class="text-success">{{item.duracion}} Min </h6>
-                            <div class="d-flex flex-column  mt-3">
-                                <button class="btn btn-outline-primary btn-sm mt-2 custom-btn" type="button"
-                                    (click)="toggleServicio(item)">
-                                    <i [ngClass]="estaSeleccionado(item) ? 'bi bi-dash fs-3' : 'bi bi-plus fs-3'"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn btn-outline-primary btn-sm mt-2 custom-btn" type="button"
+                        (click)="toggleServicio(item)">
+                        <i [ngClass]="isSeleccionado()(item.nombre) ? 'bi bi-dash fs-3' : 'bi bi-plus fs-3'"></i>
+                    </button>
                 </div>
             </div>
             }
         </div>
         <div class="col-sm-6">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Servicios Seleccionados</h5>
-
-                    <div *ngIf="serviciosSeleccionados.length === 0">
-                        <p class="text-muted">No hay servicios seleccionados.</p>
-                    </div>
-
-                    <ul *ngIf="serviciosSeleccionados.length > 0" class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center"
-                            *ngFor="let s of serviciosSeleccionados">
-                            <div>
-                                <strong>{{ s.nombre }}</strong> - {{ s.duracion }} min
-                            </div>
-                            <span>{{ s.precio | currency:'$':'symbol' }}</span>
-                        </li>
-                    </ul>
-
-                    <h5 *ngIf="serviciosSeleccionados.length > 0" class="mt-3">
-                        Total: {{ totalServicios | currency:'$':'symbol':'1.0-0' }}
-                    </h5>
-                    <button class="btn btn-dark" [disabled]="serviciosSeleccionados.length === 0" (click)="navigateToBarbers()">
-                        Continuar
-                    </button>
-                </div>
-            </div>
+            <app-detail-order [serviciosSeleccionados]="order.serviciosSeleccionados"
+                [totalServicios]="order.totalServicios" [barberoSeleccionado]="order.barberoSeleccionado"
+                [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva" [titulo]="'Detalle de servicios'" [viewButton]="true">
+            </app-detail-order>
         </div>
-
-        <!-- <div class="col-sm-6">
-            <div class="card text-center">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="true" href="#">Active</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <div class="card-body">
-                        <h5 class="card-title">Servicios Seleccionados</h5>
-
-                        <div *ngIf="serviciosSeleccionados.length === 0">
-                            <p class="text-muted">No hay servicios seleccionados.</p>
-                        </div>
-
-                        <ul *ngIf="serviciosSeleccionados.length > 0" class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center"
-                                *ngFor="let s of serviciosSeleccionados">
-                                <div>
-                                    <strong>{{ s.nombre }}</strong> - {{ s.duracion }} min
-                                </div>
-                                <span>{{ s.precio | currency:'$':'symbol' }}</span>
-                            </li>
-                        </ul>
-
-                        <h5 *ngIf="serviciosSeleccionados.length > 0" class="mt-3">
-                            Total: {{ totalServicios | currency:'$':'symbol':'1.0-0' }}
-                        </h5>
-                        <a href="#" class="btn btn-primary">Continuar</a>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>

@@ -1,95 +1,88 @@
-
 <div class="container">
-    <div class="row mb-3 mt-5">
-        <h2 class="text-center fw-bold mb-4">Elige a tu barbero de confianza</h2>
-        <div class="col-md-4 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
-            <div>
-                <div *ngFor="let barbero of barberos">
-                    <div class="barbero-card mb-3" 
-                        [class.selected]="barberoSeleccionado?.id === barbero.id">
-                        <div class="barbero-img" [style.backgroundImage]="'url(' + barbero.imagen + ')'"></div>
-                        <div class="barbero-info">
-                            <h5>{{ barbero.nombre }}</h5>
-                            <small class="text-muted">{{ barbero.rol }}</small>
-                            <div class="rating mt-2">
-                                ⭐ <strong>{{ barbero.rating.toFixed(1) }}</strong>
-                            </div>
-                            <div class="text-secondary mt-1">{{ barbero.ig }}</div>
-                            <button type="button" class="btn-custom mt-2" (click)="seleccionar(barbero)">
-                                Seleccionar
-                            </button>
-                        </div>
-                    </div>
-                </div>
+  <app-steppers [currentStep]="Stepper"></app-steppers>
+  <div class="row mb-3 mt-5">
+    <div class="col-md-4 ocultar-scroll" style="overflow-y: auto;">
+      <div>
+        <div *ngFor="let barbero of barberos">
+          <div class="barbero-card mb-3" [class.selected]="barberoSeleccionado?.id === barbero.id">
+            <div class="barbero-img" [style.backgroundImage]="'url(' + barbero.imagen + ')'"></div>
+            <div class="barbero-info">
+              <h5>{{ barbero.nombre }}</h5>
+              <div class="rating mt-2">
+                ⭐ <strong>{{ barbero.rating.toFixed(1) }}</strong>
+              </div>
+              <div class="text-secondary mt-1">{{ barbero.ig }}</div>
+              <button type="button" class="btn-custom mt-2" (click)="seleccionar(barbero)">
+                Seleccionar
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de detalle del barbero -->
+    <div *ngIf="barberoSeleccionado" class="detalle-barbero-card col-md-8">
+
+      <!-- Información -->
+      <div class="detalle-info">
+        <h3 class="fw-bold">{{ barberoSeleccionado.nombre }}</h3>
+        <p class="text-muted mb-1 small">{{ barberoSeleccionado.rol }}</p>
+        <p class="text-secondary">{{ barberoSeleccionado.ig }}</p>
+      </div>
+
+      <!-- Calendario abajo -->
+      <div class="calendario-hor-scroll mt-4">
+        <div class="calendario-header d-flex justify-content-between align-items-center mb-2">
+          <button class="btn-calendario" (click)="retrocederSemana()">←</button>
+          <h5 class="mb-0 text-primary fw-bold">
+            {{ mesActual | date: 'MMMM yyyy' : undefined : 'es' | titlecase }}
+          </h5>
+          <button class="btn-calendario" (click)="avanzarSemana()">→</button>
         </div>
 
-        <!-- Card de detalle del barbero -->
-        <div *ngIf="barberoSeleccionado" class="detalle-barbero-card col-md-8">
-        
-            <!-- Información -->
-            <div class="detalle-info">
-              <h3 class="fw-bold">{{ barberoSeleccionado.nombre }}</h3>
-              <p class="text-muted mb-1">{{ barberoSeleccionado.rol }}</p>
-              <p class="text-secondary">{{ barberoSeleccionado.ig }}</p>
-            </div>
-          
-            <!-- Calendario abajo -->
-            <div class="calendario-hor-scroll mt-4">
-              <div class="calendario-header d-flex justify-content-between align-items-center mb-2">
-                <button class="btn-calendario" (click)="retrocederSemana()">←</button>
-                <h5 class="mb-0 text-primary fw-bold">
-                  {{ mesActual | date: 'MMMM yyyy' : undefined : 'es' | titlecase }}
-                </h5>
-                <button class="btn-calendario" (click)="avanzarSemana()">→</button>
-              </div>
-          
-              <div class="dias-scroll d-flex overflow-auto">
-                <div
-                  class="dia-item text-center me-3"
-                  *ngFor="let dia of semanaVisible"
-                  [class.selected]="diaSeleccionado?.toDateString() === dia.toDateString()"
-                  (click)="seleccionarDia(dia)"
-                >
-                  <small>{{ dia | date: 'EEE' : undefined : 'es' }}</small>
-                  <div class="fw-bold">{{ dia.getDate() }}</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-4">
-                <h5 class="fw-bold mb-3">Horas disponibles:</h5>
-                <div class="row text-center">
-                  <div class="col-4">
-                    <h6 class="fw-bold">MAÑANA</h6>
-                    <ng-container *ngIf="horas.manana.length > 0; else sinHorasManana">
-                      <div *ngFor="let hora of horas.manana" class="hora-box">{{ hora }}</div>
-                    </ng-container>
-                    <ng-template #sinHorasManana>
-                      <p class="text-muted small">Sin horas para reservar</p>
-                    </ng-template>
-                  </div>
-              
-                  <div class="col-4">
-                    <h6 class="fw-bold">TARDE</h6>
-                    <ng-container *ngIf="horas.tarde.length > 0; else sinHorasTarde">
-                      <div *ngFor="let hora of horas.tarde" class="hora-box">{{ hora }}</div>
-                    </ng-container>
-                    <ng-template #sinHorasTarde>
-                      <p class="text-muted small">Sin horas para reservar</p>
-                    </ng-template>
-                  </div>
-              
-                  <div class="col-4">
-                    <h6 class="fw-bold">NOCHE</h6>
-                    <ng-container *ngIf="horas.noche.length > 0; else sinHorasNoche">
-                      <div *ngFor="let hora of horas.noche" class="hora-box">{{ hora }}</div>
-                    </ng-container>
-                    <ng-template #sinHorasNoche>
-                      <p class="text-muted small">Sin horas para reservar</p>
-                    </ng-template>
-                  </div>
-                </div>
-              </div>
+        <div class="dias-scroll d-flex overflow-auto">
+          <div class="dia-item text-center me-3" *ngFor="let dia of semanaVisible"
+            [class.selected]="diaSeleccionado?.toDateString() === dia.toDateString()" (click)="seleccionarDia(dia)">
+            <small>{{ dia | date: 'EEE' : undefined : 'es' }}</small>
+            <div class="fw-bold">{{ dia.getDate() }}</div>
           </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h5 class="fw-bold mb-3">Horas disponibles:</h5>
+        <div class="row text-center">
+          <div class="col-4">
+            <h6 class="fw-bold">MAÑANA</h6>
+            <ng-container *ngIf="horas.manana.length > 0; else sinHorasManana">
+              <div *ngFor="let hora of horas.manana" class="hora-box" (click)="selectDate(hora)">{{ hora }}</div>
+            </ng-container>
+            <ng-template #sinHorasManana>
+              <p class="text-muted small">Sin horas para reservar</p>
+            </ng-template>
+          </div>
+
+          <div class="col-4">
+            <h6 class="fw-bold">TARDE</h6>
+            <ng-container *ngIf="horas.tarde.length > 0; else sinHorasTarde">
+              <div *ngFor="let hora of horas.tarde" class="hora-box">{{ hora }}</div>
+            </ng-container>
+            <ng-template #sinHorasTarde>
+              <p class="text-muted small">Sin horas para reservar</p>
+            </ng-template>
+          </div>
+
+          <div class="col-4">
+            <h6 class="fw-bold">NOCHE</h6>
+            <ng-container *ngIf="horas.noche.length > 0; else sinHorasNoche">
+              <div *ngFor="let hora of horas.noche" class="hora-box">{{ hora }}</div>
+            </ng-container>
+            <ng-template #sinHorasNoche>
+              <p class="text-muted small">Sin horas para reservar</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
