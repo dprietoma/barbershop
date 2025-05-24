@@ -1,0 +1,61 @@
+.voucher-border {
+  position: relative;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px dashed #888;
+  background-color: #fff;
+  max-width: 420px;
+  margin: 2rem auto;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.voucher-border::before,
+.voucher-border::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  left: 0;
+  background-image: radial-gradient(circle, #fff 10px, transparent 10px);
+  background-size: 20px 20px;
+  background-repeat: repeat-x;
+  z-index: 1;
+}
+
+.voucher-border::before {
+  top: -10px;
+}
+
+.voucher-border::after {
+  bottom: -10px;
+}
+
+.voucher-content {
+  position: relative;
+  z-index: 2;
+}
+
+.voucher-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #343a40;
+}
+
+.voucher-detail {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.voucher-total {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: #198754;
+}
+img {
+    max-height: 230px;
+    object-fit: contain;
+    border-radius: 12px;
+}

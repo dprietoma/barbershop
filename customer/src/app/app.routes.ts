@@ -4,6 +4,7 @@ import { LocationComponent } from './ui/pages/location/location.component';
 import { ServicesComponent } from './ui/pages/services/services.component';
 import { BarbersComponent } from './ui/pages/barbers/barbers.component';
 import { ConfirmationComponent } from './ui/pages/confirmation/confirmation.component';
+import { AppointmentConfirmedComponent } from './ui/pages/appointment-confirmed/appointment-confirmed.component';
 
 
 export const routes: Routes = [
@@ -12,5 +13,6 @@ export const routes: Routes = [
     { path: 'services', component: ServicesComponent },
     { path: 'barbers', component: BarbersComponent },
     { path: 'confirmation', component: ConfirmationComponent },
+    { path: 'appointment-confirmed', component: AppointmentConfirmedComponent },
     { path: '**', redirectTo: '' },
 ];

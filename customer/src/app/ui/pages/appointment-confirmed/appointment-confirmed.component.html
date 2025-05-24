@@ -1,0 +1,38 @@
+<app-steppers [currentStep]="5"></app-steppers>
+<div #voucherRef id="voucher" class="card shadow mx-auto"
+    style="max-width: 28rem; border: 2px dashed #ccc; border-radius: 1rem;">
+    <img src="assets/images/reservaOK.png" class="card-img-top" alt="Cita confirmada" />
+    <div class="card-body text-center">
+        <h5 class="card-title">🎉 <strong>¡Reserva Confirmada!</strong> </h5>
+        <p class="card-text text-muted">Gracias por agendar tu cita con nosotros. A continuación, los detalles:</p>
+    </div>
+    <ul class="list-group list-group-flush text-start">
+        <li class="list-group-item">
+            💈 <strong>Barbero:</strong> Erik Alexander
+        </li>
+        <li class="list-group-item">
+            📅 <strong>Fecha:</strong> 27 de mayo, 2025
+        </li>
+        <li class="list-group-item">
+            ⏰ <strong>Hora:</strong> 10:00 AM
+        </li>
+        <li class="list-group-item">
+            💰 <strong>Total:</strong> $70,000
+        </li>
+    </ul>
+    <div class="d-flex justify-content-around text-center border rounded py-3 bg-white">
+        <div>
+            <i (click)="descargarVoucher()" class="bi bi-download fs-3 mb-1 d-block"></i>
+            <strong><small>Descargar</small></strong>
+        </div>
+        <div>
+            <i (click)="navigate('/services')" class="bi bi-arrow-left-right fs-3 mb-1 d-block"></i>
+            <strong><small>Otra reserva</small> </strong>
+        </div>
+        <div>
+            <i (click)="navigate('/home')" class="bi bi-house fs-3 mb-1 d-block"></i>
+            <strong><small>Inicio</small></strong>
+        </div>
+    </div>
+
+</div>

@@ -21,17 +21,12 @@
       </div>
     </div>
 
-    <!-- Card de detalle del barbero -->
     <div *ngIf="barberoSeleccionado" class="detalle-barbero-card col-md-8">
-
-      <!-- Información -->
       <div class="detalle-info">
         <h3 class="fw-bold">{{ barberoSeleccionado.nombre }}</h3>
         <p class="text-muted mb-1 small">{{ barberoSeleccionado.rol }}</p>
         <p class="text-secondary">{{ barberoSeleccionado.ig }}</p>
       </div>
-
-      <!-- Calendario abajo -->
       <div class="calendario-hor-scroll mt-4">
         <div class="calendario-header d-flex justify-content-between align-items-center mb-2">
           <button class="btn-calendario" (click)="retrocederSemana()">←</button>
@@ -66,7 +61,7 @@
           <div class="col-4">
             <h6 class="fw-bold">TARDE</h6>
             <ng-container *ngIf="horas.tarde.length > 0; else sinHorasTarde">
-              <div *ngFor="let hora of horas.tarde" class="hora-box">{{ hora }}</div>
+              <div *ngFor="let hora of horas.tarde" class="hora-box" (click)="selectDate(hora)">{{ hora }}</div>
             </ng-container>
             <ng-template #sinHorasTarde>
               <p class="text-muted small">Sin horas para reservar</p>
@@ -76,7 +71,7 @@
           <div class="col-4">
             <h6 class="fw-bold">NOCHE</h6>
             <ng-container *ngIf="horas.noche.length > 0; else sinHorasNoche">
-              <div *ngFor="let hora of horas.noche" class="hora-box">{{ hora }}</div>
+              <div *ngFor="let hora of horas.noche" class="hora-box" (click)="selectDate(hora)">{{ hora }}</div>
             </ng-container>
             <ng-template #sinHorasNoche>
               <p class="text-muted small">Sin horas para reservar</p>

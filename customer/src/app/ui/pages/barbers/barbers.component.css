@@ -33,6 +33,12 @@
   color: var(--text-color) !important;
 }
 
+.hora-box {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+
+}
+
 .rating {
   font-size: 0.95rem;
   color: #fbb034;
@@ -83,7 +89,7 @@
   color: var(--text-color) !important;
 }
 
-.small{
+.small {
   background-color: var(--background-color) !important;
   color: var(--text-color) !important;
 }

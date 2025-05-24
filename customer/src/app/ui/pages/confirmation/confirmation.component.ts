@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
 import { OrderStateService } from '../../utils/order-state.service';
 import { AppointmentComponent } from '../../components/appointment/appointment.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-confirmation',
@@ -23,7 +24,7 @@ export class ConfirmationComponent implements OnInit {
   ];
 
   formDataPeople: FormGroup;
-  constructor(private fb: FormBuilder, public order: OrderStateService) {
+  constructor(private fb: FormBuilder, public order: OrderStateService, private route: Router) {
   }
   ngOnInit(): void {
     this.formDataPeople = this.fb.group({
@@ -82,10 +83,11 @@ export class ConfirmationComponent implements OnInit {
   }
 
   onReserve() {
-    if (this.formDataPeople.invalid) {
-      this.formDataPeople.markAllAsTouched();
-      return;
-    }
+    // if (this.formDataPeople.invalid) {
+    //   this.formDataPeople.markAllAsTouched();
+    //   return;
+    // }
+    this.route.navigate(['/appointment-confirmed']);
     console.log('es suave piloto')
   }
 }

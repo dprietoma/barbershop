@@ -14,6 +14,6 @@ export class SteppersComponent {
     { icon: 'bi-person-badge', title: 'Selección del barbero' },
     { icon: 'bi-calendar-event ', title: 'Selección de fecha y hora' },
     { icon: 'bi-check2-circle', title: 'Confirmación de la cita' },
-    { icon: 'pe-7s-home', title: 'Cita agendada con éxito' }
+    { icon: 'bi bi-house-fill', title: 'Cita agendada con éxito' }
   ];
 }

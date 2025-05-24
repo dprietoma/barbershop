@@ -3,7 +3,11 @@
         <h5 class="card-title"><strong> {{titulo}}</strong> </h5>
 
         <div *ngIf="serviciosSeleccionados().length === 0">
-            <p>No hay servicios seleccionados.</p>
+            <strong>
+                <p>No hay servicios seleccionados.</p>
+            </strong>
+            <img src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/ChatGPT%20Image%2023%20may%202025%2C%2017_02_22.png?alt=media&token=f5927cb6-df1e-4ea6-a4bd-5cbdfecd35cd"
+                alt="Sin servicios" width="50%" class="my-3" />
         </div>
 
         <ul *ngIf="serviciosSeleccionados().length > 0" class="list-group mb-3">
@@ -15,7 +19,7 @@
                 <span>{{ s.precio | currency:'$':'symbol' }}</span>
             </li>
         </ul>
-        <ul class="list-group mb-3" *ngIf="barberoSeleccionado()">
+        <ul class="list-group mb-3" *ngIf="barberoSeleccionado() &&  serviciosSeleccionados().length > 0">
             <li class="list-group-item p-0 border-0">
                 <app-appointment [serviciosSeleccionados]="order.serviciosSeleccionados"
                     [totalServicios]="order.totalServicios" [barberoSeleccionado]="order.barberoSeleccionado"

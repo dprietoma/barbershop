@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { Router } from '@angular/router';
 import { OrderStateService } from '../../utils/order-state.service';
+import { DisponibilidadService } from '../../services/disponibilidad.service';
+import { HorasDisponibles } from '../../utils/interface/availableHours';
 
 @Component({
   selector: 'app-barbers',
@@ -94,16 +96,17 @@ export class BarbersComponent implements OnInit {
       imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
     }
   ];
-  horas = {
-    manana: ['09:00 AM', '10:00 AM'] as string[],
-    tarde: ['02:00 PM', '05: 00 PM'] as string[],
-    noche: ['06:00 PM', '07:00 PM'] as string[]
+  horas: HorasDisponibles = {
+    manana: [],
+    tarde: [],
+    noche: []
   };
   barberoSeleccionado: any = null;
   mesActual = new Date();
   semanaVisible: Date[] = [];
   diaSeleccionado: Date | null = null;
-  constructor(private router: Router, public order: OrderStateService) {
+  constructor(private router: Router,
+    public order: OrderStateService, private availableService: DisponibilidadService) {
 
   }
 
@@ -132,6 +135,7 @@ export class BarbersComponent implements OnInit {
   }
 
   retrocederSemana() {
+    debugger;
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() - 7);
     this.mesActual = nuevaFecha;
@@ -148,14 +152,39 @@ export class BarbersComponent implements OnInit {
   seleccionarDia(dia: Date) {
     this.diaSeleccionado = dia;
     this.order.setFecha(this.diaSeleccionado as any);
-    if (dia.toDateString() === new Date(2025, 4, 4).toDateString()) {
-      this.horas = {
-        manana: ['10:00 AM', '10:40 AM'],
-        tarde: ['12:00 PM', '2:00 PM', '2:40 PM', '3:20 PM', '4:00 PM', '4:40 PM'],
-        noche: ['7:20 PM']
-      };
-    } else {
-      this.horas = { manana: [], tarde: [], noche: [] };
-    }
+    const fechaFormateada = this.diaSeleccionado.toISOString().split('T')[0];
+    this.availableService.getHorasDisponibles('EwzB0JDmsLfkUOUbKo06', fechaFormateada).subscribe({
+      next: (data) => {
+        const todasLasHoras: string[] = data?.horas || [];
+        this.horas = {
+          manana: todasLasHoras.filter(hora => this.esManana(hora)),
+          tarde: todasLasHoras.filter(hora => this.esTarde(hora)),
+          noche: todasLasHoras.filter(hora => this.esNoche(hora))
+        };
+      },
+      error: (err) => {
+        console.error('Error al obtener horas disponibles', err);
+      }
+    });
+    // this.horas = {
+    //   manana: ['10:00 AM', '10:40 AM'],
+    //   tarde: ['12:00 PM', '2:00 PM', '2:40 PM', '3:20 PM', '4:00 PM', '4:40 PM'],
+    //   noche: ['7:20 PM']
+    // };
+    // if (dia.toDateString() === new Date(2025, 4, 4).toDateString()) {
+    // } else {
+    //   this.horas = { manana: [], tarde: [], noche: [] };
+    // }
+  }
+  esManana(hora: string): boolean {
+    return hora.includes('AM') && parseInt(hora) < 12;
+  }
+
+  esTarde(hora: string): boolean {
+    return hora.includes('PM') && parseInt(hora) < 6;
+  }
+
+  esNoche(hora: string): boolean {
+    return hora.includes('PM') && parseInt(hora) >= 6;
   }
 }
