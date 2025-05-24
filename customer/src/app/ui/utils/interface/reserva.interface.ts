@@ -10,4 +10,5 @@ export interface Reserva {
     docNumberCustomer: string;
     total: string;
     estado: string;
+    duracion: string;
 }

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Reserva } from '../../utils/interface/reserva.interface';
 import { ReservasService } from '../../services/ReservasService';
 import { LoadingService } from '../../utils/LoadingService';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-appointment-confirmed',
@@ -21,34 +22,42 @@ export class AppointmentConfirmedComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private reservasService: ReservasService,
     private loadingService: LoadingService
-  ) { }
+  ) {
+
+  }
 
   ngOnInit(): void {
-    this.getDataAppointment();
-  }
-  getDataAppointment() {
     this.routeActive.queryParams.subscribe(params => {
       const id = params['id'];
       const fecha = params['fecha'];
       const estado = params['estado'];
-      if (id && fecha && estado) {
-        this.loadingService.show();
-        this.reservasService.GetReservationByCustomerDateStatus(id, fecha, estado)
-          .then(reserva => {
-            this.loadingService.hide();
-            if (reserva) {
-              this.dataAppointment = reserva;
-            }
-          })
-          .catch(() => {
-            console.log('Error', 'Error al consultar la reserva.', 'error');
-          }).finally(() => {
-            this.loadingService.hide();
-          });
-      }
-    });
 
+      this.getDataAppointment(id, fecha, estado);
+    });
   }
+  async getDataAppointment(id: string, fecha: string, estado: string) {
+    if (fecha && id && estado) {
+      this.loadingService.show();
+      this.reservasService.GetReservationByCustomerDateStatus(id,
+        fecha, estado)
+        .then(reserva => {
+          if (reserva) {
+            this.dataAppointment = reserva;
+          } else {
+            console.log('Sin resultados', 'No se encontró la reserva.', 'info');
+          }
+        })
+        .catch(() => {
+          console.log('Error', 'Error al consultar la reserva.', 'error');
+        })
+        .finally(() => {
+          this.loadingService.hide();
+        });
+    } {
+      console.log('Pasó algo con el filtro')
+    }
+  }
+
   descargarVoucher() {
     if (typeof window !== 'undefined') {
       import('html2pdf.js').then(html2pdf => {

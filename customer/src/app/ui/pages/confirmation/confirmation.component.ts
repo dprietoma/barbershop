@@ -108,6 +108,14 @@ export class ConfirmationComponent implements OnInit {
   formatearFechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('sv-SE');
   }
+  getTimeServices(): string {
+    const servicios = this.order.serviciosSeleccionados();
+    if (servicios.length === 0) {
+      return '0 minutos';
+    }
+    const total = servicios.reduce((acc, s) => acc + s.duracion, 0);
+    return `${total} minutos`;
+  }
   information(): Reserva {
     const fecha = this.order.fechaReserva();
     const item: Reserva = {
@@ -121,7 +129,8 @@ export class ConfirmationComponent implements OnInit {
       hora: this.order.horaReserva() ?? '',
       servicio: this.order.serviciosSeleccionados(),
       total: this.order.totalServicios(),
-      estado: 'Confirmada'
+      estado: 'Confirmada',
+      duracion: this.getTimeServices()
     }
     return item
   }

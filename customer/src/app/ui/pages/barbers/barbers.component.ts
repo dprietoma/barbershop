@@ -95,14 +95,20 @@ export class BarbersComponent implements OnInit {
     this.diaSeleccionado = dia;
     this.order.setFecha(this.diaSeleccionado as any);
     const fechaStr = this.formatearFechaLocal(dia);
+
     this.availableService.getHorasDisponibles(this.barberoSeleccionado.id, fechaStr).subscribe({
       next: (disponibilidad) => {
         const horasDisponibles = disponibilidad?.horas ?? [];
+
         this.availableService.getReservasPorDia(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
-          const horasOcupadas = reservas.map(r => r.hora);
-
-          const horasFiltradas = horasDisponibles.filter((hora: string) => !horasOcupadas.includes(hora));
-
+          let horasOcupadas: string[] = [];
+          reservas.forEach(r => {
+            const duracionMinutos = parseInt(r.duracion);
+            const franjas = this.obtenerFranjasOcupadas(r.hora, duracionMinutos, horasDisponibles);
+            horasOcupadas.push(...franjas);
+          });
+          const horasUnicas = [...new Set(horasOcupadas)];
+          const horasFiltradas = horasDisponibles.filter((hora: string) => !horasUnicas.includes(hora));
           this.horas = {
             manana: horasFiltradas.filter((h: string) => this.esManana(h)),
             tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
@@ -112,15 +118,50 @@ export class BarbersComponent implements OnInit {
       }
     });
   }
+  obtenerFranjasOcupadas(horaInicio: string, duracion: number, todasLasFranjas: string[]): string[] {
+    const inicioMin = this.horaToMinutos(horaInicio);
+    const finMin = inicioMin + duracion;
+
+    return todasLasFranjas.filter(franja => {
+      const minutosFranja = this.horaToMinutos(franja);
+      return minutosFranja >= inicioMin && minutosFranja < finMin;
+    });
+  }
+  horaToMinutos(hora: string): number {
+    const [time, meridian] = hora.split(' ');
+    let [h, m] = time.split(':').map(Number);
+
+    if (meridian === 'PM' && h !== 12) h += 12;
+    if (meridian === 'AM' && h === 12) h = 0;
+
+    return h * 60 + m;
+  }
   esManana(hora: string): boolean {
-    return hora.includes('AM') && parseInt(hora) < 12;
+    const date = this.parseHora(hora);
+    const horaReal = date.getHours();
+    return horaReal >= 9 && horaReal < 12;
   }
 
   esTarde(hora: string): boolean {
-    return hora.includes('PM') && parseInt(hora) < 6;
+    const date = this.parseHora(hora);
+    const horaReal = date.getHours();
+    return horaReal >= 12 && horaReal < 17;
   }
 
   esNoche(hora: string): boolean {
-    return hora.includes('PM') && parseInt(hora) >= 6;
+    const date = this.parseHora(hora);
+    const horaReal = date.getHours();
+    return horaReal >= 17;
+  }
+  private parseHora(hora: string): Date {
+    return new Date(`1970-01-01T${this.to24HourFormat(hora)}:00`);
+  }
+
+  private to24HourFormat(hora: string): string {
+    const [time, modifier] = hora.split(' ');
+    let [h, m] = time.split(':').map(Number);
+    if (modifier === 'PM' && h !== 12) h += 12;
+    if (modifier === 'AM' && h === 12) h = 0;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
   }
 }
