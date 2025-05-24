@@ -18,18 +18,16 @@ export class AppointmentComponent {
   getNombresServicios(): string {
     return this.serviciosSeleccionados().map(s => s.nombre).join(', ');
   }
-getTimeServices(): string {
-  const servicios = this.serviciosSeleccionados();
-
-  // Depuración
-  console.log('Servicios seleccionados:', servicios);
-
-  if (servicios.length === 0) {
-    return '0 minutos';
+  getTimeServices(): string {
+    const servicios = this.serviciosSeleccionados();
+    if (servicios.length === 0) {
+      return '0 minutos';
+    }
+    const total = servicios.reduce((acc, s) => acc + s.duracion, 0);
+    return `${total} minutos`;
   }
-
-  const total = servicios.reduce((acc, s) => acc + s.duracion, 0);
-  return `${total} minutos`;
-}
+  formatearFechaLocal(fecha: Date): string {
+    return fecha.toLocaleDateString('sv-SE');
+  }
 
 }

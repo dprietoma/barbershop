@@ -6,18 +6,18 @@
         <h5 class="card-title">🎉 <strong>¡Reserva Confirmada!</strong> </h5>
         <p class="card-text text-muted">Gracias por agendar tu cita con nosotros. A continuación, los detalles:</p>
     </div>
-    <ul class="list-group list-group-flush text-start">
+    <ul class="list-group list-group-flush text-start" *ngIf="this.dataAppointment">
         <li class="list-group-item">
-            💈 <strong>Barbero:</strong> Erik Alexander
+            💈 <strong>Barbero:</strong> {{this.dataAppointment.barberNombre}}
         </li>
         <li class="list-group-item">
-            📅 <strong>Fecha:</strong> 27 de mayo, 2025
+            📅 <strong>Fecha:</strong> {{ formatearFecha(dataAppointment.fecha) }}
         </li>
         <li class="list-group-item">
-            ⏰ <strong>Hora:</strong> 10:00 AM
+            ⏰ <strong>Hora:</strong> {{this.dataAppointment.hora}}
         </li>
         <li class="list-group-item">
-            💰 <strong>Total:</strong> $70,000
+            💰 <strong>Total:</strong> {{this.dataAppointment.total | currency:'$':'symbol':'1.0-0'}}
         </li>
     </ul>
     <div class="d-flex justify-content-around text-center border rounded py-3 bg-white">

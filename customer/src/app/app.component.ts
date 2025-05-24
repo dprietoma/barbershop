@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SpinnerComponent } from './ui/shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, SpinnerComponent],
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {

@@ -4,7 +4,11 @@ import { SteppersComponent } from '../../components/steppers/steppers.component'
 import { Router } from '@angular/router';
 import { OrderStateService } from '../../utils/order-state.service';
 import { DisponibilidadService } from '../../services/disponibilidad.service';
-import { HorasDisponibles } from '../../utils/interface/availableHours';
+import { HorasDisponibles } from '../../utils/interface/availableHours-interface';
+import { HOURS } from '../../utils/constants/horasDefault';
+import { BarberosService } from '../../services/barberos.service';
+import { Barbero } from '../../utils/interface/barbero-interface';
+import { LoadingService } from '../../utils/LoadingService';
 
 @Component({
   selector: 'app-barbers',
@@ -14,88 +18,7 @@ import { HorasDisponibles } from '../../utils/interface/availableHours';
 })
 export class BarbersComponent implements OnInit {
   Stepper: number = 2;
-  barberos = [
-    {
-      id: 1,
-      nombre: 'Erik Alexander',
-      ig: '@erik.arce333',
-      rol: 'Barbero',
-      rating: 5.0,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 2,
-      nombre: 'Santiago Serna',
-      ig: '@santiagoserna09',
-      rol: 'Barbero',
-      rating: 4.9,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 3,
-      nombre: 'Juan Gil',
-      ig: '@11_juangil',
-      rol: 'Barbero',
-      rating: 5.0,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 4,
-      nombre: 'Diego Ruiz',
-      ig: '@diego.ruiz__',
-      rol: 'Barbero Senior',
-      rating: 5.0,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 5,
-      nombre: 'Marlon Rodríguez',
-      ig: '@roodz.barber',
-      rol: 'Barbero',
-      rating: 4.8,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 6,
-      nombre: 'Alejandro González',
-      ig: '@alejandro.gonz',
-      rol: 'Barbero',
-      rating: 5.0,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 7,
-      nombre: 'Cristian Ríos',
-      ig: '@cristian.rios',
-      rol: 'Especialista en barba',
-      rating: 4.7,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 8,
-      nombre: 'Andrés Mejía',
-      ig: '@andres.mejia',
-      rol: 'Barbero Junior',
-      rating: 4.6,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 9,
-      nombre: 'Kevin Torres',
-      ig: '@kevin.torres',
-      rol: 'Estilista Urbano',
-      rating: 5.0,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      id: 10,
-      nombre: 'Daniel Restrepo',
-      ig: '@daniel.rest',
-      rol: 'Barbero',
-      rating: 4.9,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    }
-  ];
+  barberos: Barbero[] = [];
   horas: HorasDisponibles = {
     manana: [],
     tarde: [],
@@ -106,75 +29,88 @@ export class BarbersComponent implements OnInit {
   semanaVisible: Date[] = [];
   diaSeleccionado: Date | null = null;
   constructor(private router: Router,
-    public order: OrderStateService, private availableService: DisponibilidadService) {
+    public order: OrderStateService,
+    private availableService: DisponibilidadService,
+    private barberosService: BarberosService,
+    private loadingService: LoadingService) {
 
   }
 
   ngOnInit() {
-    this.generarSemana(this.mesActual);
+    this.getBarber();
+    // this.generarSemana(this.mesActual);
   }
-
+  getBarber() {
+    this.loadingService.show();
+    this.barberosService.obtenerBarberos().subscribe(data => {
+      this.barberos = data;
+      this.loadingService.hide();
+    });
+  }
   seleccionar(barbero: any) {
     this.barberoSeleccionado = barbero;
     this.order.setBarbero(this.barberoSeleccionado);
     this.Stepper = 3;
+    this.generarSemana(this.barberoSeleccionado.id)
   }
   selectDate(hora: string) {
     this.order.setHora(hora);
     this.router.navigate(['/confirmation'])
   }
 
-  generarSemana(baseDate: Date) {
-    const start = new Date(baseDate);
+  generarSemana(barberId: string, baseDate?: Date) {
+    const start = new Date(baseDate ?? new Date());
     start.setDate(start.getDate() - 3);
-    this.semanaVisible = Array.from({ length: 14 }, (_, i) => {
+    this.semanaVisible = [];
+
+    for (let i = 0; i < 14; i++) {
       const dia = new Date(start);
       dia.setDate(start.getDate() + i);
-      return dia;
-    });
+      this.semanaVisible.push(dia);
+
+      const fechaStr = dia.toISOString().split('T')[0];
+      this.availableService.crearDisponibilidadSiNoExiste(barberId, fechaStr, HOURS)
+        .then(() => console.log(`Disponibilidad creada para ${fechaStr}`))
+        .catch(err => console.error(`Error creando disponibilidad:`, err));
+    }
   }
 
   retrocederSemana() {
-    debugger;
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() - 7);
     this.mesActual = nuevaFecha;
-    this.generarSemana(this.mesActual);
+    //this.generarSemana(this.mesActual);
   }
 
   avanzarSemana() {
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() + 7);
     this.mesActual = nuevaFecha;
-    this.generarSemana(this.mesActual);
+    //this.generarSemana(this.mesActual);
   }
-
+  formatearFechaLocal(fecha: Date): string {
+    return fecha.toLocaleDateString('sv-SE');
+  }
   seleccionarDia(dia: Date) {
     this.diaSeleccionado = dia;
     this.order.setFecha(this.diaSeleccionado as any);
-    const fechaFormateada = this.diaSeleccionado.toISOString().split('T')[0];
-    this.availableService.getHorasDisponibles('EwzB0JDmsLfkUOUbKo06', fechaFormateada).subscribe({
-      next: (data) => {
-        const todasLasHoras: string[] = data?.horas || [];
-        this.horas = {
-          manana: todasLasHoras.filter(hora => this.esManana(hora)),
-          tarde: todasLasHoras.filter(hora => this.esTarde(hora)),
-          noche: todasLasHoras.filter(hora => this.esNoche(hora))
-        };
-      },
-      error: (err) => {
-        console.error('Error al obtener horas disponibles', err);
+    const fechaStr = this.formatearFechaLocal(dia);
+    this.availableService.getHorasDisponibles(this.barberoSeleccionado.id, fechaStr).subscribe({
+      next: (disponibilidad) => {
+        const horasDisponibles = disponibilidad?.horas ?? [];
+        this.availableService.getReservasPorDia(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
+          const horasOcupadas = reservas.map(r => r.hora);
+
+          const horasFiltradas = horasDisponibles.filter((hora: string) => !horasOcupadas.includes(hora));
+
+          this.horas = {
+            manana: horasFiltradas.filter((h: string) => this.esManana(h)),
+            tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
+            noche: horasFiltradas.filter((h: string) => this.esNoche(h)),
+          };
+        });
       }
     });
-    // this.horas = {
-    //   manana: ['10:00 AM', '10:40 AM'],
-    //   tarde: ['12:00 PM', '2:00 PM', '2:40 PM', '3:20 PM', '4:00 PM', '4:40 PM'],
-    //   noche: ['7:20 PM']
-    // };
-    // if (dia.toDateString() === new Date(2025, 4, 4).toDateString()) {
-    // } else {
-    //   this.horas = { manana: [], tarde: [], noche: [] };
-    // }
   }
   esManana(hora: string): boolean {
     return hora.includes('AM') && parseInt(hora) < 12;

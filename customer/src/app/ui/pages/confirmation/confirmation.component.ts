@@ -6,7 +6,10 @@ import { DetailOrderComponent } from '../../components/detail-order/detail-order
 import { OrderStateService } from '../../utils/order-state.service';
 import { AppointmentComponent } from '../../components/appointment/appointment.component';
 import { Router } from '@angular/router';
-
+import { Reserva } from '../../utils/interface/reserva.interface';
+import { ReservasService } from '../../services/ReservasService';
+import { LoadingService } from '../../utils/LoadingService';
+import { ShowAlert } from '../../utils/sweetalert';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
@@ -24,7 +27,11 @@ export class ConfirmationComponent implements OnInit {
   ];
 
   formDataPeople: FormGroup;
-  constructor(private fb: FormBuilder, public order: OrderStateService, private route: Router) {
+  constructor(private fb: FormBuilder,
+    public order: OrderStateService,
+    private route: Router,
+    private reservasService: ReservasService,
+    private loadingService: LoadingService) {
   }
   ngOnInit(): void {
     this.formDataPeople = this.fb.group({
@@ -83,11 +90,49 @@ export class ConfirmationComponent implements OnInit {
   }
 
   onReserve() {
-    // if (this.formDataPeople.invalid) {
-    //   this.formDataPeople.markAllAsTouched();
-    //   return;
-    // }
-    this.route.navigate(['/appointment-confirmed']);
-    console.log('es suave piloto')
+    if (this.formDataPeople.invalid) {
+      this.formDataPeople.markAllAsTouched();
+      return;
+    }
+    this.loadingService.show();
+    const informationReserve = this.information();
+    this.reservasService.crearReserva(informationReserve).then(rs => {
+      if (rs.ok) {
+        this.navigate();
+      } else {
+        ShowAlert.viewAlert('Oops...', rs.mensaje, 'error');
+      }
+      this.loadingService.hide();
+    })
+  }
+  formatearFechaLocal(fecha: Date): string {
+    return fecha.toLocaleDateString('sv-SE');
+  }
+  information(): Reserva {
+    const fecha = this.order.fechaReserva();
+    const item: Reserva = {
+      barberoId: this.order.barberoSeleccionado()?.id,
+      barberNombre: this.order.barberoSeleccionado()?.nombre,
+      clienteNombre: this.formDataPeople.controls['name'].value,
+      emailCustomer: this.formDataPeople.controls['email'].value,
+      docNumberCustomer: this.formDataPeople.controls['numDoc'].value,
+      phoneCustomer: this.formDataPeople.controls['number'].value,
+      fecha: fecha ? this.formatearFechaLocal(fecha as any) : '',
+      hora: this.order.horaReserva() ?? '',
+      servicio: this.order.serviciosSeleccionados(),
+      total: this.order.totalServicios(),
+      estado: 'Confirmada'
+    }
+    return item
+  }
+  navigate() {
+    const data = this.information();
+    this.route.navigate(['/appointment-confirmed'], {
+      queryParams: {
+        id: data.docNumberCustomer,
+        fecha: data.fecha,
+        estado: data.estado
+      }
+    });
   }
 }

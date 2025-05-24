@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Reserva } from '../../utils/interface/reserva.interface';
+import { ReservasService } from '../../services/ReservasService';
+import { LoadingService } from '../../utils/LoadingService';
 
 @Component({
   selector: 'app-appointment-confirmed',
@@ -9,9 +12,43 @@ import { Router } from '@angular/router';
   templateUrl: './appointment-confirmed.component.html',
   styleUrl: './appointment-confirmed.component.css'
 })
-export class AppointmentConfirmedComponent {
+export class AppointmentConfirmedComponent implements OnInit {
   @ViewChild('voucherRef', { static: false }) voucherRef!: ElementRef;
-  constructor(private route: Router) { }
+  dataAppointment: Reserva;
+  idAppointment: string;
+  constructor(
+    private router: Router,
+    private routeActive: ActivatedRoute,
+    private reservasService: ReservasService,
+    private loadingService: LoadingService
+  ) { }
+
+  ngOnInit(): void {
+    this.getDataAppointment();
+  }
+  getDataAppointment() {
+    this.routeActive.queryParams.subscribe(params => {
+      const id = params['id'];
+      const fecha = params['fecha'];
+      const estado = params['estado'];
+      if (id && fecha && estado) {
+        this.loadingService.show();
+        this.reservasService.GetReservationByCustomerDateStatus(id, fecha, estado)
+          .then(reserva => {
+            this.loadingService.hide();
+            if (reserva) {
+              this.dataAppointment = reserva;
+            }
+          })
+          .catch(() => {
+            console.log('Error', 'Error al consultar la reserva.', 'error');
+          }).finally(() => {
+            this.loadingService.hide();
+          });
+      }
+    });
+
+  }
   descargarVoucher() {
     if (typeof window !== 'undefined') {
       import('html2pdf.js').then(html2pdf => {
@@ -33,7 +70,13 @@ export class AppointmentConfirmedComponent {
       });
     }
   }
+  formatearFecha(fechaStr: string): string {
+    const [anio, mes, dia] = fechaStr?.split('-').map(Number);
+    const fecha = new Date(anio, mes - 1, dia);
+    const nombreMes = fecha.toLocaleString('es-ES', { month: 'long' });
+    return `${dia} de ${nombreMes}, ${anio}`;
+  }
   navigate(path: string) {
-    this.route.navigate([path])
+    this.router.navigate([path])
   }
 }

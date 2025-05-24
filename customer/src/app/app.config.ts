@@ -5,14 +5,13 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
-
+import { provideStore } from '@ngrx/store';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-
-    // Firebase modular
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore())
-  ]
+    provideFirestore(() => getFirestore()),
+    provideStore()
+]
 };
