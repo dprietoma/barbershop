@@ -16,7 +16,6 @@ import { firstValueFrom } from 'rxjs';
 export class AppointmentConfirmedComponent implements OnInit {
   @ViewChild('voucherRef', { static: false }) voucherRef!: ElementRef;
   dataAppointment: Reserva;
-  idAppointment: string;
   constructor(
     private router: Router,
     private routeActive: ActivatedRoute,
@@ -26,15 +25,14 @@ export class AppointmentConfirmedComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.routeActive.queryParams.subscribe(params => {
-      const id = params['id'];
-      const fecha = params['fecha'];
-      const estado = params['estado'];
+  async ngOnInit(): Promise<void> {
+    const params = await firstValueFrom(this.routeActive.queryParams);
+    const { id, fecha, estado } = params;
 
-      this.getDataAppointment(id, fecha, estado);
-    });
+    this.getDataAppointment(id, fecha, estado);
+
   }
+
   async getDataAppointment(id: string, fecha: string, estado: string) {
     if (fecha && id && estado) {
       this.loadingService.show();
