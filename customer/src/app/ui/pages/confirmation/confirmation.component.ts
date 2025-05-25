@@ -107,9 +107,9 @@ export class ConfirmationComponent implements OnInit {
   }
 
   formatearFechaLocal(fecha: Date): string {
-    return fecha.toLocaleDateString('sv-SE');
+    return fecha.toLocaleDateString('sv-SE'); 
   }
-  
+
   getTimeServices(): string {
     const servicios = this.order.serviciosSeleccionados();
     if (servicios.length === 0) {
