@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Reserva } from '../../utils/interface/reserva.interface';
 import { ReservasService } from '../../services/ReservasService';
 import { LoadingService } from '../../utils/LoadingService';
@@ -20,18 +20,35 @@ export class AppointmentConfirmedComponent implements OnInit {
     private router: Router,
     private routeActive: ActivatedRoute,
     private reservasService: ReservasService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
   ) {
 
   }
 
   async ngOnInit(): Promise<void> {
-    const params = await firstValueFrom(this.routeActive.queryParams);
-    const { id, fecha, estado } = params;
-
-    this.getDataAppointment(id, fecha, estado);
-
+    if (typeof window !== 'undefined') {
+      if (typeof history !== 'undefined') {
+        history.pushState(null, '', location.href);
+        window.addEventListener('popstate', () => {
+          history.pushState(null, '', location.href);
+        });
+      }
+      const cached = sessionStorage.getItem('reserva');
+      if (cached) {
+        this.dataAppointment = JSON.parse(cached);
+        return;
+      } else {
+        const params = await firstValueFrom(this.routeActive.queryParams);
+        const { id, fecha, estado } = params;
+        if (id && fecha && estado) {
+          await this.getDataAppointment(id, fecha, estado);
+        }
+      }
+    }
   }
+
+
+
 
   async getDataAppointment(id: string, fecha: string, estado: string) {
     if (fecha && id && estado) {
@@ -41,6 +58,7 @@ export class AppointmentConfirmedComponent implements OnInit {
         .then(reserva => {
           if (reserva) {
             this.dataAppointment = reserva;
+            sessionStorage.setItem('reserva', JSON.stringify(this.dataAppointment));
           } else {
             console.log('Sin resultados', 'No se encontró la reserva.', 'info');
           }
@@ -84,6 +102,7 @@ export class AppointmentConfirmedComponent implements OnInit {
     return `${dia} de ${nombreMes}, ${anio}`;
   }
   navigate(path: string) {
+    sessionStorage.removeItem('reserva');
     this.router.navigate([path])
   }
 }
