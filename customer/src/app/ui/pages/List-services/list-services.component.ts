@@ -4,23 +4,17 @@ import { Router } from '@angular/router';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
 import { OrderStateService } from '../../utils/order-state.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-services',
-  imports: [CommonModule, SteppersComponent, DetailOrderComponent],
-  templateUrl: './services.component.html',
-  styleUrl: './services.component.css',
+  selector: 'app-list-services',
+  imports: [CommonModule, SteppersComponent, DetailOrderComponent,FormsModule ],
+  templateUrl: './list-services.component.html',
+  styleUrl: './list-services.component.css',
 })
-export class ServicesComponent {
-  private router = inject(Router);
- isSeleccionado = computed(() => {
-  const set = new Set(this.serviciosSeleccionados().map(s => s.nombre));
-  return (nombre: string) => set.has(nombre);
-});
-  serviciosSeleccionados = signal<any[]>([]);
-  serviceTotal = computed(() =>
-    this.serviciosSeleccionados().reduce((total, s) => total + s.precio, 0)
-  );
+export class ListServicesComponent {
+  public order = inject(OrderStateService);
+
   servicios = [
     {
       nombre: 'Corte y Barba',
@@ -74,7 +68,12 @@ export class ServicesComponent {
   ];
   barberoSeleccionado: any = null;
   isCollapsed = false;
-  constructor(public order: OrderStateService) { }
+  filtroTexto = '';
+
+  isSeleccionado(nombre: string): boolean {
+    return this.order.serviciosSeleccionados().some(s => s.nombre === nombre);
+  }
+
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }
@@ -82,23 +81,19 @@ export class ServicesComponent {
   toggleServicio(servicio: any) {
     this.order.toggleServicio(servicio);
   }
+
   get totalServicios(): number {
-    return this.serviciosSeleccionados().reduce(
+    return this.order.serviciosSeleccionados().reduce(
       (total, s) => total + s.precio,
       0
     );
   }
 
-  estaSeleccionado(servicio: any): boolean {
-
-    return this.serviciosSeleccionados().some(
-      (s) => s.nombre === servicio.nombre
+  get serviciosFiltrados() {
+    return this.servicios.filter(servicio =>
+      servicio.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
+      servicio.descripcion.toLowerCase().includes(this.filtroTexto.toLowerCase())
     );
-  }
-
-
-  navigateToBarbers() {
-    this.router.navigate(['/barbers']);
   }
 
 }

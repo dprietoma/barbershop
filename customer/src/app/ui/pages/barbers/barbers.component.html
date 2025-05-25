@@ -1,24 +1,24 @@
 <div class="container">
   <app-steppers [currentStep]="Stepper"></app-steppers>
   <div class="row mb-3 mt-5">
-    <div class="col-md-4 ocultar-scroll" style="overflow-y: auto;">
-      <div>
-        <div *ngFor="let barbero of barberos">
-          <div class="barbero-card mb-3" [class.selected]="barberoSeleccionado?.id === barbero.id">
-            <div class="barbero-img" [style.backgroundImage]="'url(' + barbero.foto + ')'"></div>
-            <div class="barbero-info">
-              <h5>{{ barbero.nombre }}</h5>
-              <div class="rating mt-2">
-                ⭐ <strong>{{ barbero.rating.toFixed(1) }}</strong>
-              </div>
-              <div class="text-secondary mt-1">{{ barbero.insta }}</div>
-              <button type="button" class="btn-custom mt-2" (click)="seleccionar(barbero)">
-                Seleccionar
-              </button>
+    <input type="text" class="form-control mb-3 " style="max-height: 600px;" placeholder="Buscar barbero..."
+    [(ngModel)]="filtroTexto" />
+    <div class="col-md-4 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
+      @for (barbero of baberosFiltrados; track $index) {
+        <div class="barbero-card mb-3" [class.selected]="barberoSeleccionado?.id === barbero.id">
+          <div class="barbero-img" [style.backgroundImage]="'url(' + barbero.foto + ')'"></div>
+          <div class="barbero-info">
+            <h5>{{ barbero.nombre }}</h5>
+            <div class="rating mt-2">
+              ⭐ <strong>{{ barbero.rating.toFixed(1) }}</strong>
             </div>
+            <div class="text-secondary mt-1">{{ barbero.insta }}</div>
+            <button type="button" class="btn-custom mt-2" (click)="seleccionar(barbero)">
+              Seleccionar
+            </button>
           </div>
         </div>
-      </div>
+      }  
     </div>
 
     <div *ngIf="barberoSeleccionado" class="detalle-barbero-card col-md-8">

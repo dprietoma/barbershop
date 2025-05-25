@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { Router } from '@angular/router';
 import { OrderStateService } from '../../utils/order-state.service';
@@ -9,14 +9,21 @@ import { HOURS } from '../../utils/constants/horasDefault';
 import { BarberosService } from '../../services/barberos.service';
 import { Barbero } from '../../utils/interface/barbero-interface';
 import { LoadingService } from '../../utils/LoadingService';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-barbers',
-  imports: [CommonModule, SteppersComponent],
+  imports: [CommonModule, SteppersComponent, FormsModule],
   templateUrl: './barbers.component.html',
   styleUrl: './barbers.component.css'
 })
 export class BarbersComponent implements OnInit {
+  public order = inject(OrderStateService);
+  private router = inject(Router);
+  private availableService = inject(DisponibilidadService);
+  private barberosService = inject(BarberosService);
+  private loadingService = inject(LoadingService);
+
   Stepper: number = 2;
   barberos: Barbero[] = [];
   horas: HorasDisponibles = {
@@ -28,13 +35,8 @@ export class BarbersComponent implements OnInit {
   mesActual = new Date();
   semanaVisible: Date[] = [];
   diaSeleccionado: Date | null = null;
-  constructor(private router: Router,
-    public order: OrderStateService,
-    private availableService: DisponibilidadService,
-    private barberosService: BarberosService,
-    private loadingService: LoadingService) {
+  filtroTexto = '';
 
-  }
 
   ngOnInit() {
     this.getBarber();
@@ -53,6 +55,14 @@ export class BarbersComponent implements OnInit {
     this.Stepper = 3;
     this.generarSemana(this.barberoSeleccionado.id)
   }
+
+  get baberosFiltrados() {
+    return this.barberos.filter(barbero =>
+      barbero.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase())
+    );
+  }
+
+
   selectDate(hora: string) {
     this.order.setHora(hora);
     this.router.navigate(['/confirmation'])
@@ -164,4 +174,6 @@ export class BarbersComponent implements OnInit {
     if (modifier === 'AM' && h === 12) h = 0;
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
   }
+
+ 
 }

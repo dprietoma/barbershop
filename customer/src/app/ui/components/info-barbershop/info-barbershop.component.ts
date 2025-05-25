@@ -14,6 +14,6 @@ export class InfoBarbershopComponent {
 
   }
   navigateToServices() {
-    this.route.navigate(['/services']);
+    this.route.navigate(['/list-services']);
   }
 }
