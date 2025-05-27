@@ -41,7 +41,7 @@ export class BarbersComponent implements OnInit {
 
   ngOnInit() {
     this.getBarber();
-    // this.generarSemana(this.mesActual);
+    this.diaSeleccionado = new Date();
   }
   getBarber() {
     this.loadingService.show();
@@ -68,17 +68,30 @@ export class BarbersComponent implements OnInit {
     this.order.setHora(hora);
     this.router.navigate(['/confirmation'])
   }
-
+  mostrarRetroceder(): boolean {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    return !this.semanaVisible.some(dia => {
+      const d = new Date(dia);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime() === hoy.getTime();
+    });
+  }
   generarSemana(barberId: string, baseDate?: Date) {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
     const start = new Date(baseDate ?? new Date());
     start.setDate(start.getDate() - 3);
     this.semanaVisible = [];
-
     for (let i = 0; i < 14; i++) {
       const dia = new Date(start);
       dia.setDate(start.getDate() + i);
+      const diaNormalizado = new Date(dia);
+      diaNormalizado.setHours(0, 0, 0, 0);
+      if (diaNormalizado < hoy) {
+        continue;
+      }
       this.semanaVisible.push(dia);
-
       const fechaStr = dia.toISOString().split('T')[0];
       this.availableService.crearDisponibilidadSiNoExiste(barberId, fechaStr, HOURS)
         .then(() => console.log(`Disponibilidad creada para ${fechaStr}`))
@@ -86,18 +99,19 @@ export class BarbersComponent implements OnInit {
     }
   }
 
+
   retrocederSemana() {
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() - 7);
     this.mesActual = nuevaFecha;
-    //this.generarSemana(this.mesActual);
+    this.generarSemana(this.barberoSeleccionado.id, this.mesActual);
   }
 
   avanzarSemana() {
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() + 7);
     this.mesActual = nuevaFecha;
-    //this.generarSemana(this.mesActual);
+    this.generarSemana(this.barberoSeleccionado.id, this.mesActual);
   }
   formatearFechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('sv-SE');
@@ -109,7 +123,20 @@ export class BarbersComponent implements OnInit {
 
     this.availableService.getHorasDisponibles(this.barberoSeleccionado.id, fechaStr).subscribe({
       next: (disponibilidad) => {
-        const horasDisponibles = disponibilidad?.horas ?? [];
+        let horasDisponibles = disponibilidad?.horas ?? [];
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        const diaNormalizado = new Date(dia);
+        diaNormalizado.setHours(0, 0, 0, 0);
+
+        if (diaNormalizado.getTime() === hoy.getTime()) {
+          const ahora = new Date();
+          horasDisponibles = horasDisponibles.filter((hora: string) => {
+            const horaDate = this.convertirHoraATime(hora);
+            return horaDate > ahora;
+          });
+        }
 
         this.availableService.getReservasPorDia(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
           let horasOcupadas: string[] = [];
@@ -118,8 +145,10 @@ export class BarbersComponent implements OnInit {
             const franjas = this.obtenerFranjasOcupadas(r.hora, duracionMinutos, horasDisponibles);
             horasOcupadas.push(...franjas);
           });
+
           const horasUnicas = [...new Set(horasOcupadas)];
           const horasFiltradas = horasDisponibles.filter((hora: string) => !horasUnicas.includes(hora));
+
           this.horas = {
             manana: horasFiltradas.filter((h: string) => this.esManana(h)),
             tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
@@ -129,6 +158,19 @@ export class BarbersComponent implements OnInit {
       }
     });
   }
+  convertirHoraATime(hora: string): Date {
+    const [horaMin, meridiano] = hora.split(' ');
+    let [horas, minutos] = horaMin.split(':').map(Number);
+
+    if (meridiano === 'PM' && horas !== 12) horas += 12;
+    if (meridiano === 'AM' && horas === 12) horas = 0;
+
+    const resultado = new Date();
+    resultado.setHours(horas, minutos, 0, 0);
+
+    return resultado;
+  }
+
   obtenerFranjasOcupadas(horaInicio: string, duracion: number, todasLasFranjas: string[]): string[] {
     const inicioMin = this.horaToMinutos(horaInicio);
     const finMin = inicioMin + duracion;
