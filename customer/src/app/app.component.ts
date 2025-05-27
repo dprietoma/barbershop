@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './ui/shared/spinner/spinner.component';
 
 @Component({
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   titleTheme = 'Modo Oscuro';
   isDarkMode = false;
   isMenuOpen = false;
-
+  constructor() { }
   ngOnInit() {
     this.loadTheme();
   }

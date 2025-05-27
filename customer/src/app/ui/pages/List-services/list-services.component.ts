@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { OrderStateService } from '../../utils/global/order-state.service';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
+import { HistorialForzadoService } from '../../utils/global/route-history.service';
 
 @Component({
   selector: 'app-list-services',
@@ -17,7 +18,7 @@ import { SearchFilterComponent } from '../../shared/search-filter/search-filter.
   templateUrl: './list-services.component.html',
   styleUrl: './list-services.component.css',
 })
-export class ListServicesComponent {
+export class ListServicesComponent implements OnInit {
   public order = inject(OrderStateService);
   private readonly filterPipe = new FilterPipe();
   servicios = [
@@ -74,6 +75,10 @@ export class ListServicesComponent {
   barberoSeleccionado: any = null;
   isCollapsed = false;
   filtroTexto = '';
+constructor(private historial: HistorialForzadoService) {}
+  ngOnInit(): void {
+    this.historial.forzarRegresoAHOME('/list-services');
+  }
   get quantityResults(): number {
     return this.filterPipe.transform(this.servicios, 'nombre', this.filtroTexto).length;
   }
@@ -98,5 +103,6 @@ export class ListServicesComponent {
       0
     );
   }
+
 
 }

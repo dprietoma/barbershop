@@ -12,6 +12,7 @@ import { OrderStateService } from '../../utils/global/order-state.service';
 import { LoadingService } from '../../utils/global/LoadingService';
 import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
+import { HistorialForzadoService } from '../../utils/global/route-history.service';
 
 
 @Component({
@@ -41,7 +42,9 @@ export class BarbersComponent implements OnInit {
   filtroTexto: string = '';
 
   private readonly filterPipe = new FilterPipe();
+  constructor(private historial: HistorialForzadoService) { }
   ngOnInit() {
+    this.historial.forzarRegresoAHOME('/barbers');
     this.getBarber();
     this.diaSeleccionado = new Date();
   }

@@ -5,6 +5,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { Reserva } from '../../utils/interface/reserva.interface';
 import { filter, Subscription } from 'rxjs';
 import { OrderStateService } from '../../utils/global/order-state.service';
+import { HistorialForzadoService } from '../../utils/global/route-history.service';
 
 
 @Component({
@@ -13,36 +14,23 @@ import { OrderStateService } from '../../utils/global/order-state.service';
   templateUrl: './appointment-confirmed.component.html',
   styleUrl: './appointment-confirmed.component.css'
 })
-export class AppointmentConfirmedComponent implements OnInit, OnDestroy {
+export class AppointmentConfirmedComponent implements OnInit {
   @ViewChild('voucherRef', { static: false }) voucherRef!: ElementRef;
   dataAppointment: Reserva;
-  private navigationSub!: Subscription;
   constructor(
     private router: Router,
-    private order: OrderStateService
-
-  ) {
-
-  }
+    private order: OrderStateService,
+    private historial: HistorialForzadoService
+  ) {}
 
   async ngOnInit(): Promise<void> {
+    this.historial.forzarRegresoAHOME('/appointment-confirmed');
     if (typeof window !== 'undefined') {
       const cached = sessionStorage.getItem('reserva');
       if (cached) {
         this.dataAppointment = JSON.parse(cached);
       }
     }
-    this.navigationSub = this.router.events
-      .pipe(filter(e => e instanceof NavigationStart))
-      .subscribe((event: NavigationStart) => {
-        if (event.navigationTrigger === 'popstate') {
-          this.order.reset();
-          this.router.navigateByUrl('/home', { replaceUrl: true });
-        }
-      });
-  }
-  ngOnDestroy(): void {
-    this.navigationSub?.unsubscribe();
   }
 
   descargarVoucher() {

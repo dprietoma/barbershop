@@ -14,5 +14,5 @@ export const routes: Routes = [
     { path: 'barbers', component: BarbersComponent },
     { path: 'confirmation', component: ConfirmationComponent },
     { path: 'appointment-confirmed', component: AppointmentConfirmedComponent },
-    { path: '**', redirectTo: '' },
+    { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './about-barber.component.css'
 })
 export class AboutBarberComponent {
+  
 
 }

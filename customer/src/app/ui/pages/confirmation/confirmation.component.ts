@@ -10,6 +10,7 @@ import { Reserva } from '../../utils/interface/reserva.interface';
 import { ReservasService } from '../../services/ReservasService';
 import { ShowAlert } from '../../utils/global/sweetalert';
 import { LoadingService } from '../../utils/global/LoadingService';
+import { HistorialForzadoService } from '../../utils/global/route-history.service';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
@@ -31,9 +32,11 @@ export class ConfirmationComponent implements OnInit {
     public order: OrderStateService,
     private route: Router,
     private reservasService: ReservasService,
-    private loadingService: LoadingService) {
+    private loadingService: LoadingService,
+    private historial: HistorialForzadoService) {
   }
   ngOnInit(): void {
+      this.historial.forzarRegresoAHOME('/confirmation');
     this.formDataPeople = this.fb.group({
       name: [
         '',

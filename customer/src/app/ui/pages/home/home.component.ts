@@ -3,7 +3,7 @@ import { InfoBarbershopComponent } from '../../components/info-barbershop/info-b
 import { CarouselIndicatorsComponent } from '../../components/carousel-indicators/carousel-indicators.component';
 import { AboutBarberComponent } from '../../components/about-barber/about-barber.component';
 import { DirectionMapsComponent } from '../../components/direction-maps/direction-maps.component';
-import { RouteHistoryService } from '../../utils/global/route-history.service';
+//import { RouteHistoryService } from '../../utils/global/route-history.service';
 
 @Component({
   selector: 'app-home',
@@ -14,16 +14,13 @@ import { RouteHistoryService } from '../../utils/global/route-history.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  constructor(private routeHistory: RouteHistoryService) {
+  constructor() {
 
   }
   ngOnInit(): void {
-    const previous = this.routeHistory.getPreviousUrl();
-    if (previous === '/appointment-confirmed') {
-      history.pushState(null, '', location.href);
-      window.onpopstate = () => {
-        history.pushState(null, '', location.href);
-      };
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/_flush');
+      window.history.replaceState({}, 'Home', '/home');
     }
 
   }
