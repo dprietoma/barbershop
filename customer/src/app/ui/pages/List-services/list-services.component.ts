@@ -6,16 +6,20 @@ import { DetailOrderComponent } from '../../components/detail-order/detail-order
 
 import { FormsModule } from '@angular/forms';
 import { OrderStateService } from '../../utils/global/order-state.service';
+import { FilterPipe } from '../../utils/pipes/filter.pipe';
+import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
 
 @Component({
   selector: 'app-list-services',
-  imports: [CommonModule, SteppersComponent, DetailOrderComponent,FormsModule ],
+  imports: [CommonModule, SteppersComponent,
+    DetailOrderComponent, FormsModule,
+    SearchFilterComponent, FilterPipe],
   templateUrl: './list-services.component.html',
   styleUrl: './list-services.component.css',
 })
 export class ListServicesComponent {
   public order = inject(OrderStateService);
-
+  private readonly filterPipe = new FilterPipe();
   servicios = [
     {
       nombre: 'Corte y Barba',
@@ -70,7 +74,12 @@ export class ListServicesComponent {
   barberoSeleccionado: any = null;
   isCollapsed = false;
   filtroTexto = '';
-
+  get quantityResults(): number {
+    return this.filterPipe.transform(this.servicios, 'nombre', this.filtroTexto).length;
+  }
+  filterUpdate(text: string) {
+    this.filtroTexto = text;
+  }
   isSeleccionado(nombre: string): boolean {
     return this.order.serviciosSeleccionados().some(s => s.nombre === nombre);
   }
@@ -87,13 +96,6 @@ export class ListServicesComponent {
     return this.order.serviciosSeleccionados().reduce(
       (total, s) => total + s.precio,
       0
-    );
-  }
-
-  get serviciosFiltrados() {
-    return this.servicios.filter(servicio =>
-      servicio.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
-      servicio.descripcion.toLowerCase().includes(this.filtroTexto.toLowerCase())
     );
   }
 

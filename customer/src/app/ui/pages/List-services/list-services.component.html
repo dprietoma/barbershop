@@ -1,13 +1,12 @@
 <div class="container">
     <app-steppers [currentStep]="1"></app-steppers>
-    
+
 
     <div class="row mb-3 mt-5">
-        <input type="text" class="form-control mb-3 " style="max-height: 600px;" placeholder="Buscar servicio..."
-        [(ngModel)]="filtroTexto" />
+        <app-search-filter [quantityResults]="quantityResults" (changeText)="filterUpdate($event)"
+            [placeHolder]="'Buscar servicio...'"></app-search-filter>
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
-            
-            @for (item of serviciosFiltrados; track $index) {
+            @for (item of servicios| filter:'nombre':filtroTexto; track $index) {
             <div class="barbero-card mb-3">
                 <div class="barbero-img" [style.backgroundImage]="'url(' + item.imagen + ')'"></div>
                 <div class="barbero-info">
@@ -16,12 +15,10 @@
                     <h6 class="text-success"> {{item.precio | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
                     </h6>
 
-                    <button class="btn btn-sm mt-2 custom-btn" type="button"
-                    [ngClass]="{
+                    <button class="btn btn-sm mt-2 custom-btn" type="button" [ngClass]="{
                         'btn-dark': isSeleccionado(item.nombre),
                         'btn-outline-primary': !isSeleccionado(item.nombre)
-                    }"
-                    (click)="toggleServicio(item)">
+                    }" (click)="toggleServicio(item)">
                         <i [ngClass]="isSeleccionado(item.nombre) ? 'bi bi-dash fs-3' : 'bi bi-plus fs-3'"></i>
                     </button>
                 </div>
@@ -31,7 +28,8 @@
         <div class="col-sm-6">
             <app-detail-order [serviciosSeleccionados]="order.serviciosSeleccionados"
                 [totalServicios]="order.totalServicios" [barberoSeleccionado]="order.barberoSeleccionado"
-                [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva" [titulo]="'Detalle de servicios'" [viewButton]="true">
+                [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva" [titulo]="'Detalle de servicios'"
+                [viewButton]="true">
             </app-detail-order>
         </div>
     </div>

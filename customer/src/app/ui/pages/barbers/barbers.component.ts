@@ -10,11 +10,13 @@ import { Barbero } from '../../utils/interface/barbero-interface';
 import { FormsModule } from '@angular/forms';
 import { OrderStateService } from '../../utils/global/order-state.service';
 import { LoadingService } from '../../utils/global/LoadingService';
+import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
+import { FilterPipe } from '../../utils/pipes/filter.pipe';
 
 
 @Component({
   selector: 'app-barbers',
-  imports: [CommonModule, SteppersComponent, FormsModule],
+  imports: [CommonModule, SteppersComponent, FormsModule, SearchFilterComponent, FilterPipe],
   templateUrl: './barbers.component.html',
   styleUrl: './barbers.component.css'
 })
@@ -36,12 +38,19 @@ export class BarbersComponent implements OnInit {
   mesActual = new Date();
   semanaVisible: Date[] = [];
   diaSeleccionado: Date | null = null;
-  filtroTexto = '';
+  filtroTexto: string = '';
 
-
+  private readonly filterPipe = new FilterPipe();
   ngOnInit() {
     this.getBarber();
     this.diaSeleccionado = new Date();
+  }
+
+  filterUpdate(text: string) {
+    this.filtroTexto = text;
+  }
+  get quantityResults(): number {
+    return this.filterPipe.transform(this.barberos, 'nombre', this.filtroTexto).length;
   }
   getBarber() {
     this.loadingService.show();
@@ -56,13 +65,6 @@ export class BarbersComponent implements OnInit {
     this.Stepper = 3;
     this.generarSemana(this.barberoSeleccionado.id)
   }
-
-  get baberosFiltrados() {
-    return this.barberos.filter(barbero =>
-      barbero.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase())
-    );
-  }
-
 
   selectDate(hora: string) {
     this.order.setHora(hora);

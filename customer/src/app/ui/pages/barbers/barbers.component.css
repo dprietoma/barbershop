@@ -46,14 +46,11 @@
 
 .ocultar-scroll {
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* Internet Explorer 10+ */
 }
 
 .ocultar-scroll::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari, Opera */
 }
 
 .detalle-barbero-card {
@@ -144,7 +141,6 @@
 
 .btn-custom {
   background-color: #050505;
-  /* Azul moderno */
   color: white;
   border: none;
   padding: 6px 16px;
@@ -160,3 +156,5 @@
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+

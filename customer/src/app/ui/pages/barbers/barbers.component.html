@@ -1,10 +1,10 @@
 <div class="container">
   <app-steppers [currentStep]="Stepper"></app-steppers>
   <div class="row mb-3 mt-5">
-    <input type="text" class="form-control mb-3 " style="max-height: 600px;" placeholder="Buscar barbero..."
-      [(ngModel)]="filtroTexto" />
-    <div class="col-md-4 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
-      @for (barbero of baberosFiltrados; track $index) {
+    <app-search-filter [quantityResults]="quantityResults" (changeText)="filterUpdate($event)"
+      [placeHolder]="'Buscar barbero...'"></app-search-filter>
+    <div class="col-md-4 mt-2 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
+      @for (barbero of barberos | filter:'nombre':filtroTexto; track $index) {
       <div class="barbero-card mb-3" [class.selected]="barberoSeleccionado?.id === barbero.id">
         <div class="barbero-img" [style.backgroundImage]="'url(' + barbero.foto + ')'"></div>
         <div class="barbero-info">
