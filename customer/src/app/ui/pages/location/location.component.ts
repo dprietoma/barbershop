@@ -12,9 +12,13 @@ import { Router } from '@angular/router';
 export class LocationComponent {
 
 
-  constructor(private router: Router, ) { }
+  constructor(private router: Router) {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/_flush');
+      window.history.replaceState({}, '', '/');
+    }
+  }
   navigateToHome() {
-
     this.router.navigate(['/home']);
   }
 }
