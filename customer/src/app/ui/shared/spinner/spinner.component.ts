@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { LoadingService } from '../../utils/LoadingService';
+
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { LoadingService } from '../../utils/global/LoadingService';
 
 @Component({
   selector: 'app-spinner',

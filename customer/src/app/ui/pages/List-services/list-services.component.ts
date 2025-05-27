@@ -3,8 +3,9 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
-import { OrderStateService } from '../../utils/order-state.service';
+
 import { FormsModule } from '@angular/forms';
+import { OrderStateService } from '../../utils/global/order-state.service';
 
 @Component({
   selector: 'app-list-services',

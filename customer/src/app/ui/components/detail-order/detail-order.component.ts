@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentComponent } from '../appointment/appointment.component';
-import { OrderStateService } from '../../utils/order-state.service';
+import { OrderStateService } from '../../utils/global/order-state.service';
+
 
 @Component({
   selector: 'app-detail-order',
@@ -19,11 +20,12 @@ export class DetailOrderComponent {
   @Input() horaReserva!: Signal<string | null>;
   @Input() titulo: string;
   @Input() viewButton: boolean;
-  constructor(public order: OrderStateService){
+  constructor(public order: OrderStateService, ) {
 
   }
 
   navigateToBarbers() {
+
     this.router.navigate(['/barbers']);
   }
 }

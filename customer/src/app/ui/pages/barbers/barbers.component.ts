@@ -2,14 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { Router } from '@angular/router';
-import { OrderStateService } from '../../utils/order-state.service';
 import { DisponibilidadService } from '../../services/disponibilidad.service';
 import { HorasDisponibles } from '../../utils/interface/availableHours-interface';
 import { HOURS } from '../../utils/constants/horasDefault';
 import { BarberosService } from '../../services/barberos.service';
 import { Barbero } from '../../utils/interface/barbero-interface';
-import { LoadingService } from '../../utils/LoadingService';
 import { FormsModule } from '@angular/forms';
+import { OrderStateService } from '../../utils/global/order-state.service';
+import { LoadingService } from '../../utils/global/LoadingService';
+
 
 @Component({
   selector: 'app-barbers',
@@ -175,5 +176,5 @@ export class BarbersComponent implements OnInit {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
   }
 
- 
+
 }
