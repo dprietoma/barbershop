@@ -44,9 +44,20 @@ export class BarbersComponent implements OnInit {
   private readonly filterPipe = new FilterPipe();
   constructor(private historial: HistorialForzadoService) { }
   ngOnInit() {
+    debugger
     this.historial.forzarRegresoAHOME('/barbers');
     this.getBarber();
     this.diaSeleccionado = new Date();
+    const barbero = this.order.barberoSeleccionado();
+    const fecha = this.order.fechaReserva();
+    const hora = this.order.horaReserva();
+    if (barbero && fecha && hora) {
+      this.barberoSeleccionado = barbero;
+      this.generarSemana(barbero.id, fecha ? new Date(fecha) : new Date());
+      this.diaSeleccionado = new Date(fecha);
+      this.seleccionarDia(this.diaSeleccionado);
+      this.Stepper = 3;
+    }
   }
 
   filterUpdate(text: string) {

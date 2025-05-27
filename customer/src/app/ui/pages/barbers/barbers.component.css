@@ -33,10 +33,23 @@
   color: var(--text-color) !important;
 }
 
+.hora-box.selected {
+  background-color: var(--primary-color, #0d6efd) !important;
+  color: var(--selected-text-color, #ffffff) !important;
+  border: 2px solid var(--primary-border-color, #0b5ed7) !important;
+  font-weight: bold;
+  border-radius: 8px;
+}
 .hora-box {
   background-color: var(--background-color) !important;
   color: var(--text-color) !important;
-
+  border: 1px solid var(--text-color);
+  padding: 0.5rem;
+  margin: 0.3rem 0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
 .rating {
@@ -156,5 +169,3 @@
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
-

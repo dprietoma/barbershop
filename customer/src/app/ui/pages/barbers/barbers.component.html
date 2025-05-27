@@ -1,6 +1,6 @@
 <div class="container">
-  <app-steppers [currentStep]="Stepper" ></app-steppers>
-  
+  <app-steppers [currentStep]="Stepper"></app-steppers>
+
   <div class="row mb-3 mt-5">
     <app-search-filter [quantityResults]="quantityResults" (changeText)="filterUpdate($event)"
       [placeHolder]="'Buscar barbero...'"></app-search-filter>
@@ -56,7 +56,8 @@
           <div class="col-4">
             <h6 class="fw-bold">MAÑANA</h6>
             <ng-container *ngIf="horas.manana.length > 0; else sinHorasManana">
-              <div *ngFor="let hora of horas.manana" class="hora-box" (click)="selectDate(hora)">{{ hora }}</div>
+              <div *ngFor="let hora of horas.manana" class="hora-box" [class.selected]="hora === order.horaReserva()"
+                (click)="selectDate(hora)">{{ hora }}</div>
             </ng-container>
             <ng-template #sinHorasManana>
               <p class="text-muted small">Sin horas para reservar</p>
@@ -66,7 +67,8 @@
           <div class="col-4">
             <h6 class="fw-bold">TARDE</h6>
             <ng-container *ngIf="horas.tarde.length > 0; else sinHorasTarde">
-              <div *ngFor="let hora of horas.tarde" class="hora-box" (click)="selectDate(hora)">{{ hora }}</div>
+              <div *ngFor="let hora of horas.tarde" [class.selected]="hora === order.horaReserva()" class="hora-box"
+                (click)="selectDate(hora)">{{ hora }}</div>
             </ng-container>
             <ng-template #sinHorasTarde>
               <p class="text-muted small">Sin horas para reservar</p>
@@ -76,7 +78,8 @@
           <div class="col-4">
             <h6 class="fw-bold">NOCHE</h6>
             <ng-container *ngIf="horas.noche.length > 0; else sinHorasNoche">
-              <div *ngFor="let hora of horas.noche" class="hora-box" (click)="selectDate(hora)">{{ hora }}</div>
+              <div *ngFor="let hora of horas.noche" [class.selected]="hora === order.horaReserva()" class="hora-box"
+                (click)="selectDate(hora)">{{ hora }}</div>
             </ng-container>
             <ng-template #sinHorasNoche>
               <p class="text-muted small">Sin horas para reservar</p>
