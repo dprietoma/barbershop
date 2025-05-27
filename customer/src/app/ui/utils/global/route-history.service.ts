@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { OrderStateService } from './order-state.service';
 
 @Injectable({ providedIn: 'root' })
 export class HistorialForzadoService {
-  constructor(private order: OrderStateService) { }
+  constructor() { }
   forzarRegresoAHOME(rutaActual: string): void {
     if (typeof window === 'undefined' || !rutaActual) return;
     window.history.pushState({}, '', '/');

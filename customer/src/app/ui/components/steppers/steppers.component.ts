@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-steppers',
@@ -9,11 +10,19 @@ import { Component, Input } from '@angular/core';
 })
 export class SteppersComponent {
   @Input() currentStep: number = 0;
+  @Output() stepClicked = new EventEmitter<string>();
+  constructor(private router: Router) { }
   steps = [
-    { icon: 'bi-scissors', title: 'Selección del servicio' },
-    { icon: 'bi-person-badge', title: 'Selección del barbero' },
-    { icon: 'bi-calendar-event ', title: 'Selección de fecha y hora' },
-    { icon: 'bi-check2-circle', title: 'Confirmación de la cita' },
-    { icon: 'bi bi-house-fill', title: 'Cita agendada con éxito' }
+    { icon: 'bi-scissors', title: 'Selección del servicio', path: '/list-services' },
+    { icon: 'bi-person-badge', title: 'Selección del barbero', path: '/barbers' },
+    { icon: 'bi-calendar-event ', title: 'Selección de fecha y hora', path: '/barbers' },
+    { icon: 'bi-check2-circle', title: 'Confirmación de la cita', path: '/confirmation' },
+    { icon: 'bi bi-house-fill', title: 'Cita agendada con éxito', path: '/appointment-confirmed' }
   ];
+  onStepClick(index: number) {
+    const step = this.steps[index];
+    if (index < this.currentStep) {
+      this.router.navigateByUrl(step.path);
+    }
+  }
 }

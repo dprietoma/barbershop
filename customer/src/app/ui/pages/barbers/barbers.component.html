@@ -1,5 +1,6 @@
 <div class="container">
-  <app-steppers [currentStep]="Stepper"></app-steppers>
+  <app-steppers [currentStep]="Stepper" ></app-steppers>
+  
   <div class="row mb-3 mt-5">
     <app-search-filter [quantityResults]="quantityResults" (changeText)="filterUpdate($event)"
       [placeHolder]="'Buscar barbero...'"></app-search-filter>

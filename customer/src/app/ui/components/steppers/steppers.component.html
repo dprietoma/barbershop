@@ -1,13 +1,12 @@
-
 <div class=" mt-3">
     <div class="row">
         <div class="col-sm-12">
             <div class="steps d-flex  flex-sm-nowrap justify-content-between w-100 px-4">
                 @for (step of steps; track $index) {
-                    <div class="step" [ngClass]="{
+                <div class="step" [ngClass]="{
                         'completed': $index < currentStep,
                         'active': $index === currentStep
-                      }">
+                      }" [class.clickable]="($index <= currentStep)" (click)="onStepClick($index)">
                     <div class="step-icon-wrap">
                         <div class="step-icon"><i [class]="step.icon"></i></div>
                     </div>
