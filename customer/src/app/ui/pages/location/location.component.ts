@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionStorageService } from '../../utils/global/StorageService ';
 
 
 @Component({
@@ -12,13 +13,14 @@ import { Router } from '@angular/router';
 export class LocationComponent {
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private sessionStorage: SessionStorageService) {
     if (typeof window !== 'undefined') {
       window.history.pushState({}, '', '/_flush');
       window.history.replaceState({}, '', '/');
     }
   }
-  navigateToHome() {
+  navigateToHome(type: string) {
+    this.sessionStorage.saveType('mode', type);
     this.router.navigate(['/home']);
   }
 }

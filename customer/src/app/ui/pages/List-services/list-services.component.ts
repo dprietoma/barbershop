@@ -9,6 +9,7 @@ import { OrderStateService } from '../../utils/global/order-state.service';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
+import { SessionStorageService } from '../../utils/global/StorageService ';
 
 @Component({
   selector: 'app-list-services',
@@ -75,7 +76,7 @@ export class ListServicesComponent implements OnInit {
   barberoSeleccionado: any = null;
   isCollapsed = false;
   filtroTexto = '';
-constructor(private historial: HistorialForzadoService) {}
+  constructor(private historial: HistorialForzadoService) { }
   ngOnInit(): void {
     this.historial.forzarRegresoAHOME('/list-services');
   }

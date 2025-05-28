@@ -7,14 +7,15 @@ import { Reserva } from '../utils/interface/reserva.interface';
 export class ReservasService {
     constructor(private firestore: Firestore) { }
 
-    async crearReserva(reserva: Reserva): Promise<{ ok: boolean; mensaje: string }> {
+    async createReservation(reserva: Reserva): Promise<{ ok: boolean; mensaje: string }> {
         try {
             const reservasRef = collection(this.firestore, 'reservas');
             const q = query(
                 reservasRef,
                 where('docNumberCustomer', '==', reserva.docNumberCustomer),
                 where('fecha', '==', reserva.fecha),
-                where('estado', '==', 'Confirmada')
+                where('estado', '==', 'Confirmada'),
+                where('type', '==', reserva.type)
             );
 
             const snapshot = await getDocs(q);

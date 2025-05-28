@@ -11,6 +11,7 @@ import { ReservasService } from '../../services/ReservasService';
 import { ShowAlert } from '../../utils/global/sweetalert';
 import { LoadingService } from '../../utils/global/LoadingService';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
+import { SessionStorageService } from '../../utils/global/StorageService ';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
@@ -33,10 +34,11 @@ export class ConfirmationComponent implements OnInit {
     private route: Router,
     private reservasService: ReservasService,
     private loadingService: LoadingService,
-    private historial: HistorialForzadoService) {
+    private historial: HistorialForzadoService,
+    private sessionStorage: SessionStorageService) {
   }
   ngOnInit(): void {
-      this.historial.forzarRegresoAHOME('/confirmation');
+    this.historial.forzarRegresoAHOME('/confirmation');
     this.formDataPeople = this.fb.group({
       name: [
         '',
@@ -99,7 +101,7 @@ export class ConfirmationComponent implements OnInit {
     }
     this.loadingService.show();
     const informationReserve = this.information();
-    this.reservasService.crearReserva(informationReserve).then(rs => {
+    this.reservasService.createReservation(informationReserve).then(rs => {
       if (rs.ok) {
         this.navigate();
       } else {
@@ -108,11 +110,9 @@ export class ConfirmationComponent implements OnInit {
       this.loadingService.hide();
     })
   }
-
   formatearFechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('sv-SE');
   }
-
   getTimeServices(): string {
     const servicios = this.order.serviciosSeleccionados();
     if (servicios.length === 0) {
@@ -135,15 +135,14 @@ export class ConfirmationComponent implements OnInit {
       servicio: this.order.serviciosSeleccionados(),
       total: this.order.totalServicios(),
       estado: 'Confirmada',
-      duracion: this.getTimeServices()
+      duracion: this.getTimeServices(),
+      type: this.sessionStorage.getType('mode') as string
     }
     return item
   }
   navigate() {
     const data = this.information();
     sessionStorage.setItem('reserva', JSON.stringify(data));
-    this.route.navigateByUrl('/home').then(() => {
-      this.route.navigate(['/appointment-confirmed'], { replaceUrl: true });
-    });
+    this.route.navigate(['/appointment-confirmed']);
   }
 }

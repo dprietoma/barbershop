@@ -1,17 +1,17 @@
-<div class="card mx-auto my-4 bg-dark text-white" style="max-width: 22rem; height: 25rem; overflow: hidden; position: relative;">
-  <img 
-    src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/recuadro.png?alt=media&token=db443411-6926-4f65-a99f-73eb15f37699" 
-    class="card-img-top img-fluid h-100 object-fit-cover" 
-    alt="Profile image" 
-    style="object-fit: cover;">
+<div class="card mx-auto my-4 bg-dark text-white"
+  style="max-width: 22rem; height: 25rem; overflow: hidden; position: relative;">
+  <img
+    src="https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/recuadro.png?alt=media&token=db443411-6926-4f65-a99f-73eb15f37699"
+    class="card-img-top img-fluid h-100 object-fit-cover" alt="Profile image" style="object-fit: cover;">
 
-  <div class="card-img-overlay d-flex flex-column justify-content-end text-center" style="background: rgba(0, 0, 0, 0.4);">
-    <h5 class="card-title mb-1 fw-bold">CRISTIAN J BARBER</h5>
+  <div class="card-img-overlay d-flex flex-column justify-content-end text-center"
+    style="background: rgba(0, 0, 0, 0.4);">
+    <h5 class="card-title mb-1 fw-bold">{{information?.tittle}}</h5>
     <div class="d-flex justify-content-center">
-      <a href="https://wa.me/3115992618" target="_blank" class="text-white me-3">
+      <a [href]="'https://wa.me/' + information?.celular" target="_blank" class="text-white me-3">
         <i class="bi bi-whatsapp fs-4"></i>
       </a>
-      <a href="https://instagram.com/cristianjbarber" target="_blank" class="text-white">
+      <a [href]="'https://instagram.com/' + information?.instagram" target="_blank" class="text-white">
         <i class="bi bi-instagram fs-4"></i>
       </a>
     </div>

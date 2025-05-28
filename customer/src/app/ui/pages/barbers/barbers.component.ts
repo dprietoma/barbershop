@@ -13,6 +13,7 @@ import { LoadingService } from '../../utils/global/LoadingService';
 import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
+import { SessionStorageService } from '../../utils/global/StorageService ';
 
 
 @Component({
@@ -40,11 +41,16 @@ export class BarbersComponent implements OnInit {
   semanaVisible: Date[] = [];
   diaSeleccionado: Date | null = null;
   filtroTexto: string = '';
+  mode: string | null = null;
 
   private readonly filterPipe = new FilterPipe();
-  constructor(private historial: HistorialForzadoService) { }
+  constructor(private historial: HistorialForzadoService,
+    private sessionStorage: SessionStorageService
+  ) { }
+
+
   ngOnInit() {
-    debugger
+    this.mode = this.sessionStorage.getType('mode');
     this.historial.forzarRegresoAHOME('/barbers');
     this.getBarber();
     this.diaSeleccionado = new Date();
@@ -68,7 +74,7 @@ export class BarbersComponent implements OnInit {
   }
   getBarber() {
     this.loadingService.show();
-    this.barberosService.obtenerBarberos().subscribe(data => {
+    this.barberosService.GetBarbersByType(this.mode as string).subscribe(data => {
       this.barberos = data;
       this.loadingService.hide();
     });

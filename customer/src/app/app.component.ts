@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './ui/shared/spinner/spinner.component';
+import { SessionStorageService } from './ui/utils/global/StorageService ';
+import { AMATE, CRISTIANJBARBER } from './ui/utils/constants/General-Constants';
+import { MODE_CONFIGS, ModeConfig } from './ui/utils/interface/barberia-interface';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +18,15 @@ export class AppComponent implements OnInit {
   titleTheme = 'Modo Oscuro';
   isDarkMode = false;
   isMenuOpen = false;
-  constructor() { }
+  mode: string | null = null;
+  information: ModeConfig | null = null;
+  constructor(private sessionStorage: SessionStorageService) { }
   ngOnInit() {
-    this.loadTheme();
+    this.sessionStorage.mode$.subscribe((mode) => {
+      this.mode = mode;
+      this.information = mode ? MODE_CONFIGS[mode] ?? null : null;
+      this.loadTheme();
+    });
   }
 
   toggleTheme() {
@@ -39,7 +48,6 @@ export class AppComponent implements OnInit {
       }
     }
   }
-
   loadTheme() {
     if (typeof window !== 'undefined') {
       const theme = localStorage.getItem('theme');
