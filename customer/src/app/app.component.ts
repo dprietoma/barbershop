@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, Component, HostListener, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './ui/shared/spinner/spinner.component';
 import { SessionStorageService } from './ui/utils/global/StorageService ';
@@ -20,9 +20,11 @@ export class AppComponent implements OnInit {
   isMenuOpen = false;
   mode: string | null = null;
   information: ModeConfig | null = null;
-  constructor(private sessionStorage: SessionStorageService) { }
+  private platformId = inject(PLATFORM_ID);
+  constructor(private sessionStorage: SessionStorageService
+  ) { }
   ngOnInit() {
-    this.sessionStorage.mode$.subscribe((mode) => {
+    this.sessionStorage.mode$.subscribe((mode: any) => {
       this.mode = mode;
       this.information = mode ? MODE_CONFIGS[mode] ?? null : null;
       this.loadTheme();
@@ -30,29 +32,27 @@ export class AppComponent implements OnInit {
   }
 
   toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
-    const body = document.body;
-    if (this.isDarkMode) {
-      this.titleTheme = "Modo Claro";
-      body.classList.add('dark-theme');
-      body.classList.remove('light-theme');
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('theme', 'dark');
-      }
-    } else {
-      this.titleTheme = "Modo Oscuro";
-      body.classList.remove('dark-theme');
-      body.classList.add('light-theme');
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('theme', 'light');
+    if (isPlatformBrowser(this.platformId)) {
+      this.isDarkMode = !this.isDarkMode;
+      const body = document.body;
+      if (this.isDarkMode) {
+        this.titleTheme = "Modo Claro";
+        body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
+        this.sessionStorage.saveType('theme', 'dark');
+      } else {
+        this.titleTheme = "Modo Oscuro";
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        this.sessionStorage.saveType('theme', 'light');
       }
     }
   }
-  loadTheme() {
-    if (typeof window !== 'undefined') {
-      const theme = localStorage.getItem('theme');
-      const body = document.body;
 
+  loadTheme() {
+    if (isPlatformBrowser(this.platformId)) {
+      const theme = this.sessionStorage.getType('theme');
+      const body = document.body;
       if (theme === 'dark') {
         this.isDarkMode = true;
         this.titleTheme = 'Modo Claro';
