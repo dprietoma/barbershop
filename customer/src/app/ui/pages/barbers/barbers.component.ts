@@ -138,45 +138,51 @@ export class BarbersComponent implements OnInit {
   formatearFechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('sv-SE');
   }
+  showHours(disponibilidad: any, day: Date, fechaStr: string) {
+    let horasDisponibles = disponibilidad?.horas ?? [];
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const diaNormalizado = new Date(day);
+    diaNormalizado.setHours(0, 0, 0, 0);
+
+    if (diaNormalizado.getTime() === hoy.getTime()) {
+      const ahora = new Date();
+      horasDisponibles = horasDisponibles.filter((hora: string) => {
+        const horaDate = this.convertirHoraATime(hora);
+        return horaDate > ahora;
+      });
+    }
+
+    this.availableService.getReservasPorDia(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
+      let horasOcupadas: string[] = [];
+      reservas.forEach(r => {
+        const duracionMinutos = parseInt(r.duracion);
+        const franjas = this.obtenerFranjasOcupadas(r.hora, duracionMinutos, horasDisponibles);
+        horasOcupadas.push(...franjas);
+      });
+
+      const horasUnicas = [...new Set(horasOcupadas)];
+      const horasFiltradas = horasDisponibles.filter((hora: string) => !horasUnicas.includes(hora));
+
+      this.horas = {
+        manana: horasFiltradas.filter((h: string) => this.esManana(h)),
+        tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
+        noche: horasFiltradas.filter((h: string) => this.esNoche(h)),
+      };
+    });
+  }
   seleccionarDia(dia: Date) {
     this.diaSeleccionado = dia;
     this.order.setFecha(this.diaSeleccionado as any);
     const fechaStr = this.formatearFechaLocal(dia);
-
     this.availableService.getHorasDisponibles(this.barberoSeleccionado.id, fechaStr).subscribe({
       next: (disponibilidad) => {
-        let horasDisponibles = disponibilidad?.horas ?? [];
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-
-        const diaNormalizado = new Date(dia);
-        diaNormalizado.setHours(0, 0, 0, 0);
-
-        if (diaNormalizado.getTime() === hoy.getTime()) {
-          const ahora = new Date();
-          horasDisponibles = horasDisponibles.filter((hora: string) => {
-            const horaDate = this.convertirHoraATime(hora);
-            return horaDate > ahora;
-          });
+        if (!disponibilidad?.disponible) {
+          this.horas = { manana: [], tarde: [], noche: [] };
+          return;
         }
-
-        this.availableService.getReservasPorDia(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
-          let horasOcupadas: string[] = [];
-          reservas.forEach(r => {
-            const duracionMinutos = parseInt(r.duracion);
-            const franjas = this.obtenerFranjasOcupadas(r.hora, duracionMinutos, horasDisponibles);
-            horasOcupadas.push(...franjas);
-          });
-
-          const horasUnicas = [...new Set(horasOcupadas)];
-          const horasFiltradas = horasDisponibles.filter((hora: string) => !horasUnicas.includes(hora));
-
-          this.horas = {
-            manana: horasFiltradas.filter((h: string) => this.esManana(h)),
-            tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
-            noche: horasFiltradas.filter((h: string) => this.esNoche(h)),
-          };
-        });
+        this.showHours(disponibilidad, dia, fechaStr);
       }
     });
   }

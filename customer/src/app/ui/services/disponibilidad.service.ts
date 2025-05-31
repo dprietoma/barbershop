@@ -18,7 +18,7 @@ export class DisponibilidadService {
         const snap = await getDoc(ref);
 
         if (!snap.exists()) {
-            return setDoc(ref, { horas });
+            return setDoc(ref, { horas, disponible: true });
         } else {
             console.log(`Ya existe disponibilidad para ${fecha}`);
             return Promise.resolve();
