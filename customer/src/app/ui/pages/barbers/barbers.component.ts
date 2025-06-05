@@ -14,11 +14,14 @@ import { SearchFilterComponent } from '../../shared/search-filter/search-filter.
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
 import { SessionStorageService } from '../../utils/global/StorageService ';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 
 @Component({
   selector: 'app-barbers',
-  imports: [CommonModule, SteppersComponent, FormsModule, SearchFilterComponent, FilterPipe],
+  imports: [CommonModule, SteppersComponent,
+    FormsModule, SearchFilterComponent, FilterPipe,
+    FooterComponent],
   templateUrl: './barbers.component.html',
   styleUrl: './barbers.component.css'
 })

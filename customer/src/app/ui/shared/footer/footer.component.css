@@ -1,0 +1,20 @@
+footer img {
+    transition: transform 0.3s ease;
+}
+
+footer img:hover {
+    transform: scale(1.1);
+}
+
+.footer-text {
+    font-family: 'Montserrat', 'sans-serif';
+    color: inherit;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    .footer-logo {
+        max-width: 120px;
+    }
+}

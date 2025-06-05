@@ -10,12 +10,13 @@ import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
 import { SessionStorageService } from '../../utils/global/StorageService ';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 @Component({
   selector: 'app-list-services',
   imports: [CommonModule, SteppersComponent,
     DetailOrderComponent, FormsModule,
-    SearchFilterComponent, FilterPipe],
+    SearchFilterComponent, FilterPipe, FooterComponent],
   templateUrl: './list-services.component.html',
   styleUrl: './list-services.component.css',
 })

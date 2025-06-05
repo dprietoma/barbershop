@@ -12,10 +12,12 @@ import { ShowAlert } from '../../utils/global/sweetalert';
 import { LoadingService } from '../../utils/global/LoadingService';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
 import { SessionStorageService } from '../../utils/global/StorageService ';
+import { FooterComponent } from '../../shared/footer/footer.component';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
-    AppointmentComponent, ReactiveFormsModule, DetailOrderComponent],
+    AppointmentComponent, ReactiveFormsModule,
+    DetailOrderComponent, FooterComponent],
   templateUrl: './confirmation.component.html',
   styleUrl: './confirmation.component.css'
 })

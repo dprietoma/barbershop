@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionStorageService } from '../../utils/global/StorageService ';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 
 @Component({
   selector: 'app-location',
   standalone: true,
-  imports: [],
+  imports: [FooterComponent],
   templateUrl: './location.component.html',
   styleUrl: './location.component.css'
 })
