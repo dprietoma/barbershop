@@ -103,11 +103,25 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" type="submit" [disabled]="formDataPeople.invalid">Enviar</button>
+                            <div class="form-check">
+                                <input class="form-check-input"  type="checkbox" formControlName="terms" >
+                                <label class="form-check-label" for="terms" role="button" data-bs-toggle="modal"
+                                    data-bs-target="#termsModal" style="text-decoration: underline; cursor: pointer;">
+                                    <strong>Aceptar términos y condiciones</strong> 
+                                </label>
+                                <div class="invalid-feedback">
+                                    You must agree before submitting.
+                                </div>
                             </div>
-
                         </div>
+
+                        <div class="col-12">
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit"
+                                    [disabled]="formDataPeople.invalid">Enviar</button>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -121,4 +135,5 @@
         </div>
     </div>
 </div>
-  <app-footer></app-footer>
+<app-footer></app-footer>
+<app-modal-terms></app-modal-terms>

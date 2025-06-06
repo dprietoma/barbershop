@@ -28,3 +28,26 @@
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
+.form-check-input {
+  width: 25px;
+  height: 25px;
+  border: 2px solid #0d6efd;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 12px; 
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.form-check-input:checked::before {
+  content: '✔';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 16px;
+}
+

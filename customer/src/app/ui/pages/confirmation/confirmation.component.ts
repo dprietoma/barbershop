@@ -13,11 +13,12 @@ import { LoadingService } from '../../utils/global/LoadingService';
 import { HistorialForzadoService } from '../../utils/global/route-history.service';
 import { SessionStorageService } from '../../utils/global/StorageService ';
 import { FooterComponent } from '../../shared/footer/footer.component';
+import { ModalTermsComponent } from '../../shared/modal-terms/modal-terms.component';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
     AppointmentComponent, ReactiveFormsModule,
-    DetailOrderComponent, FooterComponent],
+    DetailOrderComponent, FooterComponent, ModalTermsComponent],
   templateUrl: './confirmation.component.html',
   styleUrl: './confirmation.component.css'
 })
@@ -76,6 +77,7 @@ export class ConfirmationComponent implements OnInit {
           Validators.maxLength(10),
         ]
       ],
+      terms: [false, Validators.requiredTrue]
     });
 
 
