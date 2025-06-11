@@ -5,7 +5,8 @@ export class ShowAlert {
         Swal.fire({
             title: title,
             text: text,
-            icon: icon
+            icon: icon,
+            draggable: true
         });
     }
 }

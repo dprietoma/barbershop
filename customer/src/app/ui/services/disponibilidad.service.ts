@@ -9,11 +9,11 @@ import { Reserva } from '../utils/interface/reserva.interface';
 export class DisponibilidadService {
     private firestore = inject(Firestore);
 
-    getHorasDisponibles(barberoId: string, fecha: string): Observable<any> {
+    getAvailableHours(barberoId: string, fecha: string): Observable<any> {
         const ref = doc(this.firestore, `disponibilidadBarberos/${barberoId}/fechas/${fecha}`);
         return docData(ref);
     }
-    async crearDisponibilidadSiNoExiste(barberoId: string, fecha: string, horas: string[]) {
+    async createAvailabilityIfNotExists(barberoId: string, fecha: string, horas: string[]) {
         const ref = doc(this.firestore, `disponibilidadBarberos/${barberoId}/fechas/${fecha}`);
         const snap = await getDoc(ref);
 
@@ -25,7 +25,7 @@ export class DisponibilidadService {
         }
     }
 
-    getReservasPorDia(barberoId: string, fecha: string): Observable<Reserva[]> {
+    getReservationsPerDay(barberoId: string, fecha: string): Observable<Reserva[]> {
         const ref = collection(this.firestore, 'reservas')
         const q = query(ref,
             where('barberoId', '==', barberoId),

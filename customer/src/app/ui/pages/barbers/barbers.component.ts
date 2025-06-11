@@ -118,7 +118,7 @@ export class BarbersComponent implements OnInit {
       }
       this.semanaVisible.push(dia);
       const fechaStr = dia.toISOString().split('T')[0];
-      this.availableService.crearDisponibilidadSiNoExiste(barberId, fechaStr, HOURS)
+      this.availableService.createAvailabilityIfNotExists(barberId, fechaStr, HOURS)
         .then(() => console.log(`Disponibilidad creada para ${fechaStr}`))
         .catch(err => console.error(`Error creando disponibilidad:`, err));
     }
@@ -157,7 +157,7 @@ export class BarbersComponent implements OnInit {
       });
     }
 
-    this.availableService.getReservasPorDia(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
+    this.availableService.getReservationsPerDay(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
       let horasOcupadas: string[] = [];
       reservas.forEach(r => {
         const duracionMinutos = parseInt(r.duracion);
@@ -179,7 +179,7 @@ export class BarbersComponent implements OnInit {
     this.diaSeleccionado = dia;
     this.order.setFecha(this.diaSeleccionado as any);
     const fechaStr = this.formatearFechaLocal(dia);
-    this.availableService.getHorasDisponibles(this.barberoSeleccionado.id, fechaStr).subscribe({
+    this.availableService.getAvailableHours(this.barberoSeleccionado.id, fechaStr).subscribe({
       next: (disponibilidad) => {
         if (!disponibilidad?.disponible) {
           this.horas = { manana: [], tarde: [], noche: [] };

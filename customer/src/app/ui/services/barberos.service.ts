@@ -8,7 +8,7 @@ export class BarberosService {
     private firestore = inject(Firestore);
     private injector = inject(Injector);
 
-    crearBarbero(barbero: Barbero & { numDoc: string }) {
+    createBarber(barbero: Barbero & { numDoc: string }) {
         const ref = doc(this.firestore, `barberos/${barbero.numDoc}`);
         const { numDoc, ...data } = barbero;
         return setDoc(ref, data);
