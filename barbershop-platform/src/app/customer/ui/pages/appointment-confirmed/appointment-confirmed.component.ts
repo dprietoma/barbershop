@@ -24,7 +24,7 @@ export class AppointmentConfirmedComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.historial.forzarRegresoAHOME('/appointment-confirmed');
+    this.historial.forzarRegresoAHOME('/customer/appointment-confirmed');
     if (typeof window !== 'undefined') {
       const cached = sessionStorage.getItem('reserva');
       if (cached) {

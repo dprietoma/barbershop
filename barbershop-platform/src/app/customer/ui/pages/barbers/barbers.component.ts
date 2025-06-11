@@ -54,7 +54,7 @@ export class BarbersComponent implements OnInit {
 
   ngOnInit() {
     this.mode = this.sessionStorage.getType('mode');
-    this.historial.forzarRegresoAHOME('/barbers');
+    this.historial.forzarRegresoAHOME('/customer/barbers');
     this.getBarber();
     this.diaSeleccionado = new Date();
     const barbero = this.order.barberoSeleccionado();
@@ -91,7 +91,7 @@ export class BarbersComponent implements OnInit {
 
   selectDate(hora: string) {
     this.order.setHora(hora);
-    this.router.navigate(['/confirmation'])
+    this.router.navigate(['/customer/confirmation']);
   }
   mostrarRetroceder(): boolean {
     const hoy = new Date();

@@ -25,7 +25,6 @@ export class DetailOrderComponent {
   }
 
   navigateToBarbers() {
-
-    this.router.navigate(['/barbers']);
+    this.router.navigate(['/customer/barbers']);
   }
 }

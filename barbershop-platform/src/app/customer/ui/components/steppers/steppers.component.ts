@@ -13,11 +13,11 @@ export class SteppersComponent {
   @Output() stepClicked = new EventEmitter<string>();
   constructor(private router: Router) { }
   steps = [
-    { icon: 'bi-scissors', title: 'Selección del servicio', path: '/list-services' },
-    { icon: 'bi-person-badge', title: 'Selección del barbero', path: '/barbers' },
-    { icon: 'bi-calendar-event ', title: 'Selección de fecha y hora', path: '/barbers' },
-    { icon: 'bi-check2-circle', title: 'Confirmación de la cita', path: '/confirmation' },
-    { icon: 'bi bi-house-fill', title: 'Cita agendada con éxito', path: '/appointment-confirmed' }
+    { icon: 'bi-scissors', title: 'Selección del servicio', path: '/customer/list-services' },
+    { icon: 'bi-person-badge', title: 'Selección del barbero', path: '/customer/barbers' },
+    { icon: 'bi-calendar-event ', title: 'Selección de fecha y hora', path: '/customer/barbers' },
+    { icon: 'bi-check2-circle', title: 'Confirmación de la cita', path: '/customer/confirmation' },
+    { icon: 'bi bi-house-fill', title: 'Cita agendada con éxito', path: '/customer/appointment-confirmed' }
   ];
   onStepClick(index: number) {
     if (this.router.url === '/appointment-confirmed') return;

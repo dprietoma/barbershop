@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
       window.history.pushState({}, '', '/_flush');
-      window.history.replaceState({}, 'Home', '/home');
+      window.history.replaceState({}, 'Home', '/customer/home');
     }
 
   }

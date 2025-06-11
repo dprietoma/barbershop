@@ -22,6 +22,6 @@ export class LocationComponent {
   }
   navigateToHome(type: string) {
     this.sessionStorage.saveType('mode', type);
-    this.router.navigate(['/home']);
+    this.router.navigate(['/customer/home']);
   }
 }

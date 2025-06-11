@@ -79,7 +79,7 @@ export class ListServicesComponent implements OnInit {
   filtroTexto = '';
   constructor(private historial: HistorialForzadoService) { }
   ngOnInit(): void {
-    this.historial.forzarRegresoAHOME('/list-services');
+    this.historial.forzarRegresoAHOME('/customer/list-services');
   }
   get quantityResults(): number {
     return this.filterPipe.transform(this.servicios, 'nombre', this.filtroTexto).length;

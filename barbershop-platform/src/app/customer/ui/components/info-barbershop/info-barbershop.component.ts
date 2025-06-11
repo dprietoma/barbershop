@@ -14,12 +14,12 @@ import { MODE_CONFIGS, ModeConfig } from '../../../../utils/interface/barberia-i
 export class InfoBarbershopComponent implements OnInit {
   mode: string | null = null;
   information: ModeConfig | null = null;
-  constructor(private route: Router, private sessionStorage: SessionStorageService) {}
+  constructor(private router: Router, private sessionStorage: SessionStorageService) {}
   ngOnInit(): void {
     this.mode = this.sessionStorage.getType('mode');
     this.information = this.mode ? MODE_CONFIGS[this.mode] ?? null : null;
   }
   navigateToServices() {
-    this.route.navigate(['/list-services']);
+    this.router.navigate(['/customer/list-services']);
   }
 }

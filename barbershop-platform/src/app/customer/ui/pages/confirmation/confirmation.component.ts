@@ -41,7 +41,7 @@ export class ConfirmationComponent implements OnInit {
     private sessionStorage: SessionStorageService) {
   }
   ngOnInit(): void {
-    this.historial.forzarRegresoAHOME('/confirmation');
+    this.historial.forzarRegresoAHOME('/customer/confirmation');
     this.formDataPeople = this.fb.group({
       name: [
         '',
@@ -147,6 +147,6 @@ export class ConfirmationComponent implements OnInit {
   navigate() {
     const data = this.information();
     sessionStorage.setItem('reserva', JSON.stringify(data));
-    this.route.navigate(['/appointment-confirmed']);
+    this.route.navigate(['/customer/appointment-confirmed']); 
   }
 }
