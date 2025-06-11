@@ -3,17 +3,17 @@ import { Component, OnInit } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
-import { OrderStateService } from '../../utils/global/order-state.service';
+import { OrderStateService } from '../../../../utils/global/order-state.service';
 import { AppointmentComponent } from '../../components/appointment/appointment.component';
 import { Router } from '@angular/router';
-import { Reserva } from '../../utils/interface/reserva.interface';
-import { ReservasService } from '../../services/ReservasService';
-import { ShowAlert } from '../../utils/global/sweetalert';
-import { LoadingService } from '../../utils/global/LoadingService';
-import { HistorialForzadoService } from '../../utils/global/route-history.service';
-import { SessionStorageService } from '../../utils/global/StorageService ';
-import { FooterComponent } from '../../shared/footer/footer.component';
-import { ModalTermsComponent } from '../../shared/modal-terms/modal-terms.component';
+import { FooterComponent } from '../../../../shared/footer/footer.component';
+import { LoadingService } from '../../../../utils/global/LoadingService';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { ModalTermsComponent } from '../../../../shared/modal-terms/modal-terms.component';
+import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
+import { ReservasService } from '../../../../services/ReservasService';
+import { Reserva } from '../../../../utils/interface/reserva.interface';
+import { ShowAlert } from '../../../../utils/global/sweetalert';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,

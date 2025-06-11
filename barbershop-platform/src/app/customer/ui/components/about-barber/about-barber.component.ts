@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionStorageService } from '../../utils/global/StorageService ';
-import { MODE_CONFIGS, ModeConfig } from '../../utils/interface/barberia-interface';
+import { MODE_CONFIGS, ModeConfig } from '../../../../utils/interface/barberia-interface';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+
 
 @Component({
   selector: 'app-about-barber',

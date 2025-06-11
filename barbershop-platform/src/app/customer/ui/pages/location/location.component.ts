@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { SessionStorageService } from '../../utils/global/StorageService ';
-import { FooterComponent } from '../../shared/footer/footer.component';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import {FooterComponent} from '../../../../shared/footer/footer.component';
 
 
 @Component({

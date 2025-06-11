@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentComponent } from '../appointment/appointment.component';
-import { OrderStateService } from '../../utils/global/order-state.service';
+import { OrderStateService } from '../../../../utils/global/order-state.service';
 
 
 @Component({

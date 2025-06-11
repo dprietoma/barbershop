@@ -1,11 +1,11 @@
-import { CommonModule, PlatformLocation } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
-import { NavigationStart, Router } from '@angular/router';
-import { Reserva } from '../../utils/interface/reserva.interface';
-import { filter, Subscription } from 'rxjs';
-import { OrderStateService } from '../../utils/global/order-state.service';
-import { HistorialForzadoService } from '../../utils/global/route-history.service';
+import { Router } from '@angular/router';
+import { Reserva } from '../../../../utils/interface/reserva.interface';
+import { OrderStateService } from '../../../../utils/global/order-state.service';
+import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
+
 
 
 @Component({

@@ -5,12 +5,12 @@ import { SteppersComponent } from '../../components/steppers/steppers.component'
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
 
 import { FormsModule } from '@angular/forms';
-import { OrderStateService } from '../../utils/global/order-state.service';
-import { FilterPipe } from '../../utils/pipes/filter.pipe';
-import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
-import { HistorialForzadoService } from '../../utils/global/route-history.service';
-import { SessionStorageService } from '../../utils/global/StorageService ';
-import { FooterComponent } from '../../shared/footer/footer.component';
+import { OrderStateService } from '../../../../utils/global/order-state.service';
+import { FilterPipe } from '../../../../utils/pipes/filter.pipe';
+import { SearchFilterComponent } from '../../../../shared/search-filter/search-filter.component';
+import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { FooterComponent } from '../../../../shared/footer/footer.component';
 
 @Component({
   selector: 'app-list-services',

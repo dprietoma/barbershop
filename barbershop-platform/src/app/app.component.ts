@@ -1,11 +1,9 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, HostListener, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { SpinnerComponent } from './ui/shared/spinner/spinner.component';
-import { SessionStorageService } from './ui/utils/global/StorageService ';
-import { AMATE, CRISTIANJBARBER } from './ui/utils/constants/General-Constants';
-import { MODE_CONFIGS, ModeConfig } from './ui/utils/interface/barberia-interface';
-
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { SpinnerComponent } from './shared/spinner/spinner.component';
+import { SessionStorageService } from './utils/global/StorageService ';
+import { MODE_CONFIGS, ModeConfig } from './utils/interface/barberia-interface';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SessionStorageService } from '../../utils/global/StorageService ';
-import { MODE_CONFIGS, ModeConfig } from '../../utils/interface/barberia-interface';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { MODE_CONFIGS, ModeConfig } from '../../../../utils/interface/barberia-interface';
 
 
 @Component({

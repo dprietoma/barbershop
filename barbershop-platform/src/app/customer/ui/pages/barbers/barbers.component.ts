@@ -2,19 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { Router } from '@angular/router';
-import { DisponibilidadService } from '../../services/disponibilidad.service';
-import { HorasDisponibles } from '../../utils/interface/availableHours-interface';
-import { HOURS } from '../../utils/constants/horasDefault';
-import { BarberosService } from '../../services/barberos.service';
-import { Barbero } from '../../utils/interface/barbero-interface';
+import { DisponibilidadService } from '../../../../services/disponibilidad.service';
+import { HorasDisponibles } from '../../../../utils/interface/availableHours-interface';
+import { HOURS } from '../../../../utils/constants/horasDefault';
+import { BarberosService } from '../../../../services/barberos.service';
+import { Barbero } from '../../../../utils/interface/barbero-interface';
 import { FormsModule } from '@angular/forms';
-import { OrderStateService } from '../../utils/global/order-state.service';
-import { LoadingService } from '../../utils/global/LoadingService';
-import { SearchFilterComponent } from '../../shared/search-filter/search-filter.component';
-import { FilterPipe } from '../../utils/pipes/filter.pipe';
-import { HistorialForzadoService } from '../../utils/global/route-history.service';
-import { SessionStorageService } from '../../utils/global/StorageService ';
-import { FooterComponent } from '../../shared/footer/footer.component';
+import { OrderStateService } from '../../../../utils/global/order-state.service';
+import { LoadingService } from '../../../../utils/global/LoadingService';
+import { SearchFilterComponent } from '../../../../shared/search-filter/search-filter.component';
+import { FilterPipe } from '../../../../utils/pipes/filter.pipe';
+import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { FooterComponent } from '../../../../shared/footer/footer.component';
 
 
 @Component({
