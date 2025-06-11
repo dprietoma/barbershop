@@ -7,10 +7,12 @@ import { ConfirmationComponent } from "./ui/pages/confirmation/confirmation.comp
 import { AppointmentConfirmedComponent } from "./ui/pages/appointment-confirmed/appointment-confirmed.component";
 
 export const customerRoutes: Routes = [
-    { path: '', component: LocationComponent },
-    { path: 'home', component: HomeComponent },
-    { path: 'list-services', component: ListServicesComponent },
-    { path: 'barbers', component: BarbersComponent },
-    { path: 'confirmation', component: ConfirmationComponent },
-    { path: 'appointment-confirmed', component: AppointmentConfirmedComponent },
+  { path: '', redirectTo: 'location', pathMatch: 'full' },
+  { path: 'location', component: LocationComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'list-services', component: ListServicesComponent },
+  { path: 'barbers', component: BarbersComponent },
+  { path: 'confirmation', component: ConfirmationComponent },
+  { path: 'appointment-confirmed', component: AppointmentConfirmedComponent },
+  { path: '**', redirectTo: 'location' }
 ];

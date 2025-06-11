@@ -13,11 +13,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'customer',
+        redirectTo: 'customer/location',
         pathMatch: 'full',
     },
-    {
-        path: '**',
-        redirectTo: 'customer',
-    }
 ];

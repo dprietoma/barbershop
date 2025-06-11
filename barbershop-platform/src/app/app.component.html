@@ -7,7 +7,7 @@
         </button>
         <div [ngClass]="{'collapse navbar-collapse': true, 'show': isMenuOpen}" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item" style="margin-left: 20px;">
+                <!-- <li class="nav-item" style="margin-left: 20px;">
                     <a class="nav-link d-flex align-items-center gap-2" (click)="toggleTheme()">
                         @if (isDarkMode) {
                         <i class="bi bi-moon-stars-fill fs-3"></i>
@@ -17,7 +17,34 @@
                         <span style="font-family: Nunito-Sans;"><strong>{{titleTheme}} </strong></span>
                         }
                     </a>
-                </li>
+                </li> -->
+                <div class="d-flex align-items-center">
+
+                    <li class="nav-item" style="margin-left: 20px;">
+                        <button type="button" class="btn btn-light d-flex align-items-center gap-2"
+                            style="border-radius: 999px; padding: 8px 12px;" (click)="toggleTheme()">
+                            @if (isDarkMode) {
+                            <i class="bi bi-moon-stars-fill fs-3"></i>
+                            <span class="d-none d-md-inline" style="font-family: Nunito-Sans;">
+                                <strong>{{ titleTheme }}</strong>
+                            </span>
+                            } @else {
+                            <i class="bi bi-brightness-high-fill fs-3"></i>
+                            <span class="d-none d-md-inline" style="font-family: Nunito-Sans;">
+                                <strong>{{ titleTheme }}</strong>
+                            </span>
+                            }
+                        </button>
+                    </li>
+                    <li class="nav-item" style="margin-left: 20px;">
+                        <button type="button" class="btn btn-success d-flex align-items-center gap-2"
+                            style="border-radius: 999px; padding: 8px 12px;" (click)="goToLogin()">
+                            <i class="bi bi-person-circle fs-4"></i>
+                            <span class="d-none d-md-inline" style="font-family: Nunito-Sans;"><strong>Iniciar
+                                    Sesión</strong></span>
+                        </button>
+                    </li>
+                </div>
             </ul>
         </div>
     </div>

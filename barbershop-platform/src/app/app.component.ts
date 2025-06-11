@@ -1,6 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { SessionStorageService } from './utils/global/StorageService ';
 import { MODE_CONFIGS, ModeConfig } from './utils/interface/barberia-interface';
@@ -19,7 +19,8 @@ export class AppComponent implements OnInit {
   mode: string | null = null;
   information: ModeConfig | null = null;
   private platformId = inject(PLATFORM_ID);
-  constructor(private sessionStorage: SessionStorageService
+  constructor(private sessionStorage: SessionStorageService,
+    private router: Router
   ) { }
   ngOnInit() {
     this.sessionStorage.mode$.subscribe((mode: any) => {
@@ -46,7 +47,9 @@ export class AppComponent implements OnInit {
       }
     }
   }
-
+  goToLogin() {
+    this.router.navigate(['/admin/login']);
+  }
   loadTheme() {
     if (isPlatformBrowser(this.platformId)) {
       const theme = this.sessionStorage.getType('theme');
