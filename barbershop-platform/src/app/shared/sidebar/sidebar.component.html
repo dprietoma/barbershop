@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg navbar-dark "
+    [ngClass]="isDarkMode ? 'bg-dark navbar-dark' : (information?.color || 'bg-dark')">
+    <div class="container-fluid px-3">
+        <a class="navbar-brand typeLetterNav">{{ information?.tittle || 'Cristian J Barber Shop' }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-none d-lg-block" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item d-flex align-items-center" style="margin-left: 20px;">
+                    <app-nav-buttons [isDarkMode]="isDarkMode" [information]="information" (login)="goToLogin()"
+                        (themeToggle)="toggleTheme()" [isInNavbar]="true">
+                    </app-nav-buttons>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="offcanvas offcanvas-start offcanvas-custom"
+    [ngClass]="isDarkMode ? 'bg-dark text-white' : 'bg-light text-dark'"
+    tabindex="-1" id="offcanvasNavbar">
+    
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold text-primary">Menú principal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <!-- Sección Legal -->
+        <div class="menu-section">
+            <div class="menu-title">Legal</div>
+            <a href="#seccion1" class="menu-item"><i class="bi bi-file-earmark-text"></i>Términos y condiciones de uso</a>
+            <a href="#seccion2" class="menu-item"><i class="bi bi-people"></i>Naturaleza de la relación</a>
+            <a href="#seccion5" class="menu-item"><i class="bi bi-x-circle"></i>Terminación unilateral</a>
+            <a href="#seccion7" class="menu-item"><i class="bi bi-shield-lock"></i>Cláusula de confidencialidad</a>
+            <a href="#seccion9" class="menu-item"><i class="bi bi-envelope-open"></i>Aviso de confidencialidad</a>
+        </div>
+
+        <!-- Sección Configuración -->
+        <div class="menu-section">
+            <div class="menu-title">Configuración</div>
+            <a href="#" class="menu-item" (click)="toggleTheme()">
+                <i [ngClass]="isDarkMode ? 'bi bi-brightness-high-fill' : 'bi bi-moon-stars-fill'"></i>
+                Cambiar tema
+            </a>
+            <a href="#" class="menu-item" (click)="goToLogin()">
+                <i class="bi bi-person-circle"></i>
+                Iniciar sesión
+            </a>
+        </div>
+    </div>
+</div>

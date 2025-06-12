@@ -1,37 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark "
-    [ngClass]="isDarkMode ? 'bg-dark' : (information?.color || 'bg-dark')">
-    <div class="container-fluid">
-        <a class="navbar-brand typeLetterNav">{{information?.tittle || 'Cristian J Barber Shop'}} </a>
-        <button class="navbar-toggler" (click)="isMenuOpen = !isMenuOpen">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div [ngClass]="{'collapse navbar-collapse': true, 'show': isMenuOpen}" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item d-flex align-items-center" style="margin-left: 20px;">
-                    <button type="button" class="btn btn-light d-flex align-items-center gap-2" [ngClass]="{'btn-light': isDarkMode,
-                     'btn-outline-light': !isDarkMode && !information?.color,
-                    'btn-dark': !isDarkMode && information?.color}" style="border-radius: 999px; padding: 8px 12px;"
-                        (click)="toggleTheme()">
-                        @if (isDarkMode) {
-                        <i class="bi bi-brightness-high-fill fs-3"></i>
-                        } @else {
-                        <i class="bi bi-moon-stars-fill fs-3"></i>
-                        }
-                    </button>
-                    <button type="button" class="btn d-flex align-items-center gap-2 ms-2"
-                        [ngClass]="{ 'btn-outline-light': isDarkMode, 'btn-light': !isDarkMode }"
-                        style="border-radius: 999px; padding: 8px 12px;" (click)="goToLogin()">
-                        <i class="bi bi-person-circle fs-4"></i>
-                        <span  style="font-family: Nunito-Sans;">
-                            <strong>Iniciar Sesión</strong>
-                        </span>
-                    </button>
-                </li>
 
-            </ul>
-        </div>
-    </div>
-</nav>
-
+<app-sidebar></app-sidebar>
 <app-spinner></app-spinner>
 <router-outlet></router-outlet>
