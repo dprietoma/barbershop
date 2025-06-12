@@ -20,7 +20,7 @@ export class SteppersComponent {
     { icon: 'bi bi-house-fill', title: 'Cita agendada con éxito', path: '/customer/appointment-confirmed' }
   ];
   onStepClick(index: number) {
-    if (this.router.url === '/appointment-confirmed') return;
+    if (this.router.url === '/customer/appointment-confirmed') return;
     const step = this.steps[index];
     if (index < this.currentStep) {
       this.router.navigateByUrl(step.path);

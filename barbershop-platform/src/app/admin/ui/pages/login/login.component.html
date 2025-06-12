@@ -1,1 +1,52 @@
-<p>login works!</p>
+<div class=" mt-4 py-5 d-flex justify-content-center align-items-center  p-3">
+    <div class="login-card shadow rounded-4 w-100" style="max-width: 420px; padding: 2rem 1.5rem;">
+        <ng-container *ngIf="!codeSent; else otpSection">
+            <h2 class="text-center fw-bold">Inicia Sesión</h2>
+            <p class="text-center fw-semibold mt-3 mb-1">Ingresa tu número de celular</p>
+            <p class="text-center text-uppercase small">Te enviaremos un código de confirmación</p>
+            <form [formGroup]="formLogin" (ngSubmit)="sendCode()" class="row g-3">
+
+                <div class="input-group my-4 shadow-sm rounded-pill t px-3">
+                    <span class="input-group-text border-0 bg-transparent">
+                        <i class="bi bi-telephone-fill text-warning fs-5"></i>
+                    </span>
+                    <input formControlName="phone" class="form-control border-0 bg-transparent"
+                        placeholder="Número de teléfono" [ngClass]="{
+                            'is-valid': formLogin.get('phone')?.valid && 
+                            formLogin.get('phone')?.touched,
+                            'is-invalid': formLogin.get('phone')?.invalid && 
+                            formLogin.get('phone')?.touched
+                            }" />
+                    <div class="invalid-feedback">
+                       <strong> El número es obligatorio, debe tener 10 dígitos y comenzar con 1.</strong>
+                    </div>
+                </div>
+
+                <button type="submit" [disabled]="formLogin.invalid"
+                    class="btn btn-success w-100 py-2 rounded-pill text-white fw-bold">
+                    Iniciar Sesión
+                </button>
+            </form>
+        </ng-container>
+        <ng-template #otpSection>
+            <h2 class="text-center fw-bold">Inicia Sesión</h2>
+            <p class="text-center fw-semibold mt-3 mb-1">Ingresa el código único que enviamos</p>
+            <p class="text-center text-uppercase small mb-4">
+                A tu número celular <span class="text-success fw-bold">{{ phoneNumber }}</span>
+            </p>
+
+            <div class="d-flex justify-content-center gap-2 mb-4">
+                <input *ngFor="let digit of otpDigits; let i = index" #inputRef
+                    class="form-control text-center rounded-circle border border-2 border-secondary" type="text"
+                    maxlength="1" style="width: 50px; height: 50px; font-size: 1.5rem;" [value]="code[i]"
+                    (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)" placeholder="0" />
+            </div>
+
+            <p class="text-center small">
+                ¿No recibiste el código? <a href="#" class="text-success fw-semibold">Reenviar código</a>
+            </p>
+        </ng-template>
+        <div id="recaptcha-container"></div>
+    </div>
+</div>
+<app-footer></app-footer>
