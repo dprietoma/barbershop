@@ -1,9 +1,36 @@
-<div class="carousel-wrapper" >
-  <div class="carousel" [style.transform]="'rotateY(' + angle + 'deg)'">
-    <div *ngFor="let image of images; let i = index" 
-         class="carousel__face" 
-         [style.transform]="'rotateY(' + (i * rotationAngle) + 'deg) translateZ(300px)'">
-      <img [src]="image" alt="carousel item" loading="lazy">
+<div class="story-container">
+  <div class="story-header mt-2">
+    <div class="story-user">
+      <img class="avatar"
+        [src]="'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logo.png?alt=media&token=684c6309-e318-40dd-8159-efba13a0d21b'"
+        alt="Avatar" />
+      <span class="username"><strong>CRISTIANJBARBER</strong></span>
+      <i class="bi bi-patch-check-fill text-primary fs-4"></i>
     </div>
   </div>
+  <div class="progress-bar-container">
+    <div *ngFor="let story of storyUrls; let i = index" class="progress-bar">
+      <div class="progress" [class.active]="i === currentIndex"
+        [style.width.%]="i < currentIndex ? 100 : (i === currentIndex ? progress : 0)">
+      </div>
+    </div>
+  </div>
+  <div class="story-image">
+    <div class="mute-toggle" *ngIf="isVideo(currentIndex)" (click)="toggleMute()">
+      <i [ngClass]="isMuted ? 'bi bi-volume-mute-fill' : 'bi bi-volume-up-fill'"></i>
+    </div>
+    <ng-container *ngIf="storyUrls.length">
+      <ng-container *ngIf="isVideo(currentIndex); else imageBlock">
+        <video #videoPlayer class="story-content" autoplay [muted]="isMuted" playsinline
+          (loadedmetadata)="onVideoLoaded(videoPlayer)" [class.show]="contentReady" *ngIf="showVideo">
+          <source [src]="storyUrls[currentIndex].url" type="video/mp4" />
+        </video>
+      </ng-container>
+      <ng-template #imageBlock>
+        <img [src]="storyUrls[currentIndex].url" [class.show]="contentReady" alt="story" class="story-content" />
+      </ng-template>
+    </ng-container>
+  </div>
+  <div class="story-nav left" (click)="prevStory()"></div>
+  <div class="story-nav right" (click)="nextStory()"></div>
 </div>

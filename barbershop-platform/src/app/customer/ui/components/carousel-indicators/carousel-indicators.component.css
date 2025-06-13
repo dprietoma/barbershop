@@ -1,77 +1,145 @@
-.carousel-wrapper {
-  perspective: 1000px;
-  width: 400px;
-  height: 300px;
-  margin: 100px auto;
+.story-container {
   position: relative;
-
-}
-
-.carousel {
   width: 100%;
-  height: 100%;
-  position: absolute;
-  transform-style: preserve-3d;
-  animation: spin 20s infinite linear;
-}
-
-.carousel__face {
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  backface-visibility: hidden;
+  max-width: 420px;
+  /* Controla tamaño máximo en escritorio */
+  height: calc(100dvh - 260px);
+  /* Llena casi toda la pantalla, incluso móviles */
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 10%;
-  left: 10%;
 }
 
-/* Coloca 6 caras distribuidas uniformemente en el eje Y */
-.carousel__face:nth-child(1) { transform: rotateY(  0deg) translateZ(300px); }
-.carousel__face:nth-child(2) { transform: rotateY( 60deg) translateZ(300px); }
-.carousel__face:nth-child(3) { transform: rotateY(120deg) translateZ(300px); }
-.carousel__face:nth-child(4) { transform: rotateY(180deg) translateZ(300px); }
-.carousel__face:nth-child(5) { transform: rotateY(240deg) translateZ(300px); }
-.carousel__face:nth-child(6) { transform: rotateY(300deg) translateZ(300px); }
+.story-image {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 
-.carousel__face img {
+.story-image img,
+.story-image video,
+.story-content {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 16px;
+  /* O usa 'contain' si prefieres ver todo */
+  display: block;
 }
 
-@keyframes spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(-360deg);
+.progress-bar-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.progress-bar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.3);
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress {
+  background: white;
+  height: 100%;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.story-nav {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.story-nav.left {
+  left: 0;
+}
+
+.story-nav.right {
+  right: 0;
+}
+
+@media (max-width: 576px) {
+  .story-container {
+    max-width: 100%;
+    border-radius: 0;
+    height: 100dvh;
   }
 }
 
-/* Responsive para móviles */
-@media (max-width: 768px) {
-  .carousel-wrapper {
-    width: 340px;
-    height: 230px;
-    overflow: hidden;
-  }
+.story-header {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+}
 
-  .carousel__face {
-    width: 70%;
-    height: 70%;
-    top: 15%;
-    left: 15%;
-  }
+.story-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .carousel__face:nth-child(n) {
-    transform: none; /* Override if needed, or scale Z accordingly */
-  }
+.story-user .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ff0066;
+  object-fit: cover;
+}
 
-  .carousel__face img {
-    width: 100%;
-    height: 100%;
-  }
+.story-user .username {
+  font-size: 17px;
+  font-weight: bold;
+
+}
+
+.story-user .verified {
+  width: 18px;
+  height: 18px;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+}
+
+.mute-toggle {
+  position: absolute;
+   bottom: 1%;
+  right: 20px;
+  font-size: 28px;
+  color: white;
+  z-index: 5;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

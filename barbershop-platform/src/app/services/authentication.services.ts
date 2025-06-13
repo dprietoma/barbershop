@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, User } from 'firebase/auth';
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, User, getAuth } from 'firebase/auth';
 import { auth } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    private auth = auth;
+    private auth = getAuth();
     private confirmationResult!: ConfirmationResult;
     private recaptchaVerifier: RecaptchaVerifier | null = null;
 

@@ -31,12 +31,9 @@ export class LoginComponent implements OnInit {
     })
   }
   sendCode() {
-    debugger;
     this.loadingService.show();
-
     const containerId = 'recaptcha-container';
     const container = document.getElementById(containerId);
-
     if (!container) {
       console.error(`No se encontró el contenedor con id #${containerId}`);
       this.loadingService.hide();
