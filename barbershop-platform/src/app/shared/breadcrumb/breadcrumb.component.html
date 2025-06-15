@@ -1,0 +1,20 @@
+<!-- breadcrumb.component.html -->
+<div class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb custom-breadcrumb">
+      <li 
+        *ngFor="let breadcrumb of breadcrumbs; let isLast = last"
+        class="breadcrumb-item"
+        [class.active]="isLast" 
+        [attr.aria-current]="isLast ? 'page' : null"
+      >
+        <ng-container *ngIf="!isLast">
+          <a [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
+        </ng-container>
+        <ng-container *ngIf="isLast">
+          {{ breadcrumb.label }}
+        </ng-container>
+      </li>
+    </ol>
+  </nav>
+</div>
