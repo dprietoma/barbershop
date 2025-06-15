@@ -1,5 +1,4 @@
-<div *ngIf="isInNavbar; else offcanvasButtons"
-    class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-3">
+<div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-3">
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item dropdown">
             <button type="button" class="btn d-flex align-items-center gap-2 custom-Buttons-Nav" [ngClass]="{
@@ -20,45 +19,16 @@
                         Cambiar tema
                     </a>
                 </li>
+                
                 <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2" (click)="login.emit()">
+                    <a class="dropdown-item d-flex align-items-center gap-2"
+                        (click)="user?.uid ? logout() : login.emit()">
                         <i class="bi bi-person-circle fs-4"></i>
-                        Iniciar sesión
+                        {{ user?.uid ? 'Cerrar sesión' : 'Iniciar sesión' }}
                     </a>
                 </li>
+
             </ul>
         </li>
     </ul>
 </div>
-
-<ng-template #offcanvasButtons>
-    <div class="d-flex justify-content-center">
-        <div class="dropdown">
-            <button type="button" class="btn d-flex align-items-center gap-2 custom-Buttons-Nav" [ngClass]="{
-                'btn-light': isDarkMode,
-                'btn-outline-light': !isDarkMode && !information?.color,
-                'btn-dark': !isDarkMode && information?.color
-              }" id="offcanvasSettingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-gear fs-5"></i>
-                <span class="fw-bold">Settings</span>
-                <i class="bi bi-caret-down-fill fs-6"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow mt-2"
-                aria-labelledby="offcanvasSettingsDropdown">
-                <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2" (click)="themeToggle.emit()">
-                        <i
-                            [ngClass]="isDarkMode ? 'bi bi-brightness-high-fill fs-5' : 'bi bi-moon-stars-fill fs-5'"></i>
-                        Cambiar tema
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2" (click)="login.emit()">
-                        <i class="bi bi-person-circle fs-5"></i>
-                        Iniciar sesión
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</ng-template>

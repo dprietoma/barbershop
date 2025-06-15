@@ -18,3 +18,4 @@ export const CRISTIANJBARBER = {
     USUARIO: ' Cristian J Barber',
     COMENTARIO: 'Es un establecimiento especializado en el cuidado y estilo del cabello y la barba de los hombres. Es un lugar tradicionalmente diseñado para ofrecer servicios de cortes de cabello, afeitados, arreglos de barba, y otros tratamientos relacionados con el cuidado personal masculino.'
 }
+export const INTERNALCODE = 'XXXX01';

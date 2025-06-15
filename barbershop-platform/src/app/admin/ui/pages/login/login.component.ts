@@ -4,6 +4,11 @@ import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../../../../services/authentication.services';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { LoadingService } from '../../../../utils/global/LoadingService';
+import { ErrorAuth } from '../../../../utils/global/error-auth';
+import { Router } from '@angular/router';
+import { Users } from '../../../../utils/interface/users-interface';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+
 
 @Component({
   selector: 'app-login',
@@ -18,11 +23,16 @@ export class LoginComponent implements OnInit {
   code: string[] = ['', '', '', '', '', ''];
   otpDigits = Array(6).fill(0);
   formLogin: FormGroup;
+  errorMessage: string = '';
+  private errorHandler = new ErrorAuth();
+  alertType: 'success' | 'danger' | 'warning' | 'info' | '' = '';
   @ViewChildren('inputRef') inputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   constructor(private authService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private router: Router,
+    private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
     this.formLogin = this.formBuilder.group({
@@ -30,12 +40,15 @@ export class LoginComponent implements OnInit {
       Validators.maxLength(10), Validators.pattern(/^3\d{9}$/),]]
     })
   }
-  sendCode() {
+  sendCode(fromOtp: boolean = false) {
+    this.errorMessage = '';
     this.loadingService.show();
     const containerId = 'recaptcha-container';
     const container = document.getElementById(containerId);
+
     if (!container) {
-      console.error(`No se encontró el contenedor con id #${containerId}`);
+      const friendly = this.errorHandler.notFoundCAPTCHA();
+      this.showAlert(friendly.message, friendly.type);
       this.loadingService.hide();
       return;
     }
@@ -43,34 +56,49 @@ export class LoginComponent implements OnInit {
     try {
       const verifier = this.authService.initializeRecaptcha(containerId);
       this.phoneNumber = `+57${this.formLogin.controls['phone'].value}`;
-
       this.authService.sendCode(this.phoneNumber, verifier)
         .then(() => {
-          this.codeSent = true;
+          if (!fromOtp) this.codeSent = true;
           setTimeout(() => this.inputs.get(0)?.nativeElement.focus(), 100);
         })
-        .catch(err => {
-          console.error('Error al enviar código:', err);
-          alert('Error: ' + err.message);
+        .catch((err: any) => {
+          const friendly = this.errorHandler.AuthError(err);
+          this.showAlert(friendly.message, friendly.type);
         })
         .finally(() => {
           this.loadingService.hide();
         });
 
-    } catch (err) {
-      console.error('Error al inicializar reCAPTCHA:', err);
+    } catch (err: any) {
+      const friendly = this.errorHandler.unexpectedError();
+      this.showAlert(friendly.message, friendly.type);
       this.loadingService.hide();
     }
   }
 
 
-
   verifyCode() {
+    this.loadingService.show();
+    this.errorMessage = '';
     const fullCode = this.code.join('');
     this.authService.verifyCode(fullCode)
-      .then(user => alert('Login exitoso: ' + user.phoneNumber))
-      .catch(err => alert('Código incorrecto'));
+      .then(user => {
+        if (user) {
+          this.authService.getOrCreateUser(user).then((userData: Users) => {
+            this.sessionStorage.saveType('user', JSON.stringify(userData));
+            this.router.navigate(['/admin/dashboard']);
+          });
+        }
+      })
+      .catch(err => {
+        const friendly = this.errorHandler.AuthError(err);
+        this.showAlert(friendly.message, friendly.type);
+      }).finally(() => {
+        this.loadingService.hide();
+      })
   }
+
+
   isInputEnabled(index: number): boolean {
     if (index === 0) return true;
     return this.code[index - 1] !== '';
@@ -106,5 +134,13 @@ export class LoginComponent implements OnInit {
         this.code[index] = '';
       }
     }
+  }
+  showAlert(message: string, type: 'success' | 'danger' | 'warning' | 'info') {
+    this.errorMessage = message;
+    this.alertType = type;
+    setTimeout(() => {
+      this.errorMessage = '';
+      this.alertType = '';
+    }, 5000);
   }
 }

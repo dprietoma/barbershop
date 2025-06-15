@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Users } from '../interface/users-interface';
+import { AuthenticationService } from '../../services/authentication.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-buttons',
@@ -12,5 +15,16 @@ export class NavButtonsComponent {
   @Input() information!: any;
   @Output() themeToggle = new EventEmitter<void>();
   @Output() login = new EventEmitter<void>();
-  @Input() isInNavbar = false
+  @Input() isInNavbar = false;
+  @Input() user!: Users | null;
+  constructor(private authService: AuthenticationService,
+    private router: Router
+  ) { }
+
+
+  logout() {
+    this.authService.logout().then(() => {
+      this.router.navigate(['/customer/location']);
+    });
+  }
 }

@@ -7,7 +7,7 @@ export interface ModeConfig {
     instagram: string;
     celular: number;
     comentario: string;
-    usuario: string
+    usuario: string,
 
 }
 export const MODE_CONFIGS: { [key: string]: ModeConfig } = {

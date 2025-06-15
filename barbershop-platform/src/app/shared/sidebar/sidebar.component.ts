@@ -2,24 +2,31 @@ import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MODE_CONFIGS, ModeConfig } from '../../utils/interface/barberia-interface';
 import { SessionStorageService } from '../../utils/global/StorageService ';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NavButtonsComponent } from '../../utils/nav-buttons/nav-buttons.component';
-
+import { MENU_BY_ROLE } from '../../utils/constants/menu-config';
+import { Users } from '../../utils/interface/users-interface';
+import { AuthenticationService } from '../../services/authentication.services';
+import Swal from 'sweetalert2';
+import { INTERNALCODE } from '../../utils/constants/General-Constants';
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, NavButtonsComponent],
+  imports: [CommonModule, NavButtonsComponent, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent implements OnInit {
-titleTheme = 'Modo Oscuro';
+  titleTheme = 'Modo Oscuro';
   isDarkMode = false;
   isMenuOpen = false;
   mode: string | null = null;
   information: ModeConfig | null = null;
+  menuItems: any[] = [];
+  user: Users | null = null;
   private platformId = inject(PLATFORM_ID);
   constructor(private sessionStorage: SessionStorageService,
-    private router: Router
+    private router: Router,
+    private authService: AuthenticationService
   ) { }
   ngOnInit() {
     this.sessionStorage.mode$.subscribe((mode: any) => {
@@ -27,6 +34,22 @@ titleTheme = 'Modo Oscuro';
       this.information = mode ? MODE_CONFIGS[mode] ?? null : null;
       this.loadTheme();
     });
+    this.sessionStorage.user$.subscribe(userStr => {
+      if (userStr) {
+        this.loadMenus();
+      }
+    });
+  }
+  loadMenus(): void {
+    try {
+      const userData = this.sessionStorage.getType('user');
+      if (userData) {
+        this.user = JSON.parse(userData) as Users;
+        this.menuItems = MENU_BY_ROLE[this.user.role] || [];
+      }
+    } catch {
+      this.menuItems = [];
+    }
   }
 
   toggleTheme() {
@@ -47,7 +70,7 @@ titleTheme = 'Modo Oscuro';
     }
   }
   goToLogin() {
-    this.router.navigate(['/admin/login']);
+    this.showKeyPrompt();
   }
   loadTheme() {
     if (isPlatformBrowser(this.platformId)) {
@@ -66,4 +89,39 @@ titleTheme = 'Modo Oscuro';
       }
     }
   }
+  logout() {
+    this.authService.logout().then(() => {
+      this.user = null;
+      this.menuItems = [];
+      this.router.navigate(['/customer/location']);
+    });
+  }
+  async showKeyPrompt() {
+    const { value: key } = await Swal.fire({
+      title: 'Acceso restringido',
+      input: 'password',
+      inputLabel: 'Ingresa la llave secreta',
+      inputPlaceholder: '********',
+      inputAttributes: {
+        maxlength: '20',
+        autocapitalize: 'off',
+        autocorrect: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Ingresar',
+      cancelButtonText: 'Cancelar'
+    });
+    if (key) {
+      if (key?.toLowerCase() === INTERNALCODE.toLowerCase()) {
+        this.router.navigate(['/admin/login']);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Llave incorrecta',
+          text: 'La clave que ingresaste no es válida.',
+        });
+      }
+    }
+  }
+
 }

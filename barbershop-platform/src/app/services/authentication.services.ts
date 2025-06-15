@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, User, getAuth } from 'firebase/auth';
-import { auth } from '../../environments/environment';
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, User, getAuth, signOut } from 'firebase/auth';
+import { Firestore, doc, getDoc, setDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Users } from '../utils/interface/users-interface';
+import { SessionStorageService } from '../utils/global/StorageService ';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -8,7 +10,9 @@ export class AuthenticationService {
     private confirmationResult!: ConfirmationResult;
     private recaptchaVerifier: RecaptchaVerifier | null = null;
 
-    constructor() {
+    constructor(private firestore: Firestore,
+        private sessionStorage: SessionStorageService
+    ) {
         this.auth.useDeviceLanguage();
     }
 
@@ -41,5 +45,29 @@ export class AuthenticationService {
         if (!this.confirmationResult) throw new Error('No se ha enviado código aún');
         const result = await this.confirmationResult.confirm(code);
         return result.user;
+    }
+    async getOrCreateUser(user: User): Promise<Users> {
+        const userRef = doc(this.firestore, 'users', user.uid);
+        const snap = await getDoc(userRef);
+
+        if (snap.exists()) {
+            return snap.data() as Users;
+        } else {
+            const newUser: Users = {
+                uid: user.uid,
+                phoneNumber: user.phoneNumber || '',
+                role: 'barber',
+                createdAt: serverTimestamp() as any
+            };
+
+            await setDoc(userRef, newUser);
+            return newUser;
+        }
+    }
+    async logout(): Promise<void> {
+        const auth = getAuth();
+        return signOut(auth).then(() => {
+            this.sessionStorage.clearAll();
+        });
     }
 }

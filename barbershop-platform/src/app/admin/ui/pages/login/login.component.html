@@ -1,5 +1,9 @@
 <div class=" mt-4 py-5 d-flex justify-content-center align-items-center  p-3">
     <div class="login-card shadow rounded-4 w-100" style="max-width: 420px; padding: 2rem 1.5rem;">
+        <div *ngIf="errorMessage" class="alert alert-{{ alertType }} text-center fw-semibold rounded-3 mb-3"
+            role="alert">
+            {{ errorMessage }}
+        </div>
         <ng-container *ngIf="!codeSent; else otpSection">
             <h2 class="text-center fw-bold">Inicia Sesión</h2>
             <p class="text-center fw-semibold mt-3 mb-1">Ingresa tu número de celular</p>
@@ -18,7 +22,7 @@
                             formLogin.get('phone')?.touched
                             }" />
                     <div class="invalid-feedback">
-                       <strong> El número es obligatorio, debe tener 10 dígitos y comenzar con 1.</strong>
+                        <strong> El número es obligatorio, debe tener 10 dígitos y comenzar con 1.</strong>
                     </div>
                 </div>
 
@@ -43,8 +47,17 @@
             </div>
 
             <p class="text-center small">
-                ¿No recibiste el código? <a href="#" class="text-success fw-semibold">Reenviar código</a>
+                <strong>
+                    ¿No recibiste el código?
+                </strong>
+                <button class="btn btn-link p-0 text-success fw-semibold" (click)="sendCode(true)">
+                    <strong>Reenviar código</strong>
+                </button>
             </p>
+            <button type="submit" (click)="verifyCode()"
+                class="btn btn-success w-100 py-2 rounded-pill text-white fw-bold">
+                Verificar
+            </button>
         </ng-template>
         <div id="recaptcha-container"></div>
     </div>
