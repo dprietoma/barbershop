@@ -1,0 +1,65 @@
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 bg-white">
+        <thead class="bg-light">
+            <tr>
+                <th *ngFor="let col of columns" (click)="sortBy(col.key)" style="cursor: pointer">
+                    {{ col.label }}
+                    <span *ngIf="sortColumn === col.key">
+                        <i class="bi" [ngClass]="{'bi-caret-up-fill': sortDirection === 'asc',
+                        'bi-caret-down-fill': sortDirection === 'desc'}">
+                        </i>
+                    </span>
+                </th>
+                <th *ngIf="hasActionsColumn()">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of sortedData" (click)="onRowClick(row)">
+                <td *ngFor="let col of columns" [ngSwitch]="col.type">
+                    <ng-container *ngSwitchCase="'avatar'">
+                        <img [src]="row[col.key]" class="rounded-circle" width="45" height="45" />
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'badge'">
+                        <span class="badge bg-info">{{ row[col.key] }}</span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'currency'">
+                        <span class="text-success"><strong>
+                                {{ row[col.key] | currency }}
+                            </strong></span>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                        {{ row[col.key] }}
+                    </ng-container>
+                </td>
+                <td *ngIf="hasActionsColumn()">
+                    <button class="btn btn-sm btn-outline-primary me-1"
+                        (click)="onIconClick('edit', row); $event.stopPropagation()">
+                        <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger"
+                        (click)="onIconClick('delete', row); $event.stopPropagation()">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="showModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle del Usuario</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nombre:</strong> {{ selectedItem?.name }}</p>
+                <p><strong>Email:</strong> {{ selectedItem?.email }}</p>
+                <p><strong>Rol:</strong> {{ selectedItem?.role }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

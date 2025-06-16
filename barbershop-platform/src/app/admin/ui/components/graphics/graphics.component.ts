@@ -1,8 +1,9 @@
-import { Component, inject, Renderer2 } from '@angular/core';
+import { Component, inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartType } from 'chart.js';
-import { Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Timestamp } from '@angular/fire/firestore';
+import { StoriesService } from '../../../../services/stories.service';
 
 @Component({
   selector: 'app-graphics',
@@ -11,19 +12,99 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   templateUrl: './graphics.component.html',
   styleUrl: './graphics.component.css'
 })
-export class GraphicsComponent {
-  public lineChartType: ChartType = 'line';
-  public lineChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false
-  };
+export class GraphicsComponent implements OnInit {
+  ngZone = inject(NgZone);
+  reservationsService = inject(StoriesService);
+  public lineChartType: ChartType = 'doughnut';
+
   public isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  public lineChartData: ChartData<'line'> = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      { data: [65, 59, 80, 81, 56, 55, 40], label: 'Mayor' },
-      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Medio' },
-      { data: [18, 38, 30, 29, 76, 37, 60], label: 'Bajo' }
-    ]
-  };
+
+  appointmentsPerDay: ChartData<'bar'> = { labels: [], datasets: [] };
+  monthlyRevenue: ChartData<'line'> = { labels: [], datasets: [] };
+  popularServices: ChartData<'doughnut'> = { labels: [], datasets: [] };
+
+  ngOnInit(): void {
+    this.ngZone.run(() => {
+      this.reservationsService.getReservations().subscribe((reservations: any[]) => {
+        this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
+        this.monthlyRevenue = this.buildMonthlyRevenueChart(reservations);
+        this.popularServices = this.buildPopularServicesChart(reservations) as any;
+      });
+    });
+  }
+
+  buildAppointmentsPerDayChart(reservations: any[]): ChartData<'bar'> {
+    const countByDay: Record<string, number> = {};
+    reservations.forEach(r => {
+      const date = r.fecha instanceof Timestamp ? r.fecha.toDate() : new Date(r.fecha);
+      const dayKey = date.toISOString().split('T')[0];
+      countByDay[dayKey] = (countByDay[dayKey] || 0) + 1;
+    });
+
+    return {
+      labels: Object.keys(countByDay),
+      datasets: [
+        {
+          label: 'Citas por día',
+          data: Object.values(countByDay),
+          backgroundColor: '#0d6efd'
+        }
+      ]
+    };
+  }
+
+  buildMonthlyRevenueChart(reservations: any[]): ChartData<'line'> {
+    const revenueByMonth: Record<string, number> = {};
+    reservations
+      .filter(r => r.estado === 'Finalizada')
+      .forEach(r => {
+        const date = r.fecha instanceof Timestamp ? r.fecha.toDate() : new Date(r.fecha);
+        const monthKey = date.toLocaleString('default', { month: 'short' });
+
+        revenueByMonth[monthKey] = (revenueByMonth[monthKey] || 0) + Number(r.total || 0);
+      });
+
+    return {
+      labels: Object.keys(revenueByMonth),
+      datasets: [
+        {
+          label: 'Ingresos Mensuales',
+          data: Object.values(revenueByMonth),
+          borderColor: 'rgba(30, 127, 92, 0.2)',
+          backgroundColor: '#1E7F5C',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#1E7F5C',
+          pointBorderColor: '#1E7F5C',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: '#1E7F5C'
+        }
+      ]
+    };
+  }
+
+  buildPopularServicesChart(reservations: any[]): ChartData<'bar'> {
+    const serviceCount: Record<string, number> = {};
+
+    reservations.forEach(r => {
+      const services = Array.isArray(r.servicio) ? r.servicio : [r.servicio];
+      services.forEach((service: any) => {
+        const label = typeof service === 'string' ? service : service?.nombre || 'Desconocido';
+        serviceCount[label] = (serviceCount[label] || 0) + 1;
+      });
+    });
+
+    const colors = ['#0d6efd', '#dc3545', '#ffc107', '#198754', '#6f42c1', '#20c997', '#6610f2'];
+    const labels = Object.keys(serviceCount);
+
+    return {
+      labels: labels,
+      datasets: labels.map((label, index) => ({
+        label: label,
+        data: [serviceCount[label]],
+        backgroundColor: colors[index % colors.length]
+      }))
+    };
+  }
+
 }

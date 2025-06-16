@@ -15,4 +15,8 @@ export class StoriesService {
     const q = query(storiesRef, where('useBy', '==', useBy));
     return collectionData(q, { idField: 'id' }) as Observable<Story[]>;
   }
+  getReservations(): Observable<any[]> {
+    const reservationsRef = collection(this.firestore, 'reservas');
+    return collectionData(reservationsRef, { idField: 'id' }) as Observable<any[]>;
+  }
 }

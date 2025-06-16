@@ -1,4 +1,22 @@
-<div *ngIf="isBrowser" class="container" style="display: block; width: 100%; height: 350px;">
-    <canvas baseChart [data]="lineChartData" [type]="lineChartType" [options]="lineChartOptions">
-    </canvas>
+<div class="row g-4" *ngIf="isBrowser">
+    <div class="col-sm-4">
+        <div class="card p-3 rounded-4 shadow-sm">
+            <h6 class="fw-bold">Citas por Día</h6>
+            <canvas baseChart [data]="appointmentsPerDay" chartType="bar"></canvas>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="card p-3 rounded-4 shadow-sm">
+            <h6 class="fw-bold"> Ingresos Mensuales</h6>
+            <canvas baseChart [data]="monthlyRevenue" chartType="line"></canvas>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="card p-3 rounded-4 shadow-sm">
+            <h6 class="fw-bold">Servicios Más Populares</h6>
+            <canvas baseChart [data]="popularServices" chartType="doughnut"></canvas>
+        </div>
+    </div>
 </div>
