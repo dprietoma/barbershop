@@ -19,11 +19,11 @@
                         Cambiar tema
                     </a>
                 </li>
-                
+
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2"
-                        (click)="user?.uid ? logout() : login.emit()">
-                        <i class="bi bi-person-circle fs-4"></i>
+                        (click)="user?.uid ? logout.emit() : login.emit()">
+                        <i [ngClass]="user?.uid ? 'bi bi-box-arrow-in-left fs-3' : 'bi bi-box-arrow-in-right fs-3'"></i>
                         {{ user?.uid ? 'Cerrar sesión' : 'Iniciar sesión' }}
                     </a>
                 </li>

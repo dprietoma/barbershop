@@ -47,17 +47,17 @@ export class DashboardComponent implements OnInit {
 
   }
   getAppointments(): void {
-    // this.loadingService.show();
-    this.reservationsService.getReservations()
-      .pipe(finalize(() => ''))
-      .subscribe({
-        next: reservas => {
-          this.generateAppointmentsTable(reservas);
-        },
-        error: err => {
-          console.error('Error cargando reservas:', err);
-        }
-      });
+    this.loadingService.show();
+    this.reservationsService.getReservations().subscribe({
+      next: reservas => {
+        this.generateAppointmentsTable(reservas);
+        this.loadingService.hide();
+      },
+      error: err => {
+        console.error('Error cargando reservas:', err);
+        this.loadingService.hide();
+      }
+    });
   }
   onItemSelect(item: any) {
     console.log('Seleccionado:', item);

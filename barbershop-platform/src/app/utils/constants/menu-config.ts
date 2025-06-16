@@ -1,11 +1,12 @@
 export const MENU_BY_ROLE = {
     admin: [
-        { title: 'Dashboard', path: '/admin/dashboard', icon: 'bi bi-grid fs-4' },
-        { title: 'Usuarios', path: '/admin/users', icon: 'bi bi-people fs-4' },
+        { title: 'Colaboradores', path: '/admin/collaborators', icon: 'bi bi-people-fill fs-4' },
+        { title: 'Citas', path: '/admin/appointments', icon: 'bi bi-calendar-check fs-4' },
+        { title: 'Turnos y Pausas', path: '/admin/shifts', icon: 'bi bi-person-workspace fs-4' },
         { title: 'Servicios', path: '/admin/services', icon: 'bi bi-scissors fs-4' },
     ],
     barber: [
+        { title: 'Historial de Citas', path: '/admin/history', icon: 'bi bi-clock-history fs-4' },
         { title: 'Mi Agenda', path: '/admin/schedule', icon: 'bi bi-calendar-check fs-4' },
-        { title: 'Perfil', path: '/admin/profile', icon: 'bi bi-person fs-4' }
     ]
 };

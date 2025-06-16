@@ -15,16 +15,7 @@ export class NavButtonsComponent {
   @Input() information!: any;
   @Output() themeToggle = new EventEmitter<void>();
   @Output() login = new EventEmitter<void>();
+  @Output() logout = new EventEmitter<void>();
   @Input() isInNavbar = false;
   @Input() user!: Users | null;
-  constructor(private authService: AuthenticationService,
-    private router: Router
-  ) { }
-
-
-  logout() {
-    this.authService.logout().then(() => {
-      this.router.navigate(['/customer/location']);
-    });
-  }
 }

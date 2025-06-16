@@ -19,7 +19,7 @@
                 </ng-container>
                 <li class="nav-item d-flex align-items-center" style="margin-left: 20px;">
                     <app-nav-buttons [isDarkMode]="isDarkMode" [information]="information" (login)="showKeyPrompt()"
-                        (themeToggle)="toggleTheme()" [isInNavbar]="true" [user]="user">
+                        (themeToggle)="toggleTheme()" (logout)="logout()" [isInNavbar]="true" [user]="user">
                     </app-nav-buttons>
                 </li>
 
@@ -29,34 +29,26 @@
 </nav>
 <div class="offcanvas offcanvas-start offcanvas-custom"
     [ngClass]="isDarkMode ? 'bg-dark text-white' : 'bg-light text-dark'" tabindex="-1" id="offcanvasNavbar">
-
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title fw-bold text-primary">Menú principal</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
-
     <div class="offcanvas-body">
-        <!-- Sección Legal -->
-        <div class="menu-section">
-            <div class="menu-title">Legal</div>
-            <a href="#seccion1" class="menu-item"><i class="bi bi-file-earmark-text"></i>Términos y condiciones de
-                uso</a>
-            <a href="#seccion2" class="menu-item"><i class="bi bi-people"></i>Naturaleza de la relación</a>
-            <a href="#seccion5" class="menu-item"><i class="bi bi-x-circle"></i>Terminación unilateral</a>
-            <a href="#seccion7" class="menu-item"><i class="bi bi-shield-lock"></i>Cláusula de confidencialidad</a>
-            <a href="#seccion9" class="menu-item"><i class="bi bi-envelope-open"></i>Aviso de confidencialidad</a>
-        </div>
-
-        <!-- Sección Configuración -->
-        <div class="menu-section">
-            <div class="menu-title">Configuración</div>
-            <a href="#" class="menu-item" (click)="toggleTheme()">
-                <i [ngClass]="isDarkMode ? 'bi bi-brightness-high-fill' : 'bi bi-moon-stars-fill'"></i>
-                Cambiar tema
+        <div class="menu-section" *ngIf="menuItems.length">
+            <a *ngFor="let item of menuItems" [href]="item.path" class="menu-item">
+                <i class="bi" [ngClass]="item.icon"></i>
+                <strong>{{ item.title }}</strong>
             </a>
-            <a href="#" class="menu-item" (click)="goToLogin()">
-                <i class="bi bi-person-circle"></i>
-                Iniciar sesión
+        </div>
+        <div class="menu-section" *ngIf="menuItems.length">
+            <div class="menu-title">Settings</div>
+            <a class="dropdown-item d-flex align-items-center gap-2" (click)="toggleTheme()">
+                <i [ngClass]="isDarkMode ? 'bi bi-brightness-high-fill fs-3' : 'bi bi-moon-stars-fill fs-4'"></i>
+                <strong>Cambiar tema</strong>
+            </a>
+            <a (click)="user?.uid ? logout() : showKeyPrompt()" class="menu-item">
+                <i [ngClass]="user?.uid ? 'bi bi-box-arrow-in-left fs-3' : 'bi bi-box-arrow-in-right fs-4'"></i>
+                <strong>{{ user?.uid ? 'Cerrar sesión' : 'Iniciar sesión' }}</strong>
             </a>
         </div>
     </div>
