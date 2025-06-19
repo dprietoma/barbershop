@@ -97,7 +97,10 @@ export class ConfirmationComponent implements OnInit {
         : { domainNotAllowed: true };
     };
   }
-
+  extractMinutes(duration: string): number {
+    const match = duration.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 0;
+  }
   onReserve() {
     if (this.formDataPeople.invalid) {
       this.formDataPeople.markAllAsTouched();
@@ -107,7 +110,14 @@ export class ConfirmationComponent implements OnInit {
     const informationReserve = this.information();
     this.reservasService.createReservation(informationReserve).then(rs => {
       if (rs.ok) {
-        this.navigate();
+        this.reservasService.marcarHoraComoNoDisponible(
+          informationReserve.barberoId,
+          informationReserve.fecha,
+          informationReserve.hora,
+          this.extractMinutes(informationReserve.duracion)
+        ).then(rs => {
+          this.navigate();
+        })
       } else {
         ShowAlert.viewAlert('Oops...', rs.mensaje, 'error');
       }
@@ -147,6 +157,6 @@ export class ConfirmationComponent implements OnInit {
   navigate() {
     const data = this.information();
     sessionStorage.setItem('reserva', JSON.stringify(data));
-    this.route.navigate(['/customer/appointment-confirmed']); 
+    this.route.navigate(['/customer/appointment-confirmed']);
   }
 }

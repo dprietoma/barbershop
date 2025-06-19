@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, query, where, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, getDocs, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Reserva } from '../utils/interface/reserva.interface';
+import { DURACION_FRANJA_MIN } from '../utils/constants/horasDefault';
 
 
 @Injectable({ providedIn: 'root' })
@@ -66,5 +67,47 @@ export class ReservasService {
         return null;
     }
 
+    async marcarHoraComoNoDisponible(
+        barberoId: string,
+        fecha: string,
+        horaObjetivo: string,
+        duracion: number
+    ) {
+        const ref = doc(this.firestore, `disponibilidadBarberos/${barberoId}/fechas/${fecha}`);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            console.error('No se encontró la fecha');
+            return;
+        }
+        const data = snap.data();
+        const horasOriginal = data['horas'] as { hora: string; disponible: boolean }[];
+        const bloquesNecesarios = Math.ceil(duracion / DURACION_FRANJA_MIN);
+        const horaInicio = this.convertirHoraATime(horaObjetivo);
+        const horasOrdenadas = [...horasOriginal].sort((a, b) =>
+            this.convertirHoraATime(a.hora).getTime() - this.convertirHoraATime(b.hora).getTime()
+        );
+        let minutosConsumidos = 0;
+        const nuevasHoras = horasOrdenadas.map(item => {
+            const horaActual = this.convertirHoraATime(item.hora);
+
+            if (horaActual >= horaInicio && minutosConsumidos < duracion) {
+                minutosConsumidos += 30;
+                return { ...item, disponible: false };
+            }
+            return item;
+        });
+
+        await updateDoc(ref, { horas: nuevasHoras });
+    }
+    private convertirHoraATime(hora: string): Date {
+        const [horaMin, meridiano] = hora.split(' ');
+        let [h, m] = horaMin.split(':').map(Number);
+        if (meridiano === 'PM' && h !== 12) h += 12;
+        if (meridiano === 'AM' && h === 12) h = 0;
+        const d = new Date();
+        d.setHours(h, m, 0, 0);
+        return d;
+    }
 
 }
