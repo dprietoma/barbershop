@@ -60,18 +60,19 @@ export class AppointmentsComponent implements OnInit {
   }
   AppointmentsByDate(): void {
     this.loadingService.show();
-    try {
-      this.reservationsService.getReservationsByStateAndDate(this.status, this.selectedDate).subscribe({
+    this.reservationsService.getReservationsByStateAndDate(this.status, this.selectedDate)
+      .subscribe({
         next: reservas => {
           this.appointmentsTable = reservas;
+          this.loadingService.hide();
+        },
+        error: err => {
+          console.error('Error consultando las reservas', err);
+          this.loadingService.hide();
         }
-      })
-    } catch (error) {
-      console.log('error consultado las reservas', error);
-    } finally {
-      this.loadingService.hide();
-    }
+      });
   }
+
   getTodaysDate(): string {
     const today = new Date();
     return today.toISOString().split('T')[0];
