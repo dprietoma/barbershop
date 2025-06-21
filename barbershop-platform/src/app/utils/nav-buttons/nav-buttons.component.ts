@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Users } from '../interface/users-interface';
-import { AuthenticationService } from '../../services/authentication.services';
 import { Router } from '@angular/router';
 
 @Component({
