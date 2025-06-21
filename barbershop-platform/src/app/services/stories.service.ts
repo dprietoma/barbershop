@@ -19,4 +19,13 @@ export class StoriesService {
     const reservationsRef = collection(this.firestore, 'reservas');
     return collectionData(reservationsRef, { idField: 'id' }) as Observable<any[]>;
   }
+  getReservationsByStateAndDate(status: string, date: string): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'reservas'),
+      where('estado', '==', status),
+      where('fecha', '==', date)
+    );
+
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
 }

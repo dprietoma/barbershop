@@ -42,6 +42,10 @@ export class DashboardComponent implements OnInit {
     color: string;
   }[] = [];
   appointmentsTable: Reserva[] = [];
+  filtroConfig = {
+    filterBy: 'clienteNombre',
+    placeholder: 'Buscar reserva...'
+  };
   constructor(private reservationsService: StoriesService,
     private loadingService: LoadingService
   ) { }

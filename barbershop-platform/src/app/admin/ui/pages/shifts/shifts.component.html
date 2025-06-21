@@ -1,0 +1,94 @@
+<app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
+<div class="container-fluid d-flex justify-content-end mb-2">
+    <div class="w-auto">
+        <input type="date" id="fecha" class="form-control" [(ngModel)]="fechaSeleccionada"
+            (change)="cargarDisponibilidad()" />
+    </div>
+</div>
+
+<div class="agenda-container mt-3">
+    <div class="agenda-table" *ngIf="barbers.length">
+        <div class="agenda-column">
+            <div class="agenda-header fw-bold header-hora">Hora</div>
+            <div *ngFor="let hora of getHorasUnicas()" class="agenda-cell">{{ hora }}</div>
+        </div>
+        <div *ngFor="let barber of barbers" class="agenda-column">
+            <div class="agenda-header agenda-barber-header" (click)="abrirModal(barber, '', 'ByBarber')"
+                data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <img [src]="barber.avatar" class="agenda-avatar mb-1" />
+                <div class="fw-semibold small">{{ barber.nombre }}</div>
+            </div>
+            <div *ngFor="let hora of getHorasUnicas()" class="agenda-cell" [ngClass]="{'bg-success bg-opacity-25 text-dark':
+            getHora(barber, hora)?.disponible,'bg-no-disponible text-dark': 
+            !getHora(barber, hora)?.disponible}"
+                (click)="getHora(barber, hora)?.disponible && abrirModal(barber, hora,'ByHour')"
+                [attr.data-bs-toggle]="getHora(barber, hora)?.disponible ? 'modal' : null"
+                [attr.data-bs-target]="getHora(barber, hora)?.disponible ? '#exampleModal' : null"
+                style="cursor: pointer;">
+                <ng-container *ngIf="getHora(barber, hora)?.disponible; else noDisponible">
+                    <div class="text-center">
+                        <strong>
+                            <i class="bi bi-check-circle-fill me-1 text-success"></i>Disponible
+                        </strong>
+                        <div class="small">{{ hora }}</div>
+                        <div class="small text-muted d-none d-sm-block">
+                            Acá puedes gestionar esta hora a tu barbero
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #noDisponible>
+                    <div class="text-center">
+                        <strong>No disponible</strong><br>
+                        <div class="small text-muted">
+                            Revervado
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div *ngIf="barbers.length === 0" class="alert alert-info text-center mt-3" role="alert">
+        <strong> No hay barberos disponibles para esta fecha. <a class="alert-link">Cambia la fecha</a></strong>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Gestionar disponibilidad</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Hora seleccionada</strong> </label>
+                                <input type="text" class="form-control" name="hour" [value]="selectedHour" disabled />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Disponibilidad</strong></label>
+                                <select class="form-select" [(ngModel)]="isAvailable" name="disponibilidad">
+                                    <option [ngValue]="true">Disponible</option>
+                                    <option [ngValue]="false">No disponible</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" #cerrarBtn class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button class="btn btn-primary" (click)="saveAvailability()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

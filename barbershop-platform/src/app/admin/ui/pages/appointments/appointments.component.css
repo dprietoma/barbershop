@@ -1,0 +1,57 @@
+.tab-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-line {
+    position: absolute;
+    top: 50%;
+    left: -50%;
+    width: 100%;
+    height: 2px;
+    z-index: 0;
+}
+
+.active-tab {
+    border-width: 3px;
+    background-color: white;
+}
+
+.green-tab {
+    border-color: green;
+    color: green;
+}
+
+.yellow-tab {
+    border-color: orange;
+    color: orange;
+}
+
+.blue-tab {
+    border-color: #0d6efd;
+    color: #0d6efd;
+}
+
+.red-tab {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.gray-tab {
+    border-color: gray;
+    color: gray;
+}
+@media (max-width: 768px) {
+
+    .tabs-title {
+        display: none;
+      }
+  }

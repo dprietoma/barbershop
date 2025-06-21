@@ -1,5 +1,10 @@
+export interface HoraIndividual {
+    hora: string;
+    disponible: boolean;
+}
+
 export interface HorasDisponibles {
-    manana: string[];
-    tarde: string[];
-    noche: string[];
+    manana: HoraIndividual[];
+    tarde: HoraIndividual[];
+    noche: HoraIndividual[];
 }

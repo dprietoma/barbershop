@@ -54,7 +54,7 @@ export class BarbersComponent implements OnInit {
 
   ngOnInit() {
     this.mode = this.sessionStorage.getType('mode');
-    this.historial.forzarRegresoAHOME('/customer/barbers');
+    // this.historial.forzarRegresoAHOME('/customer/barbers');
     this.getBarber();
     this.diaSeleccionado = new Date();
     const barbero = this.order.barberoSeleccionado();
@@ -62,7 +62,7 @@ export class BarbersComponent implements OnInit {
     const hora = this.order.horaReserva();
     if (barbero && fecha && hora) {
       this.barberoSeleccionado = barbero;
-      this.generarSemana(barbero.id, fecha ? new Date(fecha) : new Date());
+      this.generarSemana(barbero, fecha ? new Date(fecha) : new Date());
       this.diaSeleccionado = new Date(fecha);
       this.seleccionarDia(this.diaSeleccionado);
       this.Stepper = 3;
@@ -86,11 +86,11 @@ export class BarbersComponent implements OnInit {
     this.barberoSeleccionado = barbero;
     this.order.setBarbero(this.barberoSeleccionado);
     this.Stepper = 3;
-    this.generarSemana(this.barberoSeleccionado.id)
+    this.generarSemana(this.barberoSeleccionado)
   }
 
-  selectDate(hora: string) {
-    this.order.setHora(hora);
+  selectDate(hora: any) {
+    this.order.setHora(hora.hora);
     this.router.navigate(['/customer/confirmation']);
   }
   mostrarRetroceder(): boolean {
@@ -102,7 +102,7 @@ export class BarbersComponent implements OnInit {
       return d.getTime() === hoy.getTime();
     });
   }
-  generarSemana(barberId: string, baseDate?: Date) {
+  generarSemana(barber: any, baseDate?: Date) {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     const start = new Date(baseDate ?? new Date());
@@ -118,30 +118,29 @@ export class BarbersComponent implements OnInit {
       }
       this.semanaVisible.push(dia);
       const fechaStr = dia.toISOString().split('T')[0];
-      this.availableService.createAvailabilityIfNotExists(barberId, fechaStr, HOURS)
+      this.availableService.createAvailabilityIfNotExists(barber.id, fechaStr, HOURS, barber.foto, barber.numCelular, barber.nombre)
         .then(() => console.log(`Disponibilidad creada para ${fechaStr}`))
         .catch(err => console.error(`Error creando disponibilidad:`, err));
     }
   }
 
-
   retrocederSemana() {
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() - 7);
     this.mesActual = nuevaFecha;
-    this.generarSemana(this.barberoSeleccionado.id, this.mesActual);
+    this.generarSemana(this.barberoSeleccionado, this.mesActual);
   }
 
   avanzarSemana() {
     const nuevaFecha = new Date(this.mesActual);
     nuevaFecha.setDate(nuevaFecha.getDate() + 7);
     this.mesActual = nuevaFecha;
-    this.generarSemana(this.barberoSeleccionado.id, this.mesActual);
+    this.generarSemana(this.barberoSeleccionado, this.mesActual);
   }
   formatearFechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('sv-SE');
   }
-  showHours(disponibilidad: any, day: Date, fechaStr: string) {
+  showHours(disponibilidad: any, day: Date) {
     let horasDisponibles = disponibilidad?.horas ?? [];
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -151,29 +150,18 @@ export class BarbersComponent implements OnInit {
 
     if (diaNormalizado.getTime() === hoy.getTime()) {
       const ahora = new Date();
-      horasDisponibles = horasDisponibles.filter((hora: string) => {
-        const horaDate = this.convertirHoraATime(hora);
+      horasDisponibles = horasDisponibles.filter((hora: any) => {
+        const horaDate = this.convertirHoraATime(hora?.hora);
         return horaDate > ahora;
       });
     }
 
-    this.availableService.getReservationsPerDay(this.barberoSeleccionado.id, fechaStr).subscribe(reservas => {
-      let horasOcupadas: string[] = [];
-      reservas.forEach(r => {
-        const duracionMinutos = parseInt(r.duracion);
-        const franjas = this.obtenerFranjasOcupadas(r.hora, duracionMinutos, horasDisponibles);
-        horasOcupadas.push(...franjas);
-      });
-
-      const horasUnicas = [...new Set(horasOcupadas)];
-      const horasFiltradas = horasDisponibles.filter((hora: string) => !horasUnicas.includes(hora));
-
-      this.horas = {
-        manana: horasFiltradas.filter((h: string) => this.esManana(h)),
-        tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
-        noche: horasFiltradas.filter((h: string) => this.esNoche(h)),
-      };
-    });
+    const horasFiltradas = horasDisponibles.filter((hora: any) => hora.disponible === true);
+    this.horas = {
+      manana: horasFiltradas.filter((h: string) => this.esManana(h)),
+      tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
+      noche: horasFiltradas.filter((h: string) => this.esNoche(h)),
+    };
   }
   seleccionarDia(dia: Date) {
     this.diaSeleccionado = dia;
@@ -185,7 +173,7 @@ export class BarbersComponent implements OnInit {
           this.horas = { manana: [], tarde: [], noche: [] };
           return;
         }
-        this.showHours(disponibilidad, dia, fechaStr);
+        this.showHours(disponibilidad, dia);
       }
     });
   }
@@ -206,8 +194,8 @@ export class BarbersComponent implements OnInit {
     const inicioMin = this.horaToMinutos(horaInicio);
     const finMin = inicioMin + duracion;
 
-    return todasLasFranjas.filter(franja => {
-      const minutosFranja = this.horaToMinutos(franja);
+    return todasLasFranjas.filter((franja: any) => {
+      const minutosFranja = this.horaToMinutos(franja?.hora);
       return minutosFranja >= inicioMin && minutosFranja < finMin;
     });
   }
@@ -220,24 +208,24 @@ export class BarbersComponent implements OnInit {
 
     return h * 60 + m;
   }
-  esManana(hora: string): boolean {
-    const date = this.parseHora(hora);
+  esManana(hora: any): boolean {
+    const date = this.parseHora(hora?.hora);
     const horaReal = date.getHours();
     return horaReal >= 9 && horaReal < 12;
   }
 
-  esTarde(hora: string): boolean {
-    const date = this.parseHora(hora);
+  esTarde(hora: any): boolean {
+    const date = this.parseHora(hora?.hora);
     const horaReal = date.getHours();
     return horaReal >= 12 && horaReal < 17;
   }
 
-  esNoche(hora: string): boolean {
-    const date = this.parseHora(hora);
+  esNoche(hora: any): boolean {
+    const date = this.parseHora(hora?.hora);
     const horaReal = date.getHours();
     return horaReal >= 17;
   }
-  private parseHora(hora: string): Date {
+  private parseHora(hora: any): Date {
     return new Date(`1970-01-01T${this.to24HourFormat(hora)}:00`);
   }
 

@@ -1,26 +1,50 @@
+<div class="container px-3 mt-2">
+    <div class="row align-items-center border-bottom pb-2 mb-3">
+
+        <!-- Título -->
+        <div class="col-md-6 col-12 text-center text-md-start mb-3 mb-md-0">
+            <h5 class="typeLetterNav mb-0">
+                <strong>{{ nameTable }}</strong>
+            </h5>
+        </div>
+
+        <!-- Input de búsqueda -->
+        <div class="col-md-6 col-12 d-flex justify-content-center justify-content-md-end" *ngIf="showInputFilter">
+            <div class="d-flex align-items-center w-100 rounded-pill border px-3 py-2" style="max-width: 600px;">
+                <i class="bi bi-search fs-5 me-3 text-muted"></i>
+                <input type="text" class="form-control border-0 shadow-none p-0 me-3"
+                    [placeholder]="configFilter.placeholder" [(ngModel)]="filtroTexto" style="min-width: 0;" />
+                <span class="fw-bold text-muted mb-0" style="white-space: nowrap;">
+                    {{ quantityResults }} ítems
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 <div class="table-responsive">
     <table class="table table-hover align-middle mb-0 bg-white">
         <thead class="bg-light">
             <tr>
-                <th *ngFor="let col of columns" (click)="sortBy(col.key)" style="cursor: pointer">
-                    {{ col.label }}
-                    <span *ngIf="sortColumn === col.key">
-                        <i class="bi" [ngClass]="{'bi-caret-up-fill': sortDirection === 'asc',
-                        'bi-caret-down-fill': sortDirection === 'desc'}">
-                        </i>
-                    </span>
+                <th *ngFor="let col of columns">
+                    {{ col.label.toUpperCase() }}
                 </th>
-                <th *ngIf="hasActionsColumn()">Acciones</th>
+                <th *ngIf="hasActionsColumn()">ACCIONES</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let row of sortedData" (click)="onRowClick(row)">
+            <tr *ngFor="let row of sortedData | filter:configFilter.filterBy:filtroTexto || '';"
+                (click)="onRowClick(row)">
                 <td *ngFor="let col of columns" [ngSwitch]="col.type">
                     <ng-container *ngSwitchCase="'avatar'">
                         <img [src]="row[col.key]" class="rounded-circle" width="45" height="45" />
                     </ng-container>
                     <ng-container *ngSwitchCase="'badge'">
-                        <span class="badge bg-info">{{ row[col.key] }}</span>
+                        <span class="badge" [ngClass]="getBadgeClass(row[col.key])">
+                            {{ row[col.key] }}
+                        </span>
                     </ng-container>
                     <ng-container *ngSwitchCase="'currency'">
                         <span class="text-success"><strong>
@@ -32,14 +56,10 @@
                     </ng-container>
                 </td>
                 <td *ngIf="hasActionsColumn()">
-                    <button class="btn btn-sm btn-outline-primary me-1"
-                        (click)="onIconClick('edit', row); $event.stopPropagation()">
-                        <i class="bi bi-pencil-fill"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger"
-                        (click)="onIconClick('delete', row); $event.stopPropagation()">
-                        <i class="bi bi-trash-fill"></i>
-                    </button>
+                    <i class="bi bi-pencil-fill fs-3 mb-2" style="color: blue;"
+                        (click)="onIconClick('edit', row); $event.stopPropagation()"></i>
+                    <i class="bi bi-trash-fill fs-3" style="color: red;"
+                        (click)="onIconClick('delete', row); $event.stopPropagation()"></i>
                 </td>
             </tr>
         </tbody>
