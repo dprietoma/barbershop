@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-table',
-  imports: [CommonModule, FormsModule, FilterPipe],
+  imports: [CommonModule, FormsModule, FilterPipe, NgxPaginationModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css'
 })
@@ -25,7 +25,8 @@ export class TableComponent {
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   filtroTexto = '';
-
+  p: number = 1;
+  
   private readonly filterPipe = new FilterPipe();
   onRowClick(row: any) {
     this.selectedItem = row;
