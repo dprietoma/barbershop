@@ -34,7 +34,9 @@
                         <img [src]="row[col.key]" class="rounded-circle" width="45" height="45" />
                     </ng-container>
                     <ng-container *ngSwitchCase="'badge'">
-                        <span class="badge bg-info">{{ row[col.key] }}</span>
+                        <span class="badge" [ngClass]="getBadgeClass(row[col.key])">
+                            {{ row[col.key] }}
+                        </span>
                     </ng-container>
                     <ng-container *ngSwitchCase="'currency'">
                         <span class="text-success"><strong>

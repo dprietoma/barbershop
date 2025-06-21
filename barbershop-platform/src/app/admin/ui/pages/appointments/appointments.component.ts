@@ -39,7 +39,7 @@ export class AppointmentsComponent implements OnInit {
   status: string = 'Confirmada';
   tabs = [
     { icon: 'bi-check-circle-fill', color: 'green', label: 'Confirmadas', statusValue: 'Confirmada' },
-    { icon: 'bi-play-circle-fill', color: 'yellow', label: 'En Curso', statusValue: 'EnCurso' },
+    { icon: 'bi-play-circle-fill', color: 'yellow', label: 'En Curso', statusValue: 'En Curso' },
     { icon: 'bi-flag-fill', color: 'blue', label: 'Finalizadas', statusValue: 'Finalizada' },
     { icon: 'bi-x-circle-fill', color: 'red', label: 'Canceladas', statusValue: 'Cancelada' },
   ];

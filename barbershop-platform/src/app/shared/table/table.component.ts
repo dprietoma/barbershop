@@ -58,4 +58,19 @@ export class TableComponent {
   get quantityResults(): number {
     return this.filterPipe.transform(this.sortedData, this.configFilter.filterBy, this.filtroTexto).length;
   }
+  getBadgeClass(estado: string): string {
+    switch (estado) {
+      case 'Confirmada':
+        return 'bg-success';
+      case 'En Curso':
+        return 'bg-warning text-dark';
+      case 'Finalizada':
+        return 'bg-primary';
+      case 'Cancelada':
+        return 'bg-danger';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
 }
