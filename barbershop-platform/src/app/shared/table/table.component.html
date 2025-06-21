@@ -35,8 +35,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let row of sortedData | filter:configFilter.filterBy:filtroTexto || '';"
-                (click)="onRowClick(row)">
+            <tr *ngFor="let row of sortedData | 
+            filter:configFilter.filterBy:filtroTexto |
+             paginate: { itemsPerPage: 6, currentPage: p };" (click)="onRowClick(row)">
                 <td *ngFor="let col of columns" [ngSwitch]="col.type">
                     <ng-container *ngSwitchCase="'avatar'">
                         <img [src]="row[col.key]" class="rounded-circle" width="45" height="45" />
@@ -65,6 +66,11 @@
         </tbody>
     </table>
 </div>
+<pagination-controls (pageChange)="p = $event" [maxSize]="9" [directionLinks]="true" [autoHide]="true"
+    [responsive]="true" previousLabel="Anterior" nextLabel="Siguiente" screenReaderPaginationLabel="Pagination"
+    screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+</pagination-controls>
+
 <div *ngIf="showModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
     <div class="modal-dialog">
         <div class="modal-content">
