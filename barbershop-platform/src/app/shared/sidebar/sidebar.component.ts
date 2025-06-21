@@ -9,6 +9,7 @@ import { Users } from '../../utils/interface/users-interface';
 import { AuthenticationService } from '../../services/authentication.services';
 import Swal from 'sweetalert2';
 import { INTERNALCODE } from '../../utils/constants/General-Constants';
+import { AppSignalService } from '../../services/signals.service';
 @Component({
   selector: 'app-sidebar',
   imports: [CommonModule, NavButtonsComponent, RouterModule],
@@ -26,17 +27,19 @@ export class SidebarComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   constructor(private sessionStorage: SessionStorageService,
     private router: Router,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private appSignal: AppSignalService
   ) { }
   ngOnInit() {
     this.sessionStorage.mode$.subscribe((mode: any) => {
       this.mode = mode;
       this.information = mode ? MODE_CONFIGS[mode] ?? null : null;
       this.loadTheme();
+      this.menuItems = MENU_BY_ROLE['admin'];
     });
     this.sessionStorage.user$.subscribe(userStr => {
       if (userStr) {
-        this.loadMenus();
+        // this.loadMenus();
       }
     });
   }
@@ -61,17 +64,20 @@ export class SidebarComponent implements OnInit {
         body.classList.add('dark-theme');
         body.classList.remove('light-theme');
         this.sessionStorage.saveType('theme', 'dark');
+        this.appSignal.set({ tipo: 'tema', valor: 'dark' });
       } else {
         this.titleTheme = "Modo Oscuro";
         body.classList.remove('dark-theme');
         body.classList.add('light-theme');
         this.sessionStorage.saveType('theme', 'light');
+        this.appSignal.set({ tipo: 'tema', valor: 'light' });
       }
     }
   }
   goToLogin() {
     this.showKeyPrompt();
   }
+
   loadTheme() {
     if (isPlatformBrowser(this.platformId)) {
       const theme = this.sessionStorage.getType('theme');
@@ -89,6 +95,7 @@ export class SidebarComponent implements OnInit {
       }
     }
   }
+
   logout() {
     this.authService.logout().then(() => {
       this.user = null;

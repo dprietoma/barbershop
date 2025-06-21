@@ -10,6 +10,7 @@ import { TableComponent } from '../../../../shared/table/table.component';
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { finalize } from 'rxjs/operators';
+
 @Component({
   selector: 'app-dashboard',
   imports: [BreadcrumbComponent, CommonModule,
@@ -29,7 +30,9 @@ export class DashboardComponent implements OnInit {
     { key: 'fecha', label: 'Fecha' },
     { key: 'hora', label: 'Hora' },
     { key: 'estado', label: 'Estado', type: 'badge' },
-    { key: 'total', label: 'Total', type: 'currency' }
+    { key: 'total', label: 'Total', type: 'currency'  },
+    { key: '', label: '', type: 'actions'},
+    { key: '../../../../../assets/images/reservaOK.png', label: 'Avatar', type: 'avatar'}
   ];
   summaryCards: {
     title: string;

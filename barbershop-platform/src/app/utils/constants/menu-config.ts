@@ -3,7 +3,7 @@ export const MENU_BY_ROLE = {
         { title: 'Colaboradores', path: '/admin/collaborators', icon: 'bi bi-people-fill fs-4' },
         { title: 'Citas', path: '/admin/appointments', icon: 'bi bi-calendar-check fs-4' },
         { title: 'Turnos y Pausas', path: '/admin/shifts', icon: 'bi bi-person-workspace fs-4' },
-        { title: 'Servicios', path: '/admin/services', icon: 'bi bi-scissors fs-4' },
+        { title: 'Servicios', path: '/admin/servicios', icon: 'bi bi-scissors fs-4' },
     ],
     barber: [
         { title: 'Historial de Citas', path: '/admin/history', icon: 'bi bi-clock-history fs-4' },
