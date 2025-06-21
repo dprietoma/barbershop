@@ -6,10 +6,10 @@ import { Router, RouterModule } from '@angular/router';
 import { NavButtonsComponent } from '../../utils/nav-buttons/nav-buttons.component';
 import { MENU_BY_ROLE } from '../../utils/constants/menu-config';
 import { Users } from '../../utils/interface/users-interface';
-import { AuthenticationService } from '../../services/authentication.services';
 import Swal from 'sweetalert2';
 import { INTERNALCODE } from '../../utils/constants/General-Constants';
 import { AppSignalService } from '../../services/signals.service';
+import { AuthenticationService } from '../../services/authentication.service';
 @Component({
   selector: 'app-sidebar',
   imports: [CommonModule, NavButtonsComponent, RouterModule],

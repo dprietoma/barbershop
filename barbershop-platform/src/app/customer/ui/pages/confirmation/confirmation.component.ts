@@ -11,9 +11,9 @@ import { LoadingService } from '../../../../utils/global/LoadingService';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
 import { ModalTermsComponent } from '../../../../shared/modal-terms/modal-terms.component';
 import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
-import { ReservasService } from '../../../../services/ReservasService';
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
+import { ReservasService } from '../../../../services/ReservasService.service';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
