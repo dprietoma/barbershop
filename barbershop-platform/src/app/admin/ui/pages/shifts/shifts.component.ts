@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { DisponibilidadService } from '../../../../services/disponibilidad.service';
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
-declare var bootstrap: any;
 
 
 @Component({
@@ -43,8 +42,8 @@ export class ShiftsComponent implements OnInit {
     }
   }
   getTodaysDate(): string {
-    const hoy = new Date();
-    return hoy.toISOString().split('T')[0];
+    const today = new Date();
+    return today.toISOString().split('T')[0];
   }
 
   abrirModal(barber: string, hora?: string, type?: string) {

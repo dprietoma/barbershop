@@ -23,7 +23,8 @@
     <app-graphics></app-graphics>
     <div class="card shadow-sm rounded-4 mt-4">
         <app-table [data]="this.appointmentsTable" [columns]="cols" (selectItem)="onItemSelect($event)"
-            (actionClick)="handleAction($event)">
+            (actionClick)="handleAction($event)" [showInputFilter]="true" [configFilter]="filtroConfig"
+            [nameTable]="'Listado de reservas'">
         </app-table>
     </div>
 </div>
