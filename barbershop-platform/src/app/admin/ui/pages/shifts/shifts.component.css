@@ -17,7 +17,8 @@
 }
 
 .agenda-column {
-    background-color: white;
+    background-color: var(--background-color);
+    color: var(--text-color);
     border: 1px solid #dee2e6;
     border-radius: 6px;
     overflow: hidden;
@@ -54,6 +55,8 @@
     font-size: 0.75rem;
     line-height: 1.2;
     padding: 0 4px;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .agenda-header {
@@ -61,7 +64,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f8f9fa;
+    background-color: var(--background-color);
+    color: var(--text-color);
     border-bottom: 1px solid #dee2e6;
 }
 
