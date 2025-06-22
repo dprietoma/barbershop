@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, Validators } from '@angular/forms';
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { TableComponent } from '../../../../shared/table/table.component';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
@@ -44,10 +44,90 @@ export class AppointmentsComponent implements OnInit {
     { icon: 'bi-flag-fill', color: 'blue', label: 'Finalizadas', statusValue: 'Finalizada' },
     { icon: 'bi-x-circle-fill', color: 'red', label: 'Canceladas', statusValue: 'Cancelada' },
   ];
-
-
-
   selectedTab = 0;
+  ListFormAppointments = [
+    {
+      title: 'Nombre Cliente',
+      name: 'clienteNombre',
+      type: 'text',
+      placeholder: 'Nombre Completo',
+      validation: [Validators.required,
+      Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
+      icon: 'bi-person-circle icon-color fs-5',
+      class: 'col-md-4'
+    },
+    {
+      title: 'Celular',
+      name: 'phoneCustomer',
+      type: 'text',
+      placeholder: 'Ingrese Celular',
+      validation: [
+        Validators.required,
+        Validators.pattern(/^3\d{9}$/),
+        Validators.minLength(10),
+        Validators.maxLength(10),
+      ],
+      icon: 'bi-telephone icon-color fs-5',
+      class: 'col-md-4',
+    },
+    {
+      title: 'Barbero',
+      name: 'barberNombre',
+      type: 'text',
+      placeholder: 'Ingrese Barbero',
+      validation: [Validators.required,
+      Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
+      icon: 'bi-person-gear icon-color fs-5',
+      class: 'col-md-4',
+    },
+    {
+      title: 'Fecha',
+      name: 'fecha',
+      type: 'text',
+      placeholder: 'Ingrese Fecha',
+      validation: [Validators.required],
+      icon: 'bi-calendar-event icon-color fs-5',
+      class: 'col-md-4',
+      disabled: true,
+    },
+    {
+      title: 'Hora',
+      name: 'hora',
+      type: 'text',
+      placeholder: 'Ingrese Hora',
+      validation: [Validators.required],
+      icon: 'bi-alarm icon-color fs-5',
+      class: 'col-md-4',
+      disabled: true,
+    },
+    {
+      title: 'Estado',
+      name: 'estado',
+      type: 'select',
+      placeholder: 'Seleccione Estado',
+      validation: [Validators.required],
+      icon: 'bi-list icon-color fs-5',
+      class: 'col-md-4',
+      options: [
+        { label: 'Confirmada', value: 'Confirmada' },
+        { label: 'En Curso', value: 'En Curso' },
+      ]
+    },
+    {
+      title: 'Total',
+      name: 'total',
+      type: 'currency',
+      placeholder: 'Ingrese Total',
+      validation: [Validators.required],
+      icon: 'bi-cash-coin icon-color fs-5',
+      class: 'col-md-4',
+      disabled: true,
+      mask: 'separator.0',
+      prefix: '$ ',
+      thousandSeparator: '.'
+    },
+  ];
+
   constructor(private loadingService: LoadingService,
     private reservationsService: StoriesService
   ) { }
@@ -94,5 +174,8 @@ export class AppointmentsComponent implements OnInit {
     } else if (event.action === 'delete') {
       // mostrar confirmación
     }
+  }
+  procesarDatos(event: any) {
+
   }
 }

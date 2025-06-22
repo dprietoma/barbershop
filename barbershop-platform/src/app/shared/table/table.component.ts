@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxMaskDirective } from 'ngx-mask';
 @Component({
   selector: 'app-table',
-  imports: [CommonModule, FormsModule, FilterPipe, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, FilterPipe, NgxPaginationModule,
+    ReactiveFormsModule, NgxMaskDirective],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css'
 })
-export class TableComponent {
+export class TableComponent implements OnInit {
   @Input() data: any[] = [];
   @Input() columns: { key: string, label: string, type?: string }[] = [];
   @Input() showInputFilter: boolean = false;
@@ -20,14 +22,28 @@ export class TableComponent {
   @Input() nameTable: string = '';
   @Output() selectItem = new EventEmitter<any>();
   @Output() actionClick = new EventEmitter<{ action: string, row: any }>();
+  @Input() ListForms: any[] = [];
+  @Output() formsValue = new EventEmitter<any>();
+  form: FormGroup;
   selectedItem: any = null;
   showModal: boolean = false;
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   filtroTexto = '';
   p: number = 1;
-  
+
   private readonly filterPipe = new FilterPipe();
+  constructor(private fb: FormBuilder) { }
+  ngOnInit(): void {
+    this.form = this.fb.group({});
+    this.ListForms.forEach(input => {
+      const control = this.fb.control(
+        { value: '', disabled: input.disabled || false },
+        input.validation || []
+      );
+      this.form.addControl(input.name, control);
+    });
+  }
   onRowClick(row: any) {
     this.selectedItem = row;
     this.selectItem.emit(row);
@@ -36,6 +52,7 @@ export class TableComponent {
     this.actionClick.emit({ action, row });
     if (action === 'edit') {
       this.selectedItem = row;
+      this.form.patchValue(this.selectedItem, { onlySelf: false, emitEvent: true });
       this.showModal = true;
     }
   }
@@ -73,5 +90,11 @@ export class TableComponent {
         return 'bg-secondary';
     }
   }
-
+  onSubmit(): void {
+    if (this.form.valid) {
+      this.formsValue.emit(this.form.value);
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
 }
