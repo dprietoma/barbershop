@@ -45,6 +45,15 @@
 </form> -->
 <div class="card">
     <div class="card-body">
+        <div class="profile-upload text-center">
+            <input type="file" id="photoInput" (change)="onPhotoSelected($event)" hidden>
+            <div class="circle" (click)="triggerFileInput()">
+                <span class="plus-icon">+</span>
+                <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="preview-img" />
+            </div>
+            <p class="mt-2"><strong>Agrega una foto</strong> </p>
+        </div>
+
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="container">
                 <div class="row">

@@ -11,13 +11,11 @@ import { NgxMaskDirective } from 'ngx-mask';
 })
 export class FormComponent implements OnInit {
   @Input() ListForms: any[] = [];
- @Output() formsValue = new EventEmitter<any>();
-
-
+  @Output() formsValue = new EventEmitter<any>();
   form: FormGroup;
   imagenBase64: string = '';
   archivoSeleccionado!: File;
-  imagenPreview: string | null = null;
+  previewUrl: string | null = null;
 
   constructor(private fb: FormBuilder) {
     // this.form = this.fb.group({
@@ -47,12 +45,18 @@ export class FormComponent implements OnInit {
     return date.toISOString().slice(0, 16); // formato para datetime-local
   }
 
-  subirImagen(event: any) {
-    const file = event.target.files[0];
+  triggerFileInput() {
+    const input = document.getElementById('photoInput') as HTMLInputElement;
+    input?.click();
+  }
+
+  onPhotoSelected(event: Event) {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
     if (file) {
-      this.archivoSeleccionado = file;
       const reader = new FileReader();
-      reader.onload = () => this.imagenPreview = reader.result as string;
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      };
       reader.readAsDataURL(file);
     }
   }
