@@ -1,6 +1,6 @@
+<app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
 <div class="container">
-    <app-form [campos]="['nombre','tipo', 'detalle','duracion', 'valor', 'avatar']"
-     (onSubmit)="guardarServicio($event)"></app-form>
+    <app-form [ListForms]="ListFormAppointments" (formsValue)="saveServices($event)"></app-form>
 
     <div class="card shadow-sm rounded-4 mt-4">
         <app-table [data]="servicesData" [columns]="cols" [nameTable]="'Lista de servicios'"
