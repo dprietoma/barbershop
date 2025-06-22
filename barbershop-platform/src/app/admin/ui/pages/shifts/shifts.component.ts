@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { DisponibilidadService } from '../../../../services/disponibilidad.service';
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
+import { ShowAlert } from '../../../../utils/global/sweetalert';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class ShiftsComponent implements OnInit {
     { label: 'Turnos y Pausas', url: 'admin/shifts' },
   ];
   barbers: any[] = [];
-  fechaSeleccionada: string = this.getTodaysDate();
+  selectedDate: string = this.getTodaysDate();
   selectedBarber: any = null;
   selectedHour: string = '';
   isAvailable: boolean = true;
@@ -29,12 +30,19 @@ export class ShiftsComponent implements OnInit {
     private loadingService: LoadingService
   ) { }
   ngOnInit(): void {
-    this.cargarDisponibilidad();
+    this.loadAvailability();
   }
-  async cargarDisponibilidad() {
+  async loadAvailability() {
     this.loadingService.show();
     try {
-      this.barbers = await this.disponibilidadService.getAvailabilityByDate(this.fechaSeleccionada);
+      this.barbers = await this.disponibilidadService.getAvailabilityByDate(this.selectedDate);
+      if (this.barbers.length === 0) {
+        ShowAlert.viewAlert(
+          'Oops...',
+          `No hay barberos disponibles para esta fecha: ${this.selectedDate}. Intenta cambiar o revisar en otra fecha.`,
+          'info'
+        );
+      }
     } catch (err) {
       console.log('Error consultando la disponibilidad', err);
     } finally {
@@ -47,22 +55,22 @@ export class ShiftsComponent implements OnInit {
   }
 
   abrirModal(barber: string, hora?: string, type?: string) {
-    this.selectedHour = type === 'ByBarber' ? this.fechaSeleccionada : hora ?? '';
+    this.selectedHour = type === 'ByBarber' ? this.selectedDate : hora ?? '';
     this.selectedBarber = barber;
   }
   async saveAvailability() {
     this.loadingService.show();
     try {
-      if (this.selectedHour === this.fechaSeleccionada) {
+      if (this.selectedHour === this.selectedDate) {
         await this.disponibilidadService.updateAvailabilityAllDay(
           this.selectedBarber.id,
-          this.fechaSeleccionada,
+          this.selectedDate,
           this.isAvailable
         );
       } else {
         await this.disponibilidadService.updateAvailability(
           this.selectedBarber.id,
-          this.fechaSeleccionada,
+          this.selectedDate,
           this.selectedHour,
           this.isAvailable);
       }
@@ -76,7 +84,7 @@ export class ShiftsComponent implements OnInit {
 
   closeModal() {
     this.cerrarBtn.nativeElement.click();
-    this.cargarDisponibilidad();
+    this.loadAvailability();
 
   }
   editBarberAvailability(barber: any) {

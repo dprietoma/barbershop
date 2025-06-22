@@ -1,8 +1,8 @@
 <app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
 <div class="container-fluid d-flex justify-content-end mb-2">
     <div class="w-auto">
-        <input type="date" id="fecha" class="form-control" [(ngModel)]="fechaSeleccionada"
-            (change)="cargarDisponibilidad()" />
+        <input type="date" id="fecha" class="form-control" [(ngModel)]="selectedDate"
+            (change)="loadAvailability()" />
     </div>
 </div>
 
@@ -46,11 +46,6 @@
                 </ng-template>
             </div>
         </div>
-    </div>
-</div>
-<div class="container">
-    <div *ngIf="barbers.length === 0" class="alert alert-info text-center mt-3" role="alert">
-        <strong> No hay barberos disponibles para esta fecha. <a class="alert-link">Cambia la fecha</a></strong>
     </div>
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
