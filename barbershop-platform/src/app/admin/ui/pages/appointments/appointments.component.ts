@@ -7,6 +7,7 @@ import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { BreadcrumbComponent } from '../../../../shared/breadcrumb/breadcrumb.component';
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { StoriesService } from '../../../../services/stories.service';
+import { ShowAlert } from '../../../../utils/global/sweetalert';
 
 @Component({
   selector: 'app-appointments',
@@ -65,6 +66,13 @@ export class AppointmentsComponent implements OnInit {
         next: reservas => {
           this.appointmentsTable = reservas;
           this.loadingService.hide();
+          if (this.appointmentsTable.length === 0) {
+            ShowAlert.viewAlert(
+              'Sin reservas disponibles',
+              `No se encontraron reservas para la fecha ${this.selectedDate} con estado ${this.status}. Intenta cambiar los filtros o revisar en otra fecha.`,
+              'info'
+            );
+          }
         },
         error: err => {
           console.error('Error consultando las reservas', err);

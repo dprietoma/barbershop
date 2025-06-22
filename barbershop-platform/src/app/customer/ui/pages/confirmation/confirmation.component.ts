@@ -41,7 +41,6 @@ export class ConfirmationComponent implements OnInit {
     private sessionStorage: SessionStorageService) {
   }
   ngOnInit(): void {
-    this.historial.forzarRegresoAHOME('/customer/confirmation');
     this.formDataPeople = this.fb.group({
       name: [
         '',
