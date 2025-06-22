@@ -57,10 +57,14 @@
                     </ng-container>
                 </td>
                 <td *ngIf="hasActionsColumn()">
-                    <i class="bi bi-pencil-fill fs-3 mb-2" style="color: blue;"
-                        (click)="onIconClick('edit', row); $event.stopPropagation()"></i>
-                    <i class="bi bi-trash-fill fs-3" style="color: red;"
-                        (click)="onIconClick('delete', row); $event.stopPropagation()"></i>
+                    <button type="button" class="btn btn-primary btn-no-style me-1"
+                        (click)="onIconClick('edit', row); $event.stopPropagation()">
+                        <i class="bi bi-pencil-square fs-5"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-no-style "
+                        (click)="onIconClick('delete', row); $event.stopPropagation()">
+                        <i class="bi bi-trash3 fs-5"></i>
+                    </button>
                 </td>
             </tr>
         </tbody>
