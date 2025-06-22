@@ -1,0 +1,45 @@
+<form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="row g-4 p-4">
+    <div class="col-md-6" *ngIf="mostrarCampo('nombre')">
+        <label class="form-label">Nombre del Servicio</label>
+        <input type="text" class="form-control" formControlName="nombre" placeholder="Ej: Corte premium y barba básico">
+    </div>
+
+    <div class="col-md-6" *ngIf="mostrarCampo('tipo')">
+        <label class="form-label">Tipo</label>
+        <input type="text" class="form-control" formControlName="tipo" placeholder="Ej: CRISTIANBARBER">
+    </div>
+
+    <div class="col-md-6" *ngIf="mostrarCampo('duracion')">
+        <label class="form-label">Duración</label>
+        <input type="text" class="form-control" formControlName="duracion" placeholder="Ej: 1 hora 15 minutos">
+    </div>
+
+    <div class="col-md-6" *ngIf="mostrarCampo('valor')">
+        <label class="form-label">Valor</label>
+        <input type="number" class="form-control" formControlName="valor" placeholder="Ej: 30000">
+    </div>
+
+    <div class="col-12" *ngIf="mostrarCampo('detalle')">
+        <label class="form-label">Detalle</label>
+        <textarea rows="3" class="form-control" formControlName="detalle"
+            placeholder="Describe el servicio..."></textarea>
+    </div>
+
+    <div class="col-12" *ngIf="mostrarCampo('avatar')">
+        <label for="avatar" class="form-label">Cargar imagen</label>
+        <input type="file" class="form-control" formControlName="avatar" (change)="subirImagen($event)"
+            accept="image/*" />
+        <div class="form-text" >Subiendo imagen...</div>
+    </div>
+
+    <div class="col-md-6" *ngIf="mostrarCampo('createdAt')">
+        <label class="form-label">Fecha de Creación</label>
+        <input type="datetime-local" class="form-control" formControlName="createdAt">
+    </div>
+
+    <div class="col-6 text-end">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            Guardar
+        </button>
+    </div>
+</form>

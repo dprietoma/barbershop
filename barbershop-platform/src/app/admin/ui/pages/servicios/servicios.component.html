@@ -1,48 +1,6 @@
 <div class="container">
-    <form [formGroup]="formServicio" (ngSubmit)="guardarServicio()" class="row g-4 p-4 border rounded bg-light">
-        <div class="col-md-6">
-            <label class="form-label">Nombre del Servicio</label>
-            <input type="text" class="form-control" formControlName="nombre"
-                placeholder="Ej: Corte premium y barba básico">
-        </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Tipo</label>
-            <input type="text" class="form-control" formControlName="tipo" placeholder="Ej: CRISTIANBARBER">
-        </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Duración</label>
-            <input type="text" class="form-control" formControlName="duracion" placeholder="Ej: 1 hora 15 minutos">
-        </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Valor</label>
-            <input type="number" class="form-control" formControlName="valor" placeholder="Ej: 30000">
-        </div>
-
-        <div class="col-12">
-            <label class="form-label">Detalle</label>
-            <textarea rows="3" class="form-control" formControlName="detalle"
-                placeholder="Describe el servicio..."></textarea>
-        </div>
-
-        <div class="col-12">
-            <label class="form-label">URL del Avatar</label>
-            <input type="text" class="form-control" formControlName="avatar" placeholder="URL de la imagen">
-        </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Fecha de Creación</label>
-            <input type="datetime-local" class="form-control" formControlName="createdAt">
-        </div>
-
-        <div class="col-12 text-end">
-            <button type="submit" class="btn btn-primary" [disabled]="formServicio.invalid">
-                Guardar Servicio
-            </button>
-        </div>
-    </form>
+    <app-form [campos]="['nombre','tipo', 'detalle','duracion', 'valor', 'avatar']"
+     (onSubmit)="guardarServicio($event)"></app-form>
 
     <div class="card shadow-sm rounded-4 mt-4">
         <app-table [data]="servicesData" [columns]="cols" [nameTable]="'Lista de servicios'"
