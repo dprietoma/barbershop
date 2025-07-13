@@ -48,6 +48,24 @@
                                 {{ row[col.key] | currency }}
                             </strong></span>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'phone'">
+                        <a href="https://wa.me/{{  row[col.key] }}"
+                            class="info-value text-success d-block text-truncate" style="max-width: 150px;">
+                            <strong>{{ row[col.key]}}</strong>
+                        </a>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'raiting'">
+                        <span class="text-warning">
+                            <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
+                                <i class="bi" [ngClass]="{'bi-star-fill': row[col.key] >= star,
+                                'bi-star-half': row[col.key] >= (star - 0.5) && 
+                                row[col.key] < star,
+                                'bi-star': row[col.key] < (star - 0.5)
+                                 }">
+                                </i>
+                            </ng-container>
+                        </span>
+                    </ng-container>
                     <ng-container *ngSwitchDefault>
                         {{ row[col.key] }}
                     </ng-container>
@@ -71,7 +89,6 @@
     screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
 </pagination-controls>
 
-<!-- MODAL EDICIÓN -->
 <div *ngIf="showModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg rounded-4">
@@ -80,70 +97,8 @@
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                    <div class="container">
-                        <div class="row">
-                            <div *ngFor="let input of ListForms" [class]="input.class + ' mb-3'">
-                                <label class="form-label" [for]="input.name">
-                                    <strong>
-                                        {{ input.title }}
-                                    </strong>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text" *ngIf="input.icon">
-                                        <i class="bi" [ngClass]="input.icon"></i>
-                                    </span>
-
-                                    <ng-container [ngSwitch]="input.type">
-                                        <input *ngSwitchCase="'text'" class="form-control"
-                                            [formControlName]="input.name" [placeholder]="input.placeholder" />
-                                        <input *ngSwitchCase="'password'" class="form-control"
-                                            [formControlName]="input.name" [placeholder]="input.placeholder"
-                                            type="password" />
-                                        <select *ngSwitchCase="'select'" class="form-select"
-                                            [formControlName]="input.name">
-                                            <option value="" disabled>{{ input.placeholder }}</option>
-                                            <option *ngFor="let opt of input.options" [value]="opt.value">{{ opt.label
-                                                }}</option>
-                                        </select>
-                                        <input *ngSwitchCase="'currency'" type="text" class="form-control"
-                                            [formControlName]="input.name" [placeholder]="input.placeholder"
-                                            [mask]="input.mask" [prefix]="input.prefix"
-                                            [thousandSeparator]="input.thousandSeparator" [disabled]="input.disabled" />
-
-                                    </ng-container>
-                                </div>
-
-                                <small class="text-danger"
-                                    *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['required']">
-                                    Este campo es obligatorio.
-                                </small>
-                                <small class="text-danger"
-                                    *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['email']">
-                                    Correo no válido.
-                                </small>
-                                <small class="text-danger"
-                                    *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['minlength']">
-                                    Mínimo {{ form.get(input.name)?.errors?.['minlength']?.requiredLength }} caracteres.
-                                </small>
-                                <small class="text-danger"
-                                    *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['maxlength']">
-                                    Máximo {{ form.get(input.name)?.errors?.['maxlength']?.requiredLength }} caracteres.
-                                </small>
-                                <small class="text-danger"
-                                    *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['pattern']">
-                                    Formato no válido.
-                                </small>
-
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">
-                                <strong> Guardar</strong>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                <app-form [ListForms]="ListForms" [dataEdit]="selectedItem" [IsEdit]="isEdit"
+                    (formsValue)="sendCollaborators($event)"></app-form>
             </div>
         </div>
     </div>

@@ -47,8 +47,7 @@ export class BarbersComponent implements OnInit {
   mode: string | null = null;
 
   private readonly filterPipe = new FilterPipe();
-  constructor(private historial: HistorialForzadoService,
-    private sessionStorage: SessionStorageService
+  constructor(private sessionStorage: SessionStorageService
   ) { }
 
 

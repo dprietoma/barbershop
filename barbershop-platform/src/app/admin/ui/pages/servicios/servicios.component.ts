@@ -140,7 +140,6 @@ export class ServiciosComponent implements OnInit {
 
   saveServices(event: any): void {
     console.log(event);
-    debugger;
     this.loadingService.show();
     this.listService.create(event).then(rs => {
       if (rs.ok) {

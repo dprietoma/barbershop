@@ -1,0 +1,11 @@
+<app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
+<div class="container">
+    <app-form [ListForms]="ListFormCollaborators" (formsValue)="saveCollaborators($event)"></app-form>
+    <div class="card shadow-sm rounded-4 mt-4">
+        <app-table [data]="barberos" [columns]="cols" [nameTable]="'Lista de Colaboradores'"
+            [configFilter]="filtroConfig" [showInputFilter]="true" [ListForms]="ListFormCollaborators"
+            [showAvatar]="true" (actionClick)="onClick($event)">
+        </app-table>
+    </div>
+</div>
+<app-footer></app-footer>

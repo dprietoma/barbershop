@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, addDoc, doc, setDoc, collectionData, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, setDoc, collectionData, getDocs, query, where, deleteDoc } from '@angular/fire/firestore';
 import { Barbero } from '../utils/interface/barbero-interface';
 import { from, Observable } from 'rxjs';
 
@@ -8,9 +8,9 @@ export class BarberosService {
     private firestore = inject(Firestore);
     private injector = inject(Injector);
 
-    createBarber(barbero: Barbero & { numDoc: string }) {
-        const ref = doc(this.firestore, `barberos/${barbero.numDoc}`);
-        const { numDoc, ...data } = barbero;
+    createBarber(barbero: Barbero & { id: string }) {
+        const ref = doc(this.firestore, `barberos/${barbero.id}`);
+        const { id, ...data } = barbero;
         return setDoc(ref, data);
     }
 
@@ -18,10 +18,14 @@ export class BarberosService {
         return from(
             runInInjectionContext(this.injector, async () => {
                 const ref = collection(this.firestore, 'barberos');
-                const q = query(ref, where('type', '==', type));
+                const q = type === 'all' ? ref : query(ref, where('type', '==', type));
                 const snapshot = await getDocs(q);
                 return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Barbero));
             })
         );
+    }
+    async deleteBarberById(id: string): Promise<void> {
+        const barberRef = doc(this.firestore, `barberos/${id}`);
+        await deleteDoc(barberRef);
     }
 }

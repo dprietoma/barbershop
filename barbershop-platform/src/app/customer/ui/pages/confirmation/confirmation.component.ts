@@ -10,7 +10,6 @@ import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
 import { ModalTermsComponent } from '../../../../shared/modal-terms/modal-terms.component';
-import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { ReservasService } from '../../../../services/ReservasService.service';
@@ -37,7 +36,6 @@ export class ConfirmationComponent implements OnInit {
     private route: Router,
     private reservasService: ReservasService,
     private loadingService: LoadingService,
-    private historial: HistorialForzadoService,
     private sessionStorage: SessionStorageService) {
   }
   ngOnInit(): void {

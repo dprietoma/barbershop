@@ -19,3 +19,5 @@ export const CRISTIANJBARBER = {
     COMENTARIO: 'Es un establecimiento especializado en el cuidado y estilo del cabello y la barba de los hombres. Es un lugar tradicionalmente diseñado para ofrecer servicios de cortes de cabello, afeitados, arreglos de barba, y otros tratamientos relacionados con el cuidado personal masculino.'
 }
 export const INTERNALCODE = 'XXXX01';
+export const SUCCESS = 'Registro creado correctamente.';
+export const SUCCESS_DELETE = 'Registro eliminado correctamente.';

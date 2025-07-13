@@ -49,7 +49,6 @@
     border-radius: 50%;
     z-index: 0;
     filter: brightness(1);
-    /* evita que se oscurezca */
 }
 
 .remove-btn {

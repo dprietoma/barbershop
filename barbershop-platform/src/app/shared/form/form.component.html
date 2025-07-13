@@ -1,123 +1,70 @@
-<!-- <form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="row g-4 p-4">
-    <div class="col-md-6" *ngIf="mostrarCampo('nombre')">
-        <label class="form-label">Nombre del Servicio</label>
-        <input type="text" class="form-control" formControlName="nombre" placeholder="Ej: Corte premium y barba básico">
-    </div>
-
-    <div class="col-md-6" *ngIf="mostrarCampo('tipo')">
-        <label class="form-label">Tipo</label>
-        <input type="text" class="form-control" formControlName="tipo" placeholder="Ej: CRISTIANBARBER">
-    </div>
-
-    <div class="col-md-6" *ngIf="mostrarCampo('duracion')">
-        <label class="form-label">Duración</label>
-        <input type="text" class="form-control" formControlName="duracion" placeholder="Ej: 1 hora 15 minutos">
-    </div>
-
-    <div class="col-md-6" *ngIf="mostrarCampo('valor')">
-        <label class="form-label">Valor</label>
-        <input type="number" class="form-control" formControlName="valor" placeholder="Ej: 30000">
-    </div>
-
-    <div class="col-12" *ngIf="mostrarCampo('detalle')">
-        <label class="form-label">Detalle</label>
-        <textarea rows="3" class="form-control" formControlName="detalle"
-            placeholder="Describe el servicio..."></textarea>
-    </div>
-
-    <div class="col-12" *ngIf="mostrarCampo('avatar')">
-        <label for="avatar" class="form-label">Cargar imagen</label>
-        <input type="file" class="form-control" formControlName="avatar" (change)="subirImagen($event)"
-            accept="image/*" />
-        <div class="form-text" >Subiendo imagen...</div>
-    </div>
-
-    <div class="col-md-6" *ngIf="mostrarCampo('createdAt')">
-        <label class="form-label">Fecha de Creación</label>
-        <input type="datetime-local" class="form-control" formControlName="createdAt">
-    </div>
-
-    <div class="col-6 text-end">
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-            Guardar
-        </button>
-    </div>
-</form> -->
 <div class="card">
     <div class="card-body">
-        <div class="profile-upload text-center">
-            <input type="file" id="photoInput" (change)="onPhotoSelected($event)" hidden>
-            <div class="circle" (click)="triggerFileInput()">
-                <span class="plus-icon">+</span>
-                <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="preview-img" />
-            </div>
-            <p class="mt-2"><strong>Agrega una foto</strong> </p>
-        </div>
-
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="container">
                 <div class="row">
                     <div *ngFor="let input of ListForms" [class]="input.class + ' mb-3'">
-                        <label class="form-label" [for]="input.name">
-                            <strong>
-                                {{ input.title }}
-                            </strong>
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text" *ngIf="input.icon">
-                                <i class="bi" [ngClass]="input.icon"></i>
-                            </span>
+                        <ng-container *ngIf="input.type !== 'file'; else fileUploadTemplate">
+                            <label class="form-label" [for]="input.name">
+                                <strong>{{ input.title }}</strong>
+                            </label>
 
-                            <ng-container [ngSwitch]="input.type">
-                                <input *ngSwitchCase="'text'" class="form-control" [formControlName]="input.name"
-                                    [placeholder]="input.placeholder" />
-                                <input *ngSwitchCase="'password'" class="form-control" [formControlName]="input.name"
-                                    [placeholder]="input.placeholder" type="password" />
-                                <select *ngSwitchCase="'select'" class="form-select" [formControlName]="input.name">
-                                    <option value="" disabled>{{ input.placeholder }}</option>
-                                    <option *ngFor="let opt of input.options" [value]="opt.value">{{ opt.label
-                                        }}</option>
-                                </select>
-                                <input *ngSwitchCase="'currency'" type="text" class="form-control"
-                                    [formControlName]="input.name" [placeholder]="input.placeholder" [mask]="input.mask"
-                                    [prefix]="input.prefix" [thousandSeparator]="input.thousandSeparator"
-                                    [disabled]="input.disabled" />
-                                <input *ngSwitchCase="'date'" type="date" class="form-control"
-                                    [formControlName]="input.name" [placeholder]="input.placeholder"
-                                    [disabled]="input.disabled" />
+                            <div class="input-group">
+                                <span class="input-group-text" *ngIf="input.icon">
+                                    <i class="bi" [ngClass]="input.icon"></i>
+                                </span>
 
-                                <input *ngSwitchCase="'time'" type="time" class="form-control"
-                                    [formControlName]="input.name" [placeholder]="input.placeholder"
-                                    [disabled]="input.disabled" />
+                                <ng-container [ngSwitch]="input.type">
+                                    <input *ngSwitchCase="'text'" class="form-control" [formControlName]="input.name"
+                                        [placeholder]="input.placeholder" />
+                                    <input *ngSwitchCase="'password'" class="form-control"
+                                        [formControlName]="input.name" [placeholder]="input.placeholder"
+                                        type="password" />
+                                    <select *ngSwitchCase="'select'" class="form-select" [formControlName]="input.name">
+                                        <option value="" disabled>{{ input.placeholder }}</option>
+                                        <option *ngFor="let opt of input.options" [value]="opt.value">{{ opt.label }}
+                                        </option>
+                                    </select>
+                                    <input *ngSwitchCase="'currency'" type="text" class="form-control"
+                                        [formControlName]="input.name" [placeholder]="input.placeholder"
+                                        [mask]="input.mask" [prefix]="input.prefix"
+                                        [thousandSeparator]="input.thousandSeparator" [disabled]="input.disabled" />
+                                    <input *ngSwitchCase="'date'" type="date" class="form-control"
+                                        [formControlName]="input.name" [placeholder]="input.placeholder"
+                                        [disabled]="input.disabled" />
+                                    <input *ngSwitchCase="'time'" type="time" class="form-control"
+                                        [formControlName]="input.name" [placeholder]="input.placeholder"
+                                        [disabled]="input.disabled" />
+                                </ng-container>
+                            </div>
+                            <small class="text-danger"
+                                *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['required']">
+                                Este campo es obligatorio.
+                            </small>
+                            <small class="text-danger"
+                                *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['pattern']">
+                                Formato no válido.
+                            </small>
+                        </ng-container>
+                        <ng-template #fileUploadTemplate>
+                            <div class="profile-upload d-flex flex-column align-items-center justify-content-center">
+                                <input type="file" [attr.data-name]="input.name"
+                                    [id]="this.editMode ? 'photoInputEdit' : 'photoInput'"
+                                    (change)="onPhotoSelected($event)" hidden />
 
-                            </ng-container>
-                        </div>
+                                <div class="circle" (click)="triggerFileInput()">
+                                    <span class="plus-icon">+</span>
+                                    <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="preview-img" />
+                                </div>
 
-                        <small class="text-danger"
-                            *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['required']">
-                            Este campo es obligatorio.
-                        </small>
-                        <small class="text-danger"
-                            *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['email']">
-                            Correo no válido.
-                        </small>
-                        <small class="text-danger"
-                            *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['minlength']">
-                            Mínimo {{ form.get(input.name)?.errors?.['minlength']?.requiredLength }} caracteres.
-                        </small>
-                        <small class="text-danger"
-                            *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['maxlength']">
-                            Máximo {{ form.get(input.name)?.errors?.['maxlength']?.requiredLength }} caracteres.
-                        </small>
-                        <small class="text-danger"
-                            *ngIf="form.get(input.name)?.touched && form.get(input.name)?.errors?.['pattern']">
-                            Formato no válido.
-                        </small>
-
+                                <p class="mt-2"><strong>{{ input.placeholder }}</strong></p>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success" [disabled]="form.invalid">
                         <strong> Guardar</strong>
                     </button>
                 </div>

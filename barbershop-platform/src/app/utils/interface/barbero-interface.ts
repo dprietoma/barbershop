@@ -1,9 +1,13 @@
 export interface Barbero {
-    id?: string;
+    id: string;
     nombre: string;
-    foto: string;
+    foto: any;
     insta: string;
     especialidades: string[];
     activo: boolean;
     rating: number;
+    typeDoc: string;
+    numDoc: string;
+    numCelular: string;
+    type: string;
 }
