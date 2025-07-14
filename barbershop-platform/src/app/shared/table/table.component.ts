@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxMaskDirective } from 'ngx-mask';
 import { FormComponent } from '../form/form.component';
 @Component({
   selector: 'app-table',
@@ -13,7 +12,6 @@ import { FormComponent } from '../form/form.component';
   styleUrl: './table.component.css'
 })
 export class TableComponent implements OnInit {
-  @ViewChild('photoInput') photoInput!: ElementRef<HTMLInputElement>;
   @Input() data: any[] = [];
   @Input() columns: { key: string, label: string, type?: string }[] = [];
   @Input() showInputFilter: boolean = false;
@@ -27,7 +25,6 @@ export class TableComponent implements OnInit {
   @Output() actionClick = new EventEmitter<{ action: string, row: any }>();
   @Input() ListForms: any[] = [];
   @Output() formsValue = new EventEmitter<any>();
-  form: FormGroup;
   selectedItem: any = null;
   showModal: boolean = false;
   sortColumn: string = '';
@@ -37,28 +34,18 @@ export class TableComponent implements OnInit {
   isEdit: boolean = false;
 
   private readonly filterPipe = new FilterPipe();
-  constructor(private fb: FormBuilder) { }
-  ngOnInit(): void {
-    this.form = this.fb.group({});
-    this.ListForms.forEach(input => {
-      const control = this.fb.control(
-        { value: '', disabled: input.disabled || false },
-        input.validation || []
-      );
-      this.form.addControl(input.name, control);
-    });
-  }
+  constructor() { }
+  ngOnInit(): void {  }
+
   onRowClick(row: any) {
     this.selectedItem = row;
     this.selectItem.emit(row);
   }
   onIconClick(action: string, row: any) {
-    debugger
     this.actionClick.emit({ action, row });
     if (action === 'edit') {
       this.selectedItem = row;
       this.isEdit = true;
-      this.form.patchValue(this.selectedItem, { onlySelf: false, emitEvent: true });
       this.showModal = true;
     }
   }
@@ -97,28 +84,8 @@ export class TableComponent implements OnInit {
         return 'bg-secondary';
     }
   }
-  onSubmit(): void {
-    if (this.form.valid) {
-      this.formsValue.emit(this.form.value);
-    } else {
-      this.form.markAllAsTouched();
-    }
-  }
-  // onPhotoSelected(event: Event) {
-  //   const file = (event.target as HTMLInputElement)?.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       this.previewUrl = reader.result as string;
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
-  // triggerFileInput() {
-  //   const input = document.getElementById('photoInputEdit') as HTMLInputElement;
-  //   input?.click();
-  // }
   sendCollaborators(event: any) {
     this.formsValue.emit(event);
+    this.closeModal();
   }
 }

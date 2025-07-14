@@ -12,4 +12,5 @@ export interface Reserva {
     estado: string;
     duracion: string;
     type: string;
+    id?: string
 }

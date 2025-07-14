@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, addDoc, doc, setDoc, collectionData, getDocs, query, where, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, setDoc, collectionData, getDocs, query, where, deleteDoc, updateDoc } from '@angular/fire/firestore';
 import { Barbero } from '../utils/interface/barbero-interface';
 import { from, Observable } from 'rxjs';
 
@@ -12,6 +12,10 @@ export class BarberosService {
         const ref = doc(this.firestore, `barberos/${barbero.id}`);
         const { id, ...data } = barbero;
         return setDoc(ref, data);
+    }
+    updateBarber(id: string, partialData: Partial<Barbero>) {
+        const ref = doc(this.firestore, `barberos/${id}`);
+        return updateDoc(ref, partialData);
     }
 
     GetBarbersByType(type: string): Observable<Barbero[]> {

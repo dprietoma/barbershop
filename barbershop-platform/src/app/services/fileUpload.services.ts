@@ -24,7 +24,6 @@ export class UploadfileService {
         'state_changed',
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Progreso: ${progress}%`);
         },
         (error) => {
           console.error('Error al cargar el archivo:', error);

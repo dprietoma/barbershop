@@ -21,3 +21,4 @@ export const CRISTIANJBARBER = {
 export const INTERNALCODE = 'XXXX01';
 export const SUCCESS = 'Registro creado correctamente.';
 export const SUCCESS_DELETE = 'Registro eliminado correctamente.';
+export const SUCCESS_UPDATE = 'Registro actualizado correctamente.';

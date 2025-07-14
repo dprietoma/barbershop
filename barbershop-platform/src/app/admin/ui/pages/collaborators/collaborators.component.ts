@@ -10,7 +10,7 @@ import { LoadingService } from '../../../../utils/global/LoadingService';
 import { Barbero } from '../../../../utils/interface/barbero-interface';
 import { UploadfileService } from '../../../../services/fileUpload.services';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
-import { SUCCESS, SUCCESS_DELETE } from '../../../../utils/constants/General-Constants';
+import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 
 @Component({
   selector: 'app-collaborators',
@@ -65,7 +65,7 @@ export class CollaboratorsComponent implements OnInit {
       ],
       icon: 'bi-telephone icon-color fs-5',
       class: 'col-md-3',
-
+      disabled: true
     },
     {
       title: 'Calificación',
@@ -116,7 +116,8 @@ export class CollaboratorsComponent implements OnInit {
         { label: 'Cédula de extranjería', value: 'CE' },
         { label: 'Tarjeta de identidad', value: 'TI' },
         { label: 'Pasaporte', value: 'PAS' }
-      ]
+      ],
+      disabled: true
     },
     {
       title: 'Número Documento',
@@ -131,6 +132,7 @@ export class CollaboratorsComponent implements OnInit {
       ],
       icon: 'bi-person-vcard icon-color fs-5',
       class: 'col-md-3',
+      disabled: true
     }
   ];
   filtroConfig = {
@@ -176,6 +178,34 @@ export class CollaboratorsComponent implements OnInit {
       this.deleteBarber(event.row.id as any)
     }
   }
+  async editCollaborators(event: any) {
+    this.loadingService.show();
+    try {
+      let urlFoto = event.foto instanceof File
+        ? await this.uploadFile(event.foto)
+        : event.foto;
+      const data: Barbero = {
+        id: `${event.typeDoc}${event.numDoc}`,
+        activo: Boolean(event.activo),
+        nombre: event.nombre,
+        numCelular: event.numCelular,
+        typeDoc: event.typeDoc,
+        numDoc: event.numDoc,
+        type: event.type,
+        rating: Number(event.rating),
+        foto: urlFoto,
+        especialidades: [],
+        insta: ''
+      };
+      await this.barberService.updateBarber(data.id, data);
+      ShowAlert.viewAlert('info', SUCCESS_UPDATE, 'success');
+      this.getBarber();
+    } catch (error) {
+      console.error('Error editando barbero', error);
+    } finally {
+      this.loadingService.hide();
+    }
+  }
   async deleteBarber(id: string) {
     this.loadingService.show()
     try {
@@ -203,7 +233,6 @@ export class CollaboratorsComponent implements OnInit {
     this.loadingService.show();
     this.barberService.GetBarbersByType('all').subscribe(data => {
       this.barberos = data;
-      console.log(this.barberos)
       this.loadingService.hide();
     });
   }

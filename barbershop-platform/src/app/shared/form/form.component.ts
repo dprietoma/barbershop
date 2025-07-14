@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
-import { isEmpty } from 'rxjs';
-import { json } from 'stream/consumers';
 
 @Component({
   selector: 'app-form',
@@ -20,7 +18,7 @@ export class FormComponent implements OnInit, OnChanges {
   form: FormGroup;
   previewUrl: string | null = null;
   editMode: boolean = false;
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) { }
+  constructor(private fb: FormBuilder) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['IsEdit']) {
       this.editMode = changes['IsEdit'].currentValue;
@@ -30,25 +28,20 @@ export class FormComponent implements OnInit, OnChanges {
     this.form = this.fb.group({});
     this.ListForms.forEach(input => {
       const controlValue = input.type === 'file' ? null : '';
-      this.form.addControl(input.name, this.fb.control(controlValue, input.validation || []));
+      const isDisabled = this.IsEdit && input.disabled;
+      const control = this.fb.control(
+        { value: controlValue, disabled: isDisabled || false },
+        input.validation || []
+      );
+      this.form.addControl(input.name, control);
     });
 
     if (this.editMode) {
       this.previewUrl = this.dataEdit?.foto;
-      const dataEditCopy = { ...this.dataEdit };
-      delete dataEditCopy.foto;
-      this.form.patchValue(dataEditCopy);
+      this.form.patchValue(this.dataEdit);
+      this.form.get('foto')?.setValue(this.dataEdit.foto);
     }
   }
-
-
-
-  getFechaISO(): string {
-    const date = new Date();
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    return date.toISOString().slice(0, 16);
-  }
-
   triggerFileInput() {
     const input = document.getElementById(this.editMode ? 'photoInputEdit' : 'photoInput') as HTMLInputElement;
     input?.click();
@@ -68,7 +61,11 @@ export class FormComponent implements OnInit, OnChanges {
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.formsValue.emit(this.form.value);
+      const formValues = this.form.getRawValue();
+      const mergedValues = this.dataEdit
+        ? { ...this.dataEdit, ...formValues }
+        : { ...formValues };
+      this.formsValue.emit(mergedValues);
     } else {
       this.form.markAllAsTouched();
     }

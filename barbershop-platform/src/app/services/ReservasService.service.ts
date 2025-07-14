@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, query, where, getDocs, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, getDocs, doc, getDoc, updateDoc, setDoc, deleteDoc } from '@angular/fire/firestore';
 import { Reserva } from '../utils/interface/reserva.interface';
 import { DURACION_FRANJA_MIN } from '../utils/constants/horasDefault';
 
@@ -39,7 +39,30 @@ export class ReservasService {
             return { ok: false, mensaje: 'Ocurrió un error al crear la reserva' };
         }
     }
+    async updateReservation(reservaId: string, reserva: Reserva): Promise<{ ok: boolean; mensaje: string }> {
+        try {
+            const reservaRef = doc(this.firestore, 'reservas', reservaId);
+            await setDoc(reservaRef, {
+                ...reserva,
+                actualizadoEn: new Date()
+            }, { merge: true });
+            return { ok: true, mensaje: 'Reserva actualizada exitosamente' };
+        } catch (error) {
+            console.error('Error al actualizar reserva:', error);
+            return { ok: false, mensaje: 'Ocurrió un error al actualizar la reserva' };
+        }
+    }
+    async deleteReservation(reservaId: string): Promise<{ ok: boolean; mensaje: string }> {
+        try {
+            const reservaRef = doc(this.firestore, 'reservas', reservaId);
+            await deleteDoc(reservaRef);
 
+            return { ok: true, mensaje: 'Reserva eliminada exitosamente' };
+        } catch (error) {
+            console.error('Error al eliminar reserva:', error);
+            return { ok: false, mensaje: 'Ocurrió un error al eliminar la reserva' };
+        }
+    }
     async GetReservationByCustomerDateStatus(
         docNumberCustomer: string,
         fecha: string,

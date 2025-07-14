@@ -8,6 +8,8 @@ import { BreadcrumbComponent } from '../../../../shared/breadcrumb/breadcrumb.co
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { StoriesService } from '../../../../services/stories.service';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
+import { ReservasService } from '../../../../services/ReservasService.service';
+import { SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 
 @Component({
   selector: 'app-appointments',
@@ -28,7 +30,7 @@ export class AppointmentsComponent implements OnInit {
   ];
   cols = [
     { key: 'clienteNombre', label: 'Cliente' },
-    { key: 'phoneCustomer', label: 'Celular' },
+    { key: 'phoneCustomer', label: 'Celular', type: 'phone' },
     { key: 'barberNombre', label: 'Barbero' },
     { key: 'fecha', label: 'Fecha' },
     { key: 'hora', label: 'Hora' },
@@ -41,8 +43,7 @@ export class AppointmentsComponent implements OnInit {
   tabs = [
     { icon: 'bi-check-circle-fill', color: 'green', label: 'Confirmadas', statusValue: 'Confirmada' },
     { icon: 'bi-play-circle-fill', color: 'yellow', label: 'En Curso', statusValue: 'En Curso' },
-    { icon: 'bi-flag-fill', color: 'blue', label: 'Finalizadas', statusValue: 'Finalizada' },
-    { icon: 'bi-x-circle-fill', color: 'red', label: 'Canceladas', statusValue: 'Cancelada' },
+    { icon: 'bi-flag-fill', color: 'blue', label: 'Finalizadas', statusValue: 'Finalizada' }
   ];
   selectedTab = 0;
   ListFormAppointments = [
@@ -54,7 +55,8 @@ export class AppointmentsComponent implements OnInit {
       validation: [Validators.required,
       Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
       icon: 'bi-person-circle icon-color fs-5',
-      class: 'col-md-4'
+      class: 'col-md-4',
+      disabled: true,
     },
     {
       title: 'Celular',
@@ -69,6 +71,7 @@ export class AppointmentsComponent implements OnInit {
       ],
       icon: 'bi-telephone icon-color fs-5',
       class: 'col-md-4',
+      disabled: true,
     },
     {
       title: 'Barbero',
@@ -79,6 +82,7 @@ export class AppointmentsComponent implements OnInit {
       Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
       icon: 'bi-person-gear icon-color fs-5',
       class: 'col-md-4',
+      disabled: true,
     },
     {
       title: 'Fecha',
@@ -111,6 +115,7 @@ export class AppointmentsComponent implements OnInit {
       options: [
         { label: 'Confirmada', value: 'Confirmada' },
         { label: 'En Curso', value: 'En Curso' },
+        { label: 'Finalizada', value: 'Finalizada' },
       ]
     },
     {
@@ -129,7 +134,8 @@ export class AppointmentsComponent implements OnInit {
   ];
 
   constructor(private loadingService: LoadingService,
-    private reservationsService: StoriesService
+    private storieService: StoriesService,
+    private reservasService: ReservasService
   ) { }
   ngOnInit(): void {
     this.AppointmentsByDate();
@@ -141,7 +147,7 @@ export class AppointmentsComponent implements OnInit {
   }
   AppointmentsByDate(): void {
     this.loadingService.show();
-    this.reservationsService.getReservationsByStateAndDate(this.status, this.selectedDate)
+    this.storieService.getReservationsByStateAndDate(this.status, this.selectedDate)
       .subscribe({
         next: reservas => {
           this.appointmentsTable = reservas;
@@ -169,13 +175,33 @@ export class AppointmentsComponent implements OnInit {
     console.log('Seleccionado:', item);
   }
   handleAction(event: any) {
-    if (event.action === 'edit') {
-      // abrir modal de edición
-    } else if (event.action === 'delete') {
-      // mostrar confirmación
+    if (event.action === 'delete') {
+      this.deleteAppointments(event.row.id);
     }
   }
-  procesarDatos(event: any) {
 
+  async editAppointments(event: any) {
+    this.loadingService.show();
+    try {
+      await this.reservasService.updateReservation(event.id, event);
+      ShowAlert.viewAlert('info', SUCCESS_UPDATE, 'success');
+      this.AppointmentsByDate();
+    } catch (error) {
+      console.error('Error editando la cita', error);
+    } finally {
+      this.loadingService.hide();
+    }
+  }
+  async deleteAppointments(id: string) {
+    this.loadingService.show()
+    try {
+      await this.reservasService.deleteReservation(id);
+      ShowAlert.viewAlert('info', SUCCESS_DELETE, 'success');
+      this.AppointmentsByDate();
+    } catch (error) {
+      console.error('Error eliminando la cita', error);
+    } finally {
+      this.loadingService.hide();
+    }
   }
 }
