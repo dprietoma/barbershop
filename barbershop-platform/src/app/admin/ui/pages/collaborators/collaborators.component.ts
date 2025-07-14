@@ -219,7 +219,7 @@ export class CollaboratorsComponent implements OnInit {
     }
   }
   async uploadFile(file: any): Promise<string> {
-    return this.uploadfileService.uploadFile(file)
+    return this.uploadfileService.uploadFile(file, 'barberos')
       .then((url: any) => {
         return url;
       })

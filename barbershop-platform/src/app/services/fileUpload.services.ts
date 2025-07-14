@@ -10,12 +10,12 @@ export class UploadfileService {
     return parts[parts.length - 1];
   }
 
-  async uploadFile(file: File): Promise<string> {
+  async uploadFile(file: File, nameFolder: string): Promise<string> {
     if (!file) {
       throw new Error('No file provided');
     }
 
-    const filePath = `barberos/${file.name}`;
+    const filePath = `${nameFolder}/${file.name}`;
     const fileRef = ref(this.storage, filePath);
     const uploadTask = uploadBytesResumable(fileRef, file);
 

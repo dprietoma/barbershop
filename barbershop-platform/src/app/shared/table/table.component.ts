@@ -20,7 +20,6 @@ export class TableComponent implements OnInit {
     placeholder: ''
   };
   @Input() nameTable: string = '';
-  @Input() showAvatar: boolean;
   @Output() selectItem = new EventEmitter<any>();
   @Output() actionClick = new EventEmitter<{ action: string, row: any }>();
   @Input() ListForms: any[] = [];
