@@ -4,7 +4,8 @@
 
     <div class="card shadow-sm rounded-4 mt-4">
         <app-table [data]="servicesData" [columns]="cols" [nameTable]="'Lista de servicios'"
-            [configFilter]="filtroConfig" [showInputFilter]="true">
+            [configFilter]="filtroConfig" [ListForms]="ListFormAppointments"  [showInputFilter]="true"
+            (actionClick)="onClick($event)"  (formsValue)="editServices($event)">
         </app-table>
     </div>
 </div>
