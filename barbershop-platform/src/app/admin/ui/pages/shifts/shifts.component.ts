@@ -25,6 +25,7 @@ export class ShiftsComponent implements OnInit {
   selectedBarber: any = null;
   selectedHour: string = '';
   isAvailable: boolean = true;
+  titleAvailable: string = '';
   @ViewChild('cerrarBtn') cerrarBtn!: ElementRef<HTMLButtonElement>;
   constructor(private disponibilidadService: DisponibilidadService,
     private loadingService: LoadingService
@@ -56,6 +57,7 @@ export class ShiftsComponent implements OnInit {
 
   abrirModal(barber: string, hora?: string, type?: string) {
     this.selectedHour = type === 'ByBarber' ? this.selectedDate : hora ?? '';
+    this.titleAvailable = type === 'ByBarber' ? 'Fecha Seleccionada' : 'Hora Seleccionada';
     this.selectedBarber = barber;
   }
   async saveAvailability() {

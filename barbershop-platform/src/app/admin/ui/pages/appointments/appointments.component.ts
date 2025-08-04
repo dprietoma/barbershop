@@ -162,7 +162,6 @@ export class AppointmentsComponent implements OnInit {
     this.listService.getAllServices().subscribe({
       next: (res) => {
         this.servicesData = res;
-        console.log(this.servicesData);
         this.loadingService.hide();
         this.buildFormFields();
       },
