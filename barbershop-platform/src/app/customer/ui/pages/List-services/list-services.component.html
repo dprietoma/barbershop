@@ -8,11 +8,11 @@
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
             @for (item of servicios| filter:'nombre':filtroTexto; track $index) {
             <div class="barbero-card mb-3">
-                <div class="barbero-img" [style.backgroundImage]="'url(' + item.imagen + ')'"></div>
+                <div class="barbero-img" [style.backgroundImage]="'url(' + item.foto + ')'"></div>
                 <div class="barbero-info">
                     <h5>{{ item.nombre }}</h5>
                     <small>{{ item.descripcion }}</small>
-                    <h6 class="text-success"> {{item.precio | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
+                    <h6 class="text-success"> {{item.valor | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
                     </h6>
 
                     <button class="btn btn-sm mt-2 custom-btn" type="button" [ngClass]="{

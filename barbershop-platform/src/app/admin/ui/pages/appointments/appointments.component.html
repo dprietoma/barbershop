@@ -26,7 +26,7 @@
                 (change)="AppointmentsByDate()" />
         </div>
     </div>
-    <div class="card shadow-sm rounded-4 mt-4">
+    <div class="card shadow-sm rounded-4 mt-4" *ngIf="servicesData.length > 0">
         <app-table [data]="this.appointmentsTable" [columns]="cols" (selectItem)="onItemSelect($event)"
             (actionClick)="handleAction($event)" [showInputFilter]="true" [configFilter]="filtroConfig"
             [nameTable]="'Citas para hoy'" [ListForms]="ListFormAppointments" (formsValue)="editAppointments($event)">

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, Validators } from '@angular/forms';
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { TableComponent } from '../../../../shared/table/table.component';
@@ -10,6 +10,7 @@ import { StoriesService } from '../../../../services/stories.service';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { ReservasService } from '../../../../services/ReservasService.service';
 import { SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
+import { ListService } from '../../../../services/listServices.service';
 
 @Component({
   selector: 'app-appointments',
@@ -19,6 +20,7 @@ import { SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/Gene
   styleUrl: './appointments.component.css'
 })
 export class AppointmentsComponent implements OnInit {
+  private listService = inject(ListService);
   appointmentsTable: Reserva[] = [];
   filtroConfig = {
     filterBy: 'clienteNombre',
@@ -46,92 +48,9 @@ export class AppointmentsComponent implements OnInit {
     { icon: 'bi-flag-fill', color: 'blue', label: 'Finalizadas', statusValue: 'Finalizada' }
   ];
   selectedTab = 0;
-  ListFormAppointments = [
-    {
-      title: 'Nombre Cliente',
-      name: 'clienteNombre',
-      type: 'text',
-      placeholder: 'Nombre Completo',
-      validation: [Validators.required,
-      Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
-      icon: 'bi-person-circle icon-color fs-5',
-      class: 'col-md-4',
-      disabled: true,
-    },
-    {
-      title: 'Celular',
-      name: 'phoneCustomer',
-      type: 'text',
-      placeholder: 'Ingrese Celular',
-      validation: [
-        Validators.required,
-        Validators.pattern(/^3\d{9}$/),
-        Validators.minLength(10),
-        Validators.maxLength(10),
-      ],
-      icon: 'bi-telephone icon-color fs-5',
-      class: 'col-md-4',
-      disabled: true,
-    },
-    {
-      title: 'Barbero',
-      name: 'barberNombre',
-      type: 'text',
-      placeholder: 'Ingrese Barbero',
-      validation: [Validators.required,
-      Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
-      icon: 'bi-person-gear icon-color fs-5',
-      class: 'col-md-4',
-      disabled: true,
-    },
-    {
-      title: 'Fecha',
-      name: 'fecha',
-      type: 'text',
-      placeholder: 'Ingrese Fecha',
-      validation: [Validators.required],
-      icon: 'bi-calendar-event icon-color fs-5',
-      class: 'col-md-4',
-      disabled: true,
-    },
-    {
-      title: 'Hora',
-      name: 'hora',
-      type: 'text',
-      placeholder: 'Ingrese Hora',
-      validation: [Validators.required],
-      icon: 'bi-alarm icon-color fs-5',
-      class: 'col-md-4',
-      disabled: true,
-    },
-    {
-      title: 'Estado',
-      name: 'estado',
-      type: 'select',
-      placeholder: 'Seleccione Estado',
-      validation: [Validators.required],
-      icon: 'bi-list icon-color fs-5',
-      class: 'col-md-4',
-      options: [
-        { label: 'Confirmada', value: 'Confirmada' },
-        { label: 'En Curso', value: 'En Curso' },
-        { label: 'Finalizada', value: 'Finalizada' },
-      ]
-    },
-    {
-      title: 'Total',
-      name: 'total',
-      type: 'currency',
-      placeholder: 'Ingrese Total',
-      validation: [Validators.required],
-      icon: 'bi-cash-coin icon-color fs-5',
-      class: 'col-md-4',
-      disabled: true,
-      mask: 'separator.0',
-      prefix: '$ ',
-      thousandSeparator: '.'
-    },
-  ];
+  ListFormAppointments: any[] = [];
+
+  servicesData: any[] = [];
 
   constructor(private loadingService: LoadingService,
     private storieService: StoriesService,
@@ -139,6 +58,119 @@ export class AppointmentsComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.AppointmentsByDate();
+  }
+  buildFormFields() {
+    this.ListFormAppointments = [
+      {
+        title: 'Nombre Cliente',
+        name: 'clienteNombre',
+        type: 'text',
+        placeholder: 'Nombre Completo',
+        validation: [Validators.required,
+        Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
+        icon: 'bi-person-circle icon-color fs-5',
+        class: 'col-md-4',
+        disabled: true,
+      },
+      {
+        title: 'Celular',
+        name: 'phoneCustomer',
+        type: 'text',
+        placeholder: 'Ingrese Celular',
+        validation: [
+          Validators.required,
+          Validators.pattern(/^3\d{9}$/),
+          Validators.minLength(10),
+          Validators.maxLength(10),
+        ],
+        icon: 'bi-telephone icon-color fs-5',
+        class: 'col-md-4',
+        disabled: true,
+      },
+      {
+        title: 'Barbero',
+        name: 'barberNombre',
+        type: 'text',
+        placeholder: 'Ingrese Barbero',
+        validation: [Validators.required,
+        Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
+        icon: 'bi-person-gear icon-color fs-5',
+        class: 'col-md-4',
+        disabled: true,
+      },
+      {
+        title: 'Fecha',
+        name: 'fecha',
+        type: 'text',
+        placeholder: 'Ingrese Fecha',
+        validation: [Validators.required],
+        icon: 'bi-calendar-event icon-color fs-5',
+        class: 'col-md-3',
+        disabled: true,
+      },
+      {
+        title: 'Hora',
+        name: 'hora',
+        type: 'text',
+        placeholder: 'Ingrese Hora',
+        validation: [Validators.required],
+        icon: 'bi-alarm icon-color fs-5',
+        class: 'col-md-3',
+        disabled: true,
+      },
+      {
+        title: 'Estado',
+        name: 'estado',
+        type: 'select',
+        placeholder: 'Seleccione Estado',
+        validation: [Validators.required],
+        icon: 'bi-list icon-color fs-5',
+        class: 'col-md-3',
+        options: [
+          { label: 'Confirmada', value: 'Confirmada' },
+          { label: 'En Curso', value: 'En Curso' },
+          { label: 'Finalizada', value: 'Finalizada' },
+        ]
+      },
+      {
+        title: 'Total',
+        name: 'total',
+        type: 'currency',
+        placeholder: 'Ingrese Total',
+        validation: [Validators.required],
+        icon: 'bi-cash-coin icon-color fs-5',
+        class: 'col-md-3',
+        disabled: true,
+        mask: 'separator.0',
+        prefix: '$ ',
+        thousandSeparator: '.'
+      },
+      {
+        title: '',
+        name: '',
+        type: 'table',
+        placeholder: '',
+        validation: [],
+        icon: '',
+        class: 'col-md-12',
+        options: this.servicesData
+      }
+    ];
+  }
+  getServices() {
+    this.loadingService.show();
+    this.listService.getAllServices().subscribe({
+      next: (res) => {
+        this.servicesData = res;
+        console.log(this.servicesData);
+        this.loadingService.hide();
+        this.buildFormFields();
+      },
+      error: (err) => {
+        this.loadingService.hide();
+        ShowAlert.viewAlert('Oops...', 'Algo salio mal en la consulta', 'error');
+      }
+    });
   }
   selectTab(index: number): void {
     this.selectedTab = index;
@@ -151,6 +183,7 @@ export class AppointmentsComponent implements OnInit {
       .subscribe({
         next: reservas => {
           this.appointmentsTable = reservas;
+          this.getServices();
           this.loadingService.hide();
           if (this.appointmentsTable.length === 0) {
             ShowAlert.viewAlert(

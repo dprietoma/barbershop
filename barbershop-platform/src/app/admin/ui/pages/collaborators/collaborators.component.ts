@@ -133,7 +133,7 @@ export class CollaboratorsComponent implements OnInit {
       icon: 'bi-person-vcard icon-color fs-5',
       class: 'col-md-3',
       disabled: true
-    }
+    },
   ];
   filtroConfig = {
     filterBy: 'nombre',
@@ -147,6 +147,7 @@ export class CollaboratorsComponent implements OnInit {
   ngOnInit(): void {
     this.getBarber();
   }
+
   async saveCollaborators(event: Barbero) {
     this.loadingService.show();
     try {

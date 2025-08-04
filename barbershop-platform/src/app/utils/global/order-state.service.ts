@@ -15,7 +15,7 @@ export class OrderStateService {
   horaReserva = this._hora.asReadonly();
 
   totalServicios = computed(() =>
-    this._serviciosSeleccionados().reduce((acc, s) => acc + s.precio, 0)
+    this._serviciosSeleccionados().reduce((acc, s) => acc + s.valor, 0)
   );
 
   toggleServicio(servicio: any) {

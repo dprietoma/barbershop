@@ -11,6 +11,9 @@ import { SearchFilterComponent } from '../../../../shared/search-filter/search-f
 import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
+import { LoadingService } from '../../../../utils/global/LoadingService';
+import { ShowAlert } from '../../../../utils/global/sweetalert';
+import { ListService } from '../../../../services/listServices.service';
 
 @Component({
   selector: 'app-list-services',
@@ -22,64 +25,28 @@ import { FooterComponent } from '../../../../shared/footer/footer.component';
 })
 export class ListServicesComponent implements OnInit {
   public order = inject(OrderStateService);
+  private listService = inject(ListService);
   private readonly filterPipe = new FilterPipe();
-  servicios = [
-    {
-      nombre: 'Corte y Barba',
-      descripcion: 'Servicio completo que incluye corte de cabello y arreglo de barba con estilo profesional.',
-      precio: 30000,
-      duracion: 90,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Corte Clásico',
-      descripcion: 'Un corte limpio y clásico, perfecto para cualquier ocasión.',
-      precio: 25000,
-      duracion: 60,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Arreglo de Barba',
-      descripcion: 'Definición y diseño de barba con navaja caliente y productos premium.',
-      precio: 15000,
-      duracion: 30,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Afeitado Clásico',
-      descripcion: 'Afeitado con toalla caliente, espuma especial y navaja, como en la vieja escuela.',
-      precio: 20000,
-      duracion: 40,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Corte Infantil',
-      descripcion: 'Corte especial para niños, con paciencia y estilo moderno.',
-      precio: 20000,
-      duracion: 45,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Color o Tinte',
-      descripcion: 'Aplicación de tinte profesional para cabello o barba, incluye asesoría personalizada.',
-      precio: 40000,
-      duracion: 90,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-    {
-      nombre: 'Diseño de Cejas',
-      descripcion: 'Definición de cejas con pinza o navaja para realzar tu mirada.',
-      precio: 10000,
-      duracion: 15,
-      imagen: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/20230729_225203-01.jpeg?alt=media&token=3f2e7913-8112-4963-9f42-7817a02ff826'
-    },
-  ];
+  servicios: any[] = [];
   barberoSeleccionado: any = null;
   isCollapsed = false;
   filtroTexto = '';
-  constructor(private historial: HistorialForzadoService) { }
+  constructor(private loadingService: LoadingService) { }
   ngOnInit(): void {
-    this.historial.forzarRegresoAHOME('/customer/list-services');
+    this.getServices();
+  }
+  getServices() {
+    this.loadingService.show();
+    this.listService.getAllServices().subscribe({
+      next: (res) => {
+        this.servicios = res;
+        this.loadingService.hide();
+      },
+      error: (err) => {
+        this.loadingService.hide();
+        ShowAlert.viewAlert('Oops...', 'Algo salio mal en la consulta', 'error');
+      }
+    });
   }
   get quantityResults(): number {
     return this.filterPipe.transform(this.servicios, 'nombre', this.filtroTexto).length;
@@ -101,7 +68,7 @@ export class ListServicesComponent implements OnInit {
 
   get totalServicios(): number {
     return this.order.serviciosSeleccionados().reduce(
-      (total, s) => total + s.precio,
+      (total, s) => total + s.valor,
       0
     );
   }

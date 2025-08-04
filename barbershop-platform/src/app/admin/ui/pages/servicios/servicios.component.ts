@@ -125,7 +125,6 @@ export class ServiciosComponent implements OnInit {
 
 
   async saveServices(event: Servicios) {
-    debugger;
     this.loadingService.show();
     try {
       const urlFoto = await this.uploadFile(event.foto);
@@ -151,7 +150,7 @@ export class ServiciosComponent implements OnInit {
   }
 
   async uploadFile(file: any): Promise<string> {
-    return this.uploadfileService.uploadFile(file)
+    return this.uploadfileService.uploadFile(file,'services')
       .then((url: any) => {
         return url;
       })
