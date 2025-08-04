@@ -4,7 +4,7 @@
     <div class="card shadow-sm rounded-4 mt-4">
         <app-table [data]="barberos" [columns]="cols" [nameTable]="'Lista de Colaboradores'"
             [configFilter]="filtroConfig" [showInputFilter]="true" [ListForms]="ListFormCollaborators"
-            (actionClick)="onClick($event)" (formsValue)="editCollaborators($event)">
+            (actionClick)="onClick($event)" (formsValue)="editCollaborators($event)" [tittle]="'Actulizar Calaborador'">
         </app-table>
     </div>
 </div>

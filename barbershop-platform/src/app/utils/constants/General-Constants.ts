@@ -10,7 +10,7 @@ export const AMATE = {
 }
 export const CRISTIANJBARBER = {
     TYPE: 'CRISTIANBARBER',
-    TITTLE_NAV: 'Cristian J Barber Shop',
+    TITTLE_NAV: 'Cristian J Barberia',
     DESCRIPTION: 'Style & Elegance',
     COLOR_NAV: 'aqua-gradient',
     CELULAR: 3115992618,

@@ -3,7 +3,6 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="container">
                 <div class="row">
-
                     <div *ngFor="let input of ListForms" [class]="input.class + ' mb-3'">
                         <ng-container *ngIf="input.type !== 'file'; else fileUploadTemplate">
                             <label class="form-label" [for]="input.name">
@@ -42,9 +41,9 @@
                                             <table class="table align-middle mb-0 bg-white">
                                                 <thead class="bg-light">
                                                     <tr>
-                                                        <th>Nombre del servicio</th>
-                                                        <th>Detalle</th>
-                                                        <th>Acciones</th>
+                                                        <th>NOMBRE DEL SERVICIO</th>
+                                                        <th>DETALLE</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -71,13 +70,14 @@
                                                                 (click)="onClickSevice('edit', item); $event.stopPropagation()">
                                                                 <i class="bi bi-plus-circle-fill fs-5"></i>
                                                             </button>
-                                                            <button *ngIf="isSelected(item)"  type="button" class="btn btn-danger btn-no-style"
+                                                            <button *ngIf="isSelected(item)" type="button"
+                                                                class="btn btn-danger btn-no-style"
                                                                 (click)="onClickSevice('delete', item); $event.stopPropagation()">
                                                                 <i class="bi bi-trash3 fs-5"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
-    
+
                                                 </tbody>
                                             </table>
                                         </div>
