@@ -30,9 +30,7 @@ export class DashboardComponent implements OnInit {
     { key: 'fecha', label: 'Fecha' },
     { key: 'hora', label: 'Hora' },
     { key: 'estado', label: 'Estado', type: 'badge' },
-    { key: 'total', label: 'Total', type: 'currency'  },
-    { key: '', label: '', type: 'actions'},
-    { key: '../../../../../assets/images/reservaOK.png', label: 'Avatar', type: 'avatar'}
+    { key: 'total', label: 'Total', type: 'currency'  }
   ];
   summaryCards: {
     title: string;
