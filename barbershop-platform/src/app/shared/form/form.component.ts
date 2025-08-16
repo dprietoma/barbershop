@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
-import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-form',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxMaskDirective, NgSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxMaskDirective],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css'
 })
