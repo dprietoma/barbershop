@@ -19,6 +19,12 @@
                         Cambiar tema
                     </a>
                 </li>
+                <li *ngIf="!user?.uid">
+                    <a class="dropdown-item d-flex align-items-center gap-2" (click)="redirect()">
+                        <i class="bi bi-gear fs-4"></i>
+                        Personalizar
+                    </a>
+                </li>
 
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2"

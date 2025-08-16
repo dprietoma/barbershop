@@ -24,8 +24,6 @@ export class ServiciosComponent implements OnInit {
   private uploadfileService = inject(UploadfileService);
   private listService = inject(ListService);
   private loadingService = inject(LoadingService);
-
-  // Variables
   servicesData: any[] = [];
   uploading = false;
   fechaActual = Timestamp.fromDate(new Date())

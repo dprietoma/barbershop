@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Users } from '../interface/users-interface';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-nav-buttons',
   imports: [CommonModule],
@@ -17,4 +18,12 @@ export class NavButtonsComponent {
   @Output() logout = new EventEmitter<void>();
   @Input() isInNavbar = false;
   @Input() user!: Users | null;
+  constructor(private route: Router) {
+
+  }
+
+  redirect(): void {
+    this.route.navigate(['/admin/custom']);
+  }
+
 }

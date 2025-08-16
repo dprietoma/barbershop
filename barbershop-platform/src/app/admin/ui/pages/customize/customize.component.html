@@ -1,0 +1,13 @@
+<app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
+<div class="container">
+    <app-form [ListForms]="ListFormAppointments" (formsValue)="saveCustom($event)"></app-form>
+    <div class="card shadow-sm rounded-4 mt-4">
+        <app-table [data]="servicesData" [columns]="cols" [nameTable]="'Mis configuraciones'"
+            [configFilter]="filtroConfig" [ListForms]="ListFormAppointments" [showInputFilter]="true"
+            (actionClick)="onClick($event)" (formsValue)="editCustom($event)" [tittle]="'Actulizar Personalización'">
+        </app-table>
+    </div>
+
+</div>
+
+<app-footer></app-footer>
