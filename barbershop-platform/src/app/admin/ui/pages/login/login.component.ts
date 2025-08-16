@@ -87,7 +87,13 @@ export class LoginComponent implements OnInit {
         if (user) {
           this.authService.getOrCreateUser(user).then((userData: Users) => {
             this.sessionStorage.saveType('user', JSON.stringify(userData));
-            this.router.navigate(['/admin/dashboard']);
+            if(userData?.role === "admin"){
+              this.router.navigate(['/admin/dashboard']);
+            } else {
+
+            }
+            
+
           });
         }
       })
