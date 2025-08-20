@@ -1,0 +1,32 @@
+<app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
+<div class="container mt-4">
+    <div class="row g-4 mb-4">
+        <div class="col-md-3" *ngFor="let item of summaryCards">
+            <div class="card border-0 shadow-sm rounded-4 p-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 h-100"
+                    [ngStyle]="{ width: '6px', backgroundColor: item.bg, borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem' }">
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 text-muted small"><strong>{{ item.title }}</strong> </p>
+                        <h4 class="fw-bold mb-0" [ngClass]="item.color">{{ item.value }}</h4>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                        [ngStyle]="{ width: '48px', height: '48px', backgroundColor: item.bg }">
+                        <i class="bi" [ngClass]="item.icon + ' fs-4 text-white'"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <app-graphics></app-graphics>
+
+    <div class="card shadow-sm rounded-4 mt-4">
+        <app-table [data]="this.appointmentsTable" [columns]="cols" (selectItem)="onItemSelect($event)"
+            (actionClick)="handleAction($event)" [showInputFilter]="true" [configFilter]="filtroConfig"
+            [nameTable]="'Listado de reservas'">
+        </app-table>
+    </div>
+</div>
+<app-footer></app-footer>

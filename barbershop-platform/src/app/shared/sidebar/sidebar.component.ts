@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { INTERNALCODE } from '../../utils/constants/General-Constants';
 import { AppSignalService } from '../../services/signals.service';
 import { AuthenticationService } from '../../services/authentication.service';
+
 @Component({
   selector: 'app-sidebar',
   imports: [CommonModule, NavButtonsComponent, RouterModule],
@@ -24,6 +25,7 @@ export class SidebarComponent implements OnInit {
   information: ModeConfig | null = null;
   menuItems: any[] = [];
   user: Users | null = null;
+  hideLogin = false;
   private platformId = inject(PLATFORM_ID);
   constructor(private sessionStorage: SessionStorageService,
     private router: Router,
@@ -35,11 +37,10 @@ export class SidebarComponent implements OnInit {
       this.mode = mode;
       this.information = mode ? MODE_CONFIGS[mode] ?? null : null;
       this.loadTheme();
-      this.menuItems = MENU_BY_ROLE['admin'];
     });
     this.sessionStorage.user$.subscribe(userStr => {
       if (userStr) {
-        // this.loadMenus();
+        this.loadMenus();
       }
     });
   }
@@ -120,7 +121,7 @@ export class SidebarComponent implements OnInit {
     });
     if (key) {
       if (key?.toLowerCase() === INTERNALCODE.toLowerCase()) {
-        this.router.navigate(['/admin/login']);
+        this.router.navigate(['/auth/login']); 
       } else {
         Swal.fire({
           icon: 'error',

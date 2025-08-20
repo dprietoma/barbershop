@@ -2,13 +2,14 @@ import { Component, QueryList, ViewChildren, ElementRef, OnInit } from '@angular
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { FooterComponent } from '../../../../shared/footer/footer.component';
-import { LoadingService } from '../../../../utils/global/LoadingService';
-import { ErrorAuth } from '../../../../utils/global/error-auth';
+import { FooterComponent } from '../footer/footer.component';
+import { LoadingService } from '../../utils/global/LoadingService';
+import { ErrorAuth } from '../../utils/global/error-auth';
 import { Router } from '@angular/router';
-import { Users } from '../../../../utils/interface/users-interface';
-import { SessionStorageService } from '../../../../utils/global/StorageService ';
-import { AuthenticationService } from '../../../../services/authentication.service';
+import { Users } from '../../utils/interface/users-interface';
+import { SessionStorageService } from '../../utils/global/StorageService ';
+import { AuthenticationService } from '../../services/authentication.service';
+import { AppSignalService } from '../../services/signals.service';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private loadingService: LoadingService,
     private router: Router,
-    private sessionStorage: SessionStorageService
+    private sessionStorage: SessionStorageService,
+    private appSignal: AppSignalService
   ) { }
   ngOnInit(): void {
     this.formLogin = this.formBuilder.group({
@@ -78,32 +80,87 @@ export class LoginComponent implements OnInit {
   }
 
 
-  verifyCode() {
-    this.loadingService.show();
-    this.errorMessage = '';
-    const fullCode = this.code.join('');
-    this.authService.verifyCode(fullCode)
-      .then(user => {
-        if (user) {
-          this.authService.getOrCreateUser(user).then((userData: Users) => {
-            this.sessionStorage.saveType('user', JSON.stringify(userData));
-            if(userData?.role === "admin"){
-              this.router.navigate(['/admin/dashboard']);
-            } else {
+  // verifyCode() {
+  //   this.loadingService.show();
+  //   this.errorMessage = '';
+  //   const fullCode = this.code.join('');
+  //   this.authService.verifyCode(fullCode)
+  //     .then(user => {
+  //       if (user) {
+  //         this.authService.getOrCreateUser(user).then((userData: Users) => {
+  //           this.sessionStorage.saveType('user', JSON.stringify(userData));
+  //           if(userData?.role === "admin"){
+  //             this.router.navigate(['/admin/dashboard']);
+  //           } else {
+  //              this.router.navigate(['/barbers/dashboard-barbers']);
+  //           }
+  //         });
+  //       }
+  //     })
+  //     .catch(err => {
+  //       const friendly = this.errorHandler.AuthError(err);
+  //       this.showAlert(friendly.message, friendly.type);
+  //     }).finally(() => {
+  //       this.loadingService.hide();
+  //     })
+  // }
 
-            }
-            
-
-          });
-        }
-      })
-      .catch(err => {
-        const friendly = this.errorHandler.AuthError(err);
-        this.showAlert(friendly.message, friendly.type);
-      }).finally(() => {
-        this.loadingService.hide();
-      })
+  // En tu LoginComponent
+async verifyCode() {
+  // 1) Validación rápida del código (ej. 6 dígitos)
+  const fullCode = (this.code ?? []).join('');
+  if (!fullCode || fullCode.length < 6) {
+    this.showAlert('Ingresa el código completo.', 'warning');
+    return;
   }
+
+  this.loadingService.show();
+  this.errorMessage = '';
+
+  try {
+    // 2) Verifica el OTP (devuelve Firebase User o credencial)
+    const fbUser = await this.authService.verifyCode(fullCode);
+    if (!fbUser) throw new Error('No fue posible verificar el código');
+
+    // 3) Crea/lee perfil y rol (Firestore o claims, como lo tengas)
+    const userData: Users = await this.authService.getOrCreateUser(fbUser);
+
+    // (Opcional pero recomendado) refresca claims si usas custom claims
+    // await fbUser.getIdToken(true);
+
+    // 4) Guarda en sessionStorage/Storage si lo necesitas
+    this.sessionStorage.saveType('user', JSON.stringify(userData));
+
+    // 5) Redirección segura por rol
+    const path = this.getLandingPathByRole(userData?.role);
+    if (!path) {
+      // Si por alguna razón viene sin rol o rol inválido
+      this.showAlert('Tu cuenta no tiene permisos para acceder. Contacta al admin.', 'danger');
+      // (Opcional) cerrar sesión
+      // await this.authService.signOut();
+      return;
+    }
+
+    await this.router.navigate([path], { replaceUrl: true });
+
+  } catch (err: any) {
+    const friendly = this.errorHandler.AuthError(err);
+    this.showAlert(friendly.message, friendly.type);
+  } finally {
+    this.loadingService.hide();
+  }
+}
+
+// Helper local: mapea rol → ruta de aterrizaje
+private getLandingPathByRole(role?: string | null): string | null {
+ const tipoUser = role === 'barber' ? 'barber' : 'admin';
+ this.appSignal.set({ tipo: 'role', valor: tipoUser });
+  switch (role) {
+    case 'admin':  return '/admin/dashboard';
+    case 'barber': return '/barbers/dashboard-barbers';
+    default:       return null; // customers no deberían loguearse
+  }
+}
 
 
   isInputEnabled(index: number): boolean {

@@ -1,9 +1,10 @@
-import { Component, inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, effect, inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartType } from 'chart.js';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { StoriesService } from '../../../../services/stories.service';
+import { AppSignalService } from '../../../../services/signals.service';
 
 @Component({
   selector: 'app-graphics',
@@ -15,6 +16,8 @@ import { StoriesService } from '../../../../services/stories.service';
 export class GraphicsComponent implements OnInit {
   ngZone = inject(NgZone);
   reservationsService = inject(StoriesService);
+  appSignal= inject(AppSignalService);
+  tipoUse: boolean;
   public lineChartType: ChartType = 'doughnut';
 
   public isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -22,6 +25,14 @@ export class GraphicsComponent implements OnInit {
   appointmentsPerDay: ChartData<'bar'> = { labels: [], datasets: [] };
   monthlyRevenue: ChartData<'line'> = { labels: [], datasets: [] };
   popularServices: ChartData<'doughnut'> = { labels: [], datasets: [] };
+
+  constructor(){
+    effect(() => {
+       const rol = (this.appSignal.data()?.valor ?? '').toLowerCase();
+       const esBarbero = rol === 'barbero' || rol === 'barber';
+       this.tipoUse = !esBarbero; // mostrar si NO es barbero
+    })
+  }
 
   ngOnInit(): void {
     this.ngZone.run(() => {
