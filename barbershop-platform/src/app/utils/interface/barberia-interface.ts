@@ -5,8 +5,11 @@ export interface ModeConfig {
     description: string;
     instagram: string;
     celular: number;
+    face: string;
+    tiktok: string;
     comentario: string;
     usuario: string,
+    logo: string;
 
 }
 export const MODE_CONFIGS: { [key: string]: ModeConfig } = {
@@ -15,15 +18,21 @@ export const MODE_CONFIGS: { [key: string]: ModeConfig } = {
         description: AMATE.DESCRIPTION,
         celular: AMATE.CELULAR,
         instagram: AMATE.INSTAGRAM,
+        face: AMATE.FACE,
+        tiktok: AMATE.TIKTOK,
         comentario: AMATE.COMENTARIO,
-        usuario: AMATE.USUARIO
+        usuario: AMATE.USUARIO,
+        logo: AMATE.LOGO
     },
     [CRISTIANJBARBER.TYPE]: {
         tittle: CRISTIANJBARBER.TITTLE_NAV,
         description: CRISTIANJBARBER.DESCRIPTION,
         celular: CRISTIANJBARBER.CELULAR,
         instagram: CRISTIANJBARBER.INSTAGRAM,
+        face: CRISTIANJBARBER.FACE,
+        tiktok: CRISTIANJBARBER.TIKTOK,
         comentario: CRISTIANJBARBER.COMENTARIO,
-        usuario: CRISTIANJBARBER.USUARIO
+        usuario: CRISTIANJBARBER.USUARIO,
+        logo: CRISTIANJBARBER.LOGO
     }
 };
