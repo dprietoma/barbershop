@@ -2,7 +2,6 @@ export const AMATE = {
     TYPE: 'AMATE',
     TITTLE_NAV: 'Amate',
     DESCRIPTION: 'Arte y Cuidado Personal',
-    COLOR_NAV: 'aqua-gradient-amate',
     CELULAR: 3115992618,
     INSTAGRAM: 'cristianjbarber',
     USUARIO: 'Marian Spa',
@@ -12,7 +11,7 @@ export const CRISTIANJBARBER = {
     TYPE: 'CRISTIANBARBER',
     TITTLE_NAV: 'Cristian J Barberia',
     DESCRIPTION: 'Style & Elegance',
-    COLOR_NAV: 'aqua-gradient',
+
     CELULAR: 3115992618,
     INSTAGRAM: 'cristianjbarber',
     USUARIO: ' Cristian J Barber',

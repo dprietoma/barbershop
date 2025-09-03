@@ -20,11 +20,15 @@
                                     <input *ngSwitchCase="'password'" class="form-control"
                                         [formControlName]="input.name" [placeholder]="input.placeholder"
                                         type="password" />
+                                    <textarea *ngSwitchCase="'textarea'" class="form-control"
+                                        [formControlName]="input.name" rows="3" [placeholder]="input.placeholder">
+                                         </textarea>
                                     <select *ngSwitchCase="'select'" class="form-select" [formControlName]="input.name">
                                         <option value="" disabled>{{ input.placeholder }}</option>
                                         <option *ngFor="let opt of input.options" [value]="opt.value">{{ opt.label }}
                                         </option>
                                     </select>
+
                                     <input *ngSwitchCase="'currency'" type="text" class="form-control"
                                         [formControlName]="input.name" [placeholder]="input.placeholder"
                                         [mask]="input.mask" [prefix]="input.prefix"
@@ -35,6 +39,50 @@
                                     <input *ngSwitchCase="'time'" type="time" class="form-control"
                                         [formControlName]="input.name" [placeholder]="input.placeholder"
                                         [disabled]="input.disabled" />
+                                    <!-- Caso checkbox-group -->
+                                    <ng-container *ngSwitchCase="'checkbox-group'">
+                                        <div class="form-check form-check-inline" *ngFor="let opt of input.options">
+                                            <input class="form-check-input" type="checkbox"
+                                                [id]="input.name + '_' + opt.value"
+                                                [checked]="isNetworkSelected(opt.value)"
+                                                (change)="onToggleNetwork(input, opt.value, $event)">
+                                            <label class="form-check-label" [for]="input.name + '_' + opt.value">
+                                                {{ opt.label }}
+                                            </label>
+                                        </div>
+
+                                        <!-- Inputs de usuario por red, visibles solo si está seleccionada -->
+                                        <div class="row mt-3">
+                                            <div class="col-md-6 mb-2" *ngIf="isNetworkSelected('face')">
+                                                <label class="form-label" for="user_face"><strong>Facebook (cómo
+                                                        apareces)</strong></label>
+                                                <input id="user_face" class="form-control" formControlName="user_face"
+                                                    placeholder="@usuario o nombre" />
+                                            </div>
+
+                                            <div class="col-md-6 mb-2" *ngIf="isNetworkSelected('whatsapp')">
+                                                <label class="form-label" for="user_whatsapp"><strong>WhatsApp (número o
+                                                        enlace)</strong></label>
+                                                <input id="user_whatsapp" class="form-control"
+                                                    formControlName="user_whatsapp" placeholder="+57 3xx xxx xxxx" />
+                                            </div>
+
+                                            <div class="col-md-6 mb-2" *ngIf="isNetworkSelected('insta')">
+                                                <label class="form-label" for="user_insta"><strong>Instagram (cómo
+                                                        apareces)</strong></label>
+                                                <input id="user_insta" class="form-control" formControlName="user_insta"
+                                                    placeholder="@usuario" />
+                                            </div>
+
+                                            <div class="col-md-6 mb-2" *ngIf="isNetworkSelected('tiktok')">
+                                                <label class="form-label" for="user_tiktok"><strong>TikTok (cómo
+                                                        apareces)</strong></label>
+                                                <input id="user_tiktok" class="form-control"
+                                                    formControlName="user_tiktok" placeholder="@usuario" />
+                                            </div>
+                                        </div>
+                                    </ng-container>
+
                                     <ng-container *ngSwitchCase="'table'">
                                         <div class="table-responsive w-100">
 

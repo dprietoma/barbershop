@@ -9,7 +9,7 @@ import { LoadingService } from '../../../../utils/global/LoadingService';
 import { Custom } from '../../../../utils/interface/custom-interface';
 import { ListService } from '../../../../services/listServices.service';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
-import { SUCCESS, SUCCESS_DELETE } from '../../../../utils/constants/General-Constants';
+import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 
 @Component({
   selector: 'app-customize',
@@ -21,6 +21,7 @@ export class CustomizeComponent implements OnInit {
   private uploadfileService = inject(UploadfileService);
   private loadingService = inject(LoadingService);
   private listService = inject(ListService);
+
   breadcrumbRoutes = [
     { label: 'Panel de Administración', url: 'admin/dashboard' },
     { label: 'Personalizar', url: 'admin/custom' },
@@ -43,7 +44,7 @@ export class CustomizeComponent implements OnInit {
       validation: [Validators.required,
       Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
       icon: 'bi-house-gear icon-color fs-5',
-      class: 'col-md-4'
+      class: 'col-md-3'
     },
     {
       title: 'Tipo',
@@ -52,7 +53,7 @@ export class CustomizeComponent implements OnInit {
       placeholder: 'Seleccione Tipo',
       validation: [Validators.required],
       icon: 'bi-list icon-color fs-5',
-      class: 'col-md-4',
+      class: 'col-md-3',
       options: [
         { label: 'Cristian J Barberia', value: 'CRISTIANBARBER' },
         { label: 'Amate', value: 'AMATE' },
@@ -65,8 +66,40 @@ export class CustomizeComponent implements OnInit {
       placeholder: 'Porcentaje',
       validation: [Validators.required, Validators.pattern(/^(100|[1-9][0-9]?)%$/)],
       icon: 'bi-house-gear icon-color fs-5',
-      class: 'col-md-4'
+      class: 'col-md-3'
+    },
+    {
+      title: 'Eslogan',
+      name: 'eslogan',
+      type: 'text',
+      placeholder: 'Eslogan',
+      validation: [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
+      icon: 'bi-house-gear icon-color fs-5',
+      class: 'col-md-3'
+    },
+    {
+      title: 'Descripción',
+      name: 'descripcion',
+      type: 'textarea',
+      placeholder: 'Escribe una reseña para tu barberia',
+      validation: [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/)],
+      icon: 'bi-house-gear icon-color fs-5',
+      class: 'col-md-6'
+    },
+    {
+      title: 'Redes sociales',
+      name: 'redes',
+      type: 'checkbox-group',
+      placeholder: 'Selecciona tus redes',
+      class: 'col-md-6',
+      options: [
+        { label: 'Facebook', value: 'face' },
+        { label: 'WhatsApp', value: 'whatsapp' },
+        { label: 'Instagram', value: 'insta' },
+        { label: 'TikTok', value: 'tiktok' },
+      ]
     }
+
   ]
   cols = [
     { key: 'foto', label: 'Avatar', type: 'avatar' },
@@ -93,10 +126,12 @@ export class CustomizeComponent implements OnInit {
         nombre: event.nombre,
         foto: urlFoto,
         porcentaje: event.porcentaje,
-        tipo: event.type,
-        redes: event.redes,
-
+        tipo: event.tipo,
+        descripcion: event.descripcion,
+        eslogan: event.eslogan,
+        redes: event.redes
       };
+      debugger;
       await this.listService.createCustom(data as any);
       ShowAlert.viewAlert('info', SUCCESS, 'success');
       this.getCustom();
@@ -128,7 +163,29 @@ export class CustomizeComponent implements OnInit {
     return resultado;
   }
   async editCustom(event: any) {
-
+    this.loadingService.show();
+    try {
+      let urlFoto = event.foto instanceof File
+        ? await this.uploadFile(event.foto)
+        : event.foto;
+      const data: Custom = {
+        id: event.id,
+        nombre: event.nombre,
+        foto: urlFoto,
+        porcentaje: event.porcentaje,
+        tipo: event.tipo,
+        descripcion: event.descripcion,
+        eslogan: event.eslogan,
+        redes: event.redes
+      };
+      await this.listService.updateCustom(data.id as any, data);
+      ShowAlert.viewAlert('info', SUCCESS_UPDATE, 'success');
+      this.getCustom();
+    } catch (error) {
+      console.error('Error editando personalización', error);
+    } finally {
+      this.loadingService.hide();
+    }
   }
   onClick(event: any) {
     if (event.action === 'delete') {
