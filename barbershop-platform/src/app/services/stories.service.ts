@@ -19,6 +19,20 @@ export class StoriesService {
     const reservationsRef = collection(this.firestore, 'reservas');
     return collectionData(reservationsRef, { idField: 'id' }) as Observable<any[]>;
   }
+  private todayBogota(): string {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' })
+      .format(new Date());
+  }
+  getReservationsTodayByStatus(status = 'Confirmada'): Observable<any[]> {
+    const today = this.todayBogota();
+    const reservasRef = collection(this.firestore, 'reservas');
+    const q = query(
+      reservasRef,
+      where('fecha', '==', today),
+      where('estado', '==', status)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
   getReservationsByStateAndDate(status: string, date: string): Observable<any[]> {
     const q = query(
       collection(this.firestore, 'reservas'),

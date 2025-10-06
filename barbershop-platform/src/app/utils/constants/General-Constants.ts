@@ -2,7 +2,7 @@ export const AMATE = {
     TYPE: 'AMATE',
     TITTLE_NAV: 'Amate',
     DESCRIPTION: 'Arte y Cuidado Personal',
-    CELULAR: 3115992618,
+    CELULAR: 3239335050,
     FACE: 'marian vegas',
     TIKTOK: 'The.amate',
     INSTAGRAM: 'Amate_the',

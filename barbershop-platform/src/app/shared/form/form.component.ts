@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
+import { Users } from '../../utils/interface/users-interface';
 @Component({
   selector: 'app-form',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxMaskDirective],
@@ -13,6 +14,7 @@ export class FormComponent implements OnInit, OnChanges {
   @Input() ListForms: any[] = [];
   @Input() IsEdit: boolean = false;
   @Input() dataEdit: any;
+  @Input() user!: Users;
   @Output() formsValue = new EventEmitter<any>();
   form: FormGroup;
   previewUrl: string | null = null;
@@ -43,6 +45,7 @@ export class FormComponent implements OnInit, OnChanges {
       this.form.patchValue(this.dataEdit);
       this.form.get('foto')?.setValue(this.dataEdit.foto);
     }
+    console.log(this.user, 'formulario')
   }
   onClickSevice(key: string, row: any) {
     if (key === 'edit') {
