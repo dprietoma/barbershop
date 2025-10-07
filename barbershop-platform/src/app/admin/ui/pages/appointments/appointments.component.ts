@@ -29,10 +29,7 @@ export class AppointmentsComponent implements OnInit {
     filterBy: 'clienteNombre',
     placeholder: 'Buscar reserva...'
   };
-  breadcrumbRoutes = [
-    { label: 'Panel de Administración', url: 'admin/dashboard' },
-    { label: 'Control de reservas', url: 'admin/appointments' },
-  ];
+  breadcrumbRoutes: any = [];
   cols: any = [];
   selectedDate: string = this.getTodaysDate();
   status: string = 'Confirmada';
@@ -43,7 +40,6 @@ export class AppointmentsComponent implements OnInit {
   ];
   selectedTab = 0;
   ListFormAppointments: any[] = [];
-
   servicesData: any[] = [];
 
   constructor(private loadingService: LoadingService,
@@ -67,6 +63,10 @@ export class AppointmentsComponent implements OnInit {
       { key: 'estado', label: 'Estado', type: 'badge' },
       { key: keyTotal, label: 'Total', type: 'currency' },
       { key: '', label: '', type: 'actions' }
+    ];
+    this.breadcrumbRoutes = [
+      { label: 'Panel de Administración', url: this.user?.role === 'admin' ? 'admin/dashboard' : 'barbers/dashboard-barbers' },
+      { label: 'Control de reservas', url: this.user?.role === 'admin' ? 'admin/appointments' : 'barbers/appointments' },
     ];
   }
   validateRol(): string {

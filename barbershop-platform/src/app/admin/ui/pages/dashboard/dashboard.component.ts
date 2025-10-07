@@ -19,10 +19,7 @@ import { SessionStorageService } from '../../../../utils/global/StorageService '
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  breadcrumbRoutes = [
-    { label: 'Login', url: 'admin/login' },
-    { label: 'Panel de Administración', url: 'admin/dashboard' },
-  ];
+  breadcrumbRoutes: any = [];
   cols: any = [];
   summaryCards: {
     title: string;
@@ -58,6 +55,9 @@ export class DashboardComponent implements OnInit {
       { key: 'hora', label: 'Hora' },
       { key: 'estado', label: 'Estado', type: 'badge' },
       { key: keyTotal, label: 'Total', type: 'currency' }
+    ];
+    this.breadcrumbRoutes = [
+      { label: 'Panel de Administración', url: this.user?.role === 'admin' ? 'admin/dashboard' : 'barbers/dashboard-barbers' },
     ];
   }
   validateRol(): string {
@@ -97,7 +97,6 @@ export class DashboardComponent implements OnInit {
       const currentServices = Array.isArray(r.servicio) ? r.servicio.length : 1;
       return acc + currentServices;
     }, 0);
-
     const uniqueClients = new Set(reservations.map(r => r.docNumberCustomer)).size;
     this.validateItemsByRole(totalAppointments.length, income, services, uniqueClients);
 

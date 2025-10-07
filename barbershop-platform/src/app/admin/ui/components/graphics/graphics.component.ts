@@ -18,22 +18,14 @@ export class GraphicsComponent implements OnInit {
   ngZone = inject(NgZone);
   reservationsService = inject(StoriesService);
   appSignal = inject(AppSignalService);
-  tipoUse: any;
   public lineChartType: ChartType = 'doughnut';
   public isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   appointmentsPerDay: ChartData<'bar'> = { labels: [], datasets: [] };
   monthlyRevenue: ChartData<'line'> = { labels: [], datasets: [] };
   popularServices: ChartData<'doughnut'> = { labels: [], datasets: [] };
-
-  constructor(private sessionStorage: SessionStorageService) {
-    effect(() => {
-      const rol = (this.appSignal.data()?.valor ?? '').toLowerCase();
-      const esBarbero = rol === 'barbero' || rol === 'barber';
-      this.tipoUse = !esBarbero; // mostrar si NO es barbero
-    })
-  }
-
   user: any;
+  constructor(private sessionStorage: SessionStorageService) {}
+
   ngOnInit(): void {
     this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     if (this.user) {

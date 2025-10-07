@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { Router } from '@angular/router';
 
 interface Breadcrumb {
   label: string;
@@ -16,4 +16,12 @@ interface Breadcrumb {
 })
 export class BreadcrumbComponent {
   @Input() breadcrumbs: Breadcrumb[] = [];
+  constructor( private route: Router){
+
+  }
+
+  navigate(url: string){
+    debugger;
+    this.route.navigate([url]);
+  }
 }

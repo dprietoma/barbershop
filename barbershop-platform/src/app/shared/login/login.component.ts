@@ -105,9 +105,7 @@ export class LoginComponent implements OnInit {
   //     })
   // }
 
-  // En tu LoginComponent
 async verifyCode() {
-  // 1) Validación rápida del código (ej. 6 dígitos)
   const fullCode = (this.code ?? []).join('');
   if (!fullCode || fullCode.length < 6) {
     this.showAlert('Ingresa el código completo.', 'warning');
@@ -118,26 +116,13 @@ async verifyCode() {
   this.errorMessage = '';
 
   try {
-    // 2) Verifica el OTP (devuelve Firebase User o credencial)
     const fbUser = await this.authService.verifyCode(fullCode);
     if (!fbUser) throw new Error('No fue posible verificar el código');
-
-    // 3) Crea/lee perfil y rol (Firestore o claims, como lo tengas)
     const userData: Users = await this.authService.getOrCreateUser(fbUser);
-
-    // (Opcional pero recomendado) refresca claims si usas custom claims
-    // await fbUser.getIdToken(true);
-
-    // 4) Guarda en sessionStorage/Storage si lo necesitas
     this.sessionStorage.saveType('user', JSON.stringify(userData));
-
-    // 5) Redirección segura por rol
     const path = this.getLandingPathByRole(userData?.role);
     if (!path) {
-      // Si por alguna razón viene sin rol o rol inválido
       this.showAlert('Tu cuenta no tiene permisos para acceder. Contacta al admin.', 'danger');
-      // (Opcional) cerrar sesión
-      // await this.authService.signOut();
       return;
     }
 
@@ -150,15 +135,13 @@ async verifyCode() {
     this.loadingService.hide();
   }
 }
-
-// Helper local: mapea rol → ruta de aterrizaje
 private getLandingPathByRole(role?: string | null): string | null {
  const tipoUser = role === 'barber' ? 'barber' : 'admin';
  this.appSignal.set({ tipo: 'role', valor: tipoUser });
   switch (role) {
     case 'admin':  return '/admin/dashboard';
     case 'barber': return '/barbers/dashboard-barbers';
-    default:       return null; // customers no deberían loguearse
+    default:       return null;
   }
 }
 
