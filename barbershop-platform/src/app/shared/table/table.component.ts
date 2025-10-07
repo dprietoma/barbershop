@@ -26,7 +26,6 @@ export class TableComponent implements OnInit {
   @Input() ListForms: any[] = [];
   @Output() formsValue = new EventEmitter<any>();
   @Input() tittle: string = '';
-  @Input() user!: Users;
   selectedItem: any = null;
   showModal: boolean = false;
   sortColumn: string = '';
@@ -37,9 +36,7 @@ export class TableComponent implements OnInit {
 
   private readonly filterPipe = new FilterPipe();
   constructor() { }
-  ngOnInit(): void { 
-    console.log(this.user);
-  }
+  ngOnInit(): void {}
 
   onRowClick(row: any) {
     this.selectedItem = row;

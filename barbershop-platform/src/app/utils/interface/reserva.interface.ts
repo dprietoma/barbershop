@@ -1,6 +1,7 @@
 export interface Reserva {
     barberoId: string;
     barberNombre: string,
+    barberPhone: string,
     clienteNombre: string;
     fecha: string;
     hora: string;

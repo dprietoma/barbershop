@@ -52,7 +52,7 @@ export class AppointmentsComponent implements OnInit {
     private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
-    this.user = this.sessionStorage.getType('user');
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     this.buildColumns();
     this.AppointmentsByDate();
   }

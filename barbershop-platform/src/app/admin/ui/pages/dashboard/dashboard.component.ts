@@ -42,9 +42,11 @@ export class DashboardComponent implements OnInit {
     private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
-    this.user = this.sessionStorage.getType('user');
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any) ;
     this.buildColumns();
-    this.getAppointments();
+    if( this.user){
+      this.getAppointments(); 
+    }
 
   }
   buildColumns() {
@@ -65,7 +67,7 @@ export class DashboardComponent implements OnInit {
   }
   getAppointments(): void {
     this.loadingService.show();
-    this.reservationsService.getReservationsTodayByStatus().subscribe({
+    this.reservationsService.getReservationsTodayByStatus('Confirmada',this.user?.phoneNumber as any).subscribe({
       next: reservas => {
         this.generateAppointmentsTable(reservas);
         this.loadingService.hide();
@@ -85,7 +87,6 @@ export class DashboardComponent implements OnInit {
     } else if (event.action === 'delete') {
     }
   }
-
   generateAppointmentsTable(reservations: Reserva[]) {
     this.appointmentsTable = reservations;
     const totalAppointments = reservations.length;

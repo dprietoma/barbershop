@@ -35,11 +35,10 @@ export class SidebarComponent implements OnInit {
       this.mode = mode;
       this.information = mode ? MODE_CONFIGS[mode] ?? null : null;
       this.loadTheme();
-      this.menuItems = MENU_BY_ROLE['admin'];
     });
     this.sessionStorage.user$.subscribe(userStr => {
       if (userStr) {
-        // this.loadMenus();
+        this.loadMenus();
       }
     });
   }

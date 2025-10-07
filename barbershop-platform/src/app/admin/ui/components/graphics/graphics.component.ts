@@ -24,14 +24,16 @@ export class GraphicsComponent implements OnInit {
   user: any;
   constructor(private sessionStorage: SessionStorageService) { }
   ngOnInit(): void {
-    this.user = this.sessionStorage.getType('user');
-    this.ngZone.run(() => {
-      this.reservationsService.getReservationsTodayByStatus().subscribe((reservations: any[]) => {
-        this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
-        this.monthlyRevenue = this.buildMonthlyRevenueChart(reservations);
-        this.popularServices = this.buildPopularServicesChart(reservations) as any;
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
+    if(this.user){
+      this.ngZone.run(() => {
+        this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber as any).subscribe((reservations: any[]) => {
+          this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
+          this.monthlyRevenue = this.buildMonthlyRevenueChart(reservations);
+          this.popularServices = this.buildPopularServicesChart(reservations) as any;
+        });
       });
-    });
+    }
   }
 
   buildAppointmentsPerDayChart(reservations: any[]): ChartData<'bar'> {

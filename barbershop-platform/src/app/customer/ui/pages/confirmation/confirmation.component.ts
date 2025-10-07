@@ -31,7 +31,7 @@ export class ConfirmationComponent implements OnInit {
     { code: '+54', name: 'AR' },
   ];
 
-  formDataPeople: FormGroup;
+  formDataPeople!: FormGroup;
   constructor(private fb: FormBuilder,
     public order: OrderStateService,
     private route: Router,
@@ -139,6 +139,7 @@ export class ConfirmationComponent implements OnInit {
     const item: Reserva = {
       barberoId: this.order.barberoSeleccionado()?.id,
       barberNombre: this.order.barberoSeleccionado()?.nombre,
+      barberPhone: this.order.barberoSeleccionado()?.numCelular,
       clienteNombre: this.formDataPeople.controls['name'].value,
       emailCustomer: this.formDataPeople.controls['email'].value,
       docNumberCustomer: this.formDataPeople.controls['numDoc'].value,
@@ -155,7 +156,6 @@ export class ConfirmationComponent implements OnInit {
     }
     return item
   }
-  
   navigate() {
     const data = this.information();
     sessionStorage.setItem('reserva', JSON.stringify(data));

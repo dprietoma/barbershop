@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   phoneNumber: string = '';
   code: string[] = ['', '', '', '', '', ''];
   otpDigits = Array(6).fill(0);
-  formLogin: FormGroup;
+  formLogin!: FormGroup;
   errorMessage: string = '';
   private errorHandler = new ErrorAuth();
   alertType: 'success' | 'danger' | 'warning' | 'info' | '' = '';
@@ -87,13 +87,9 @@ export class LoginComponent implements OnInit {
         if (user) {
           this.authService.getOrCreateUser(user).then((userData: Users) => {
             this.sessionStorage.saveType('user', JSON.stringify(userData));
-            if(userData?.role === "admin"){
+            if (userData?.role) {
               this.router.navigate(['/admin/dashboard']);
-            } else {
-
             }
-            
-
           });
         }
       })

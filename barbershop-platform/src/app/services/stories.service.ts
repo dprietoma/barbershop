@@ -23,13 +23,14 @@ export class StoriesService {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' })
       .format(new Date());
   }
-  getReservationsTodayByStatus(status = 'Confirmada'): Observable<any[]> {
+  getReservationsTodayByStatus(status: string,assistant: string): Observable<any[]> {
     const today = this.todayBogota();
     const reservasRef = collection(this.firestore, 'reservas');
     const q = query(
       reservasRef,
       where('fecha', '==', today),
-      where('estado', '==', status)
+      where('estado', '==', status),
+      where('phoneNumber', '==', assistant)
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }

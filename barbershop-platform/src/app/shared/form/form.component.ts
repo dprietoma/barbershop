@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
-import { Users } from '../../utils/interface/users-interface';
+import { SessionStorageService } from '../../utils/global/StorageService ';
 @Component({
   selector: 'app-form',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxMaskDirective],
@@ -14,19 +14,19 @@ export class FormComponent implements OnInit, OnChanges {
   @Input() ListForms: any[] = [];
   @Input() IsEdit: boolean = false;
   @Input() dataEdit: any;
-  @Input() user!: Users;
   @Output() formsValue = new EventEmitter<any>();
-  form: FormGroup;
+  form!: FormGroup;
   previewUrl: string | null = null;
   editMode: boolean = false;
-
-  constructor(private fb: FormBuilder) { }
+  user: any;
+  constructor(private fb: FormBuilder, private sessionStorage: SessionStorageService) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['IsEdit']) {
       this.editMode = changes['IsEdit'].currentValue;
     }
   }
   ngOnInit(): void {
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     this.form = this.fb.group({});
     this.ListForms.forEach(input => {
       if (input.type === 'table') {
@@ -45,7 +45,6 @@ export class FormComponent implements OnInit, OnChanges {
       this.form.patchValue(this.dataEdit);
       this.form.get('foto')?.setValue(this.dataEdit.foto);
     }
-    console.log(this.user, 'formulario')
   }
   onClickSevice(key: string, row: any) {
     if (key === 'edit') {
