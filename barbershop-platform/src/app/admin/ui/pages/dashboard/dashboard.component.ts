@@ -42,10 +42,10 @@ export class DashboardComponent implements OnInit {
     private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
-    this.user = JSON.parse(this.sessionStorage.getType('user') as any) ;
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     this.buildColumns();
-    if( this.user){
-      this.getAppointments(); 
+    if (this.user) {
+      this.getAppointments();
     }
   }
   buildColumns() {
@@ -66,7 +66,7 @@ export class DashboardComponent implements OnInit {
   }
   getAppointments(): void {
     this.loadingService.show();
-    this.reservationsService.getReservationsTodayByStatus('Confirmada',this.user?.phoneNumber as any).subscribe({
+    this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber as any).subscribe({
       next: reservas => {
         this.generateAppointmentsTable(reservas);
         this.loadingService.hide();
@@ -98,37 +98,32 @@ export class DashboardComponent implements OnInit {
     }, 0);
 
     const uniqueClients = new Set(reservations.map(r => r.docNumberCustomer)).size;
+    this.validateItemsByRole(totalAppointments, income, services, uniqueClients);
 
-    this.summaryCards = [
-      {
-        title: 'Total Citas',
-        value: totalAppointments,
-        icon: 'bi-calendar-check',
-        bg: '#0d6efd',
-        color: 'text-primary'
-      },
-      {
-        title: 'Proximos ingresos',
-        value: income.toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }),
-        icon: 'bi-cash-coin',
-        bg: '#dc3545',
-        color: 'text-danger'
-      },
-      {
-        title: 'Servicios',
-        value: services,
-        icon: 'bi-scissors',
-        bg: '#198754',
-        color: 'text-success'
-      },
-      {
-        title: 'Clientes',
-        value: uniqueClients >= 1000 ? (uniqueClients / 1000).toFixed(1) + 'K' : uniqueClients,
-        icon: 'bi-people-fill',
-        bg: '#ffc107',
-        color: 'text-warning'
-      }
+  }
+  validateItemsByRole(
+    totalAppointments: number,
+    income: number,
+    services: number,
+    uniqueClients: number
+  ) {
+    const role = (this.user?.role || '').toLowerCase();
+    const isAdmin = role === 'admin';
+    const fmtCOP = (n: number) =>
+      n.toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+    const fmtK = (n: number) =>
+      n >= 1000 ? `${(n / 1000).toFixed(n % 1000 ? 1 : 0)}K` : String(n);
+    const base = [
+      { title: 'Total Citas', value: totalAppointments, icon: 'bi-calendar-check', bg: '#0d6efd', color: 'text-primary' },
+      { title: 'Próximos ingresos', value: fmtCOP(income), icon: 'bi-cash-coin', bg: '#dc3545', color: 'text-danger' },
     ];
+
+    const extrasAdmin = [
+      { title: 'Servicios', value: services, icon: 'bi-scissors', bg: '#198754', color: 'text-success' },
+      { title: 'Clientes', value: fmtK(uniqueClients), icon: 'bi-people-fill', bg: '#ffc107', color: 'text-warning' },
+    ];
+
+    this.summaryCards = isAdmin ? [...base, ...extrasAdmin] : base;
   }
 
 }
