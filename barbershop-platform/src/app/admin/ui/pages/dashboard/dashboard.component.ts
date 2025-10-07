@@ -88,7 +88,8 @@ export class DashboardComponent implements OnInit {
   }
   generateAppointmentsTable(reservations: Reserva[]) {
     this.appointmentsTable = reservations;
-    const totalAppointments = reservations.length;
+    const totalAppointments =
+      reservations.filter(r => r.estado === 'Confirmada' && ((this.user?.role || '').toLowerCase() === 'admin' || r.barberPhone === this.user?.phoneNumber));
     const income = reservations
       .filter(r => r.estado === 'Confirmada')
       .reduce((acc, r) => acc + Number(this.user?.role === 'admin' ? r.gananciaBarberia : r.gananciaBarbero || 0), 0);
@@ -98,7 +99,7 @@ export class DashboardComponent implements OnInit {
     }, 0);
 
     const uniqueClients = new Set(reservations.map(r => r.docNumberCustomer)).size;
-    this.validateItemsByRole(totalAppointments, income, services, uniqueClients);
+    this.validateItemsByRole(totalAppointments.length, income, services, uniqueClients);
 
   }
   validateItemsByRole(
