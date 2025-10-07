@@ -9,7 +9,7 @@ import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { TableComponent } from '../../../../shared/table/table.component';
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { LoadingService } from '../../../../utils/global/LoadingService';
-import { finalize } from 'rxjs/operators';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,15 +23,7 @@ export class DashboardComponent implements OnInit {
     { label: 'Login', url: 'admin/login' },
     { label: 'Panel de Administración', url: 'admin/dashboard' },
   ];
-  cols = [
-    { key: 'clienteNombre', label: 'Cliente' },
-    { key: 'phoneCustomer', label: 'Celular' },
-    { key: 'barberNombre', label: 'Barbero' },
-    { key: 'fecha', label: 'Fecha' },
-    { key: 'hora', label: 'Hora' },
-    { key: 'estado', label: 'Estado', type: 'badge' },
-    { key: 'total', label: 'Total', type: 'currency'  }
-  ];
+  cols: any = [];
   summaryCards: {
     title: string;
     value: string | number;
@@ -44,16 +36,38 @@ export class DashboardComponent implements OnInit {
     filterBy: 'clienteNombre',
     placeholder: 'Buscar reserva...'
   };
+  user: any;
   constructor(private reservationsService: StoriesService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
-    this.getAppointments();
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any) ;
+    this.buildColumns();
+    if( this.user){
+      this.getAppointments(); 
+    }
 
+  }
+  buildColumns() {
+    const keyTotal = this.validateRol();
+    this.cols = [
+      { key: 'clienteNombre', label: 'Cliente' },
+      { key: 'phoneCustomer', label: 'Celular' },
+      { key: 'barberNombre', label: 'Barbero' },
+      { key: 'fecha', label: 'Fecha' },
+      { key: 'hora', label: 'Hora' },
+      { key: 'estado', label: 'Estado', type: 'badge' },
+      { key: keyTotal, label: 'Total', type: 'currency' }
+    ];
+  }
+  validateRol(): string {
+    const role = (this.user?.role || '').toLowerCase();
+    return role === 'admin' ? 'gananciaBarberia' : 'gananciaBarbero';
   }
   getAppointments(): void {
     this.loadingService.show();
-    this.reservationsService.getReservations().subscribe({
+    this.reservationsService.getReservationsTodayByStatus('Confirmada',this.user?.phoneNumber as any).subscribe({
       next: reservas => {
         this.generateAppointmentsTable(reservas);
         this.loadingService.hide();
@@ -70,18 +84,15 @@ export class DashboardComponent implements OnInit {
 
   handleAction(event: any) {
     if (event.action === 'edit') {
-      // abrir modal de edición
     } else if (event.action === 'delete') {
-      // mostrar confirmación
     }
   }
-
   generateAppointmentsTable(reservations: Reserva[]) {
     this.appointmentsTable = reservations;
     const totalAppointments = reservations.length;
     const income = reservations
       .filter(r => r.estado === 'Confirmada')
-      .reduce((acc, r) => acc + Number(r.total || 0), 0);
+      .reduce((acc, r) => acc + Number(this.user?.role === 'admin' ? r.gananciaBarberia : r.gananciaBarbero || 0), 0);
     const services = reservations.reduce((acc, r) => {
       const currentServices = Array.isArray(r.servicio) ? r.servicio.length : 1;
       return acc + currentServices;

@@ -11,6 +11,8 @@ import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { ReservasService } from '../../../../services/ReservasService.service';
 import { SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 import { ListService } from '../../../../services/listServices.service';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { PERCENTAGE } from '../../../../utils/constants/horasDefault';
 
 @Component({
   selector: 'app-appointments',
@@ -22,6 +24,7 @@ import { ListService } from '../../../../services/listServices.service';
 export class AppointmentsComponent implements OnInit {
   private listService = inject(ListService);
   appointmentsTable: Reserva[] = [];
+  user: any;
   filtroConfig = {
     filterBy: 'clienteNombre',
     placeholder: 'Buscar reserva...'
@@ -30,16 +33,7 @@ export class AppointmentsComponent implements OnInit {
     { label: 'Panel de Administración', url: 'admin/dashboard' },
     { label: 'Control de reservas', url: 'admin/appointments' },
   ];
-  cols = [
-    { key: 'clienteNombre', label: 'Cliente' },
-    { key: 'phoneCustomer', label: 'Celular', type: 'phone' },
-    { key: 'barberNombre', label: 'Barbero' },
-    { key: 'fecha', label: 'Fecha' },
-    { key: 'hora', label: 'Hora' },
-    { key: 'estado', label: 'Estado', type: 'badge' },
-    { key: 'total', label: 'Total', type: 'currency' },
-    { key: '', label: '', type: 'actions' }
-  ];
+  cols: any = [];
   selectedDate: string = this.getTodaysDate();
   status: string = 'Confirmada';
   tabs = [
@@ -54,10 +48,30 @@ export class AppointmentsComponent implements OnInit {
 
   constructor(private loadingService: LoadingService,
     private storieService: StoriesService,
-    private reservasService: ReservasService
+    private reservasService: ReservasService,
+    private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
+    this.buildColumns();
     this.AppointmentsByDate();
+  }
+  buildColumns() {
+    const keyTotal = this.validateRol();
+    this.cols = [
+      { key: 'clienteNombre', label: 'Cliente' },
+      { key: 'phoneCustomer', label: 'Celular', type: 'phone' },
+      { key: 'barberNombre', label: 'Barbero' },
+      { key: 'fecha', label: 'Fecha' },
+      { key: 'hora', label: 'Hora' },
+      { key: 'estado', label: 'Estado', type: 'badge' },
+      { key: keyTotal, label: 'Total', type: 'currency' },
+      { key: '', label: '', type: 'actions' }
+    ];
+  }
+  validateRol(): string {
+    const role = (this.user?.role || '').toLowerCase();
+    return role === 'admin' ? 'gananciaBarberia' : 'gananciaBarbero';
   }
   buildFormFields() {
     this.ListFormAppointments = [
@@ -134,7 +148,7 @@ export class AppointmentsComponent implements OnInit {
       },
       {
         title: 'Total',
-        name: 'total',
+        name: this.validateRol(),
         type: 'currency',
         placeholder: 'Ingrese Total',
         validation: [Validators.required],
@@ -214,6 +228,8 @@ export class AppointmentsComponent implements OnInit {
 
   async editAppointments(event: any) {
     this.loadingService.show();
+    event.gananciaBarberia = Number((event.total * PERCENTAGE).toFixed(2));
+    event.gananciaBarbero = Number((event.total * PERCENTAGE).toFixed(2))
     try {
       await this.reservasService.updateReservation(event.id, event);
       ShowAlert.viewAlert('info', SUCCESS_UPDATE, 'success');

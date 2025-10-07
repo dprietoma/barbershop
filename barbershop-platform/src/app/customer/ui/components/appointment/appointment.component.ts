@@ -13,7 +13,7 @@ export class AppointmentComponent {
   @Input() barberoSeleccionado!: Signal<any | null>;
   @Input() fechaReserva!: Signal<string | null>;
   @Input() horaReserva!: Signal<string | null>;
-  @Input() showService: boolean;
+  @Input() showService!: boolean;
 
   getNombresServicios(): string {
     return this.serviciosSeleccionados().map(s => s.nombre).join(', ');

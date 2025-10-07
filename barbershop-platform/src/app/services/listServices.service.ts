@@ -34,17 +34,25 @@ export class ListService {
         const servRef = doc(this.firestore, `servicios/${id}`);
         await deleteDoc(servRef);
     }
-   createCustom(item: Custom & { id: string }) {
+    createCustom(item: Custom & { id: string }) {
         const ref = doc(this.firestore, `customize/${item.id}`);
         const { id, ...data } = item;
         return setDoc(ref, data);
-    } 
-    
-    getCustom(): Observable<any[]> {
-        const serviciosRef = collection(this.firestore, 'customize');
-        return collectionData(serviciosRef, { idField: 'id' }) as Observable<any[]>;
     }
-      async deleteCustomById(id: string): Promise<void> {
+    updateCustom(id: string, item: Custom) {
+        const ref = doc(this.firestore, `customize/${id}`);
+        return updateDoc(ref, item as any);
+    }
+
+    getCustom(tipo?: string): Observable<any[]> {
+        const serviciosRef = collection(this.firestore, 'customize');
+        const q = tipo
+            ? query(serviciosRef, where('tipo', '==', tipo))
+            : serviciosRef;
+
+        return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    }
+    async deleteCustomById(id: string): Promise<void> {
         const servRef = doc(this.firestore, `customize/${id}`);
         await deleteDoc(servRef);
     }

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipe } from '../../utils/pipes/filter.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormComponent } from '../form/form.component';
+import { Users } from '../../utils/interface/users-interface';
 @Component({
   selector: 'app-table',
   imports: [CommonModule, FormsModule, FilterPipe, NgxPaginationModule,
@@ -35,7 +36,7 @@ export class TableComponent implements OnInit {
 
   private readonly filterPipe = new FilterPipe();
   constructor() { }
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   onRowClick(row: any) {
     this.selectedItem = row;

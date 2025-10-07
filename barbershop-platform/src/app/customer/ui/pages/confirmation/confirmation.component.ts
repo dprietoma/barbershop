@@ -13,6 +13,7 @@ import { ModalTermsComponent } from '../../../../shared/modal-terms/modal-terms.
 import { Reserva } from '../../../../utils/interface/reserva.interface';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { ReservasService } from '../../../../services/ReservasService.service';
+import { PERCENTAGE } from '../../../../utils/constants/horasDefault';
 @Component({
   selector: 'app-confirmation',
   imports: [CommonModule, SteppersComponent,
@@ -30,7 +31,7 @@ export class ConfirmationComponent implements OnInit {
     { code: '+54', name: 'AR' },
   ];
 
-  formDataPeople: FormGroup;
+  formDataPeople!: FormGroup;
   constructor(private fb: FormBuilder,
     public order: OrderStateService,
     private route: Router,
@@ -134,9 +135,11 @@ export class ConfirmationComponent implements OnInit {
   }
   information(): Reserva {
     const fecha = this.order.fechaReserva();
+    const total = this.order.totalServicios();
     const item: Reserva = {
       barberoId: this.order.barberoSeleccionado()?.id,
       barberNombre: this.order.barberoSeleccionado()?.nombre,
+      barberPhone: this.order.barberoSeleccionado()?.numCelular,
       clienteNombre: this.formDataPeople.controls['name'].value,
       emailCustomer: this.formDataPeople.controls['email'].value,
       docNumberCustomer: this.formDataPeople.controls['numDoc'].value,
@@ -144,7 +147,9 @@ export class ConfirmationComponent implements OnInit {
       fecha: fecha ? this.formatearFechaLocal(fecha as any) : '',
       hora: this.order.horaReserva() ?? '',
       servicio: this.order.serviciosSeleccionados(),
-      total: this.order.totalServicios(),
+      total,
+      gananciaBarberia:Number((total * PERCENTAGE).toFixed(2)),
+      gananciaBarbero: Number((total * PERCENTAGE).toFixed(2)),
       estado: 'Confirmada',
       duracion: this.getTimeServices(),
       type: this.sessionStorage.getType('mode') as string

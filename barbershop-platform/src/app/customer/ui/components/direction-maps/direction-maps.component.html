@@ -35,11 +35,13 @@
             </thead>
             <tbody>
                 @for (horario of horarios; track $index) {
-                <tr>
+                <tr
+                    [ngStyle]="horario.dia === 'Miércoles' ? {'--background-color': '#f2e01b', '--text-color': '#212529'} : null">
                     <td>{{ horario.dia }}</td>
                     <td>{{ horario.apertura }}</td>
                     <td>{{ horario.cierre }}</td>
                 </tr>
+
                 }
             </tbody>
         </table>

@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   phoneNumber: string = '';
   code: string[] = ['', '', '', '', '', ''];
   otpDigits = Array(6).fill(0);
-  formLogin: FormGroup;
+  formLogin!: FormGroup;
   errorMessage: string = '';
   private errorHandler = new ErrorAuth();
   alertType: 'success' | 'danger' | 'warning' | 'info' | '' = '';

@@ -5,6 +5,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { StoriesService } from '../../../../services/stories.service';
 import { AppSignalService } from '../../../../services/signals.service';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 
 @Component({
   selector: 'app-graphics',
@@ -17,16 +18,14 @@ export class GraphicsComponent implements OnInit {
   ngZone = inject(NgZone);
   reservationsService = inject(StoriesService);
   appSignal= inject(AppSignalService);
-  tipoUse: boolean;
+  tipoUse: any;
   public lineChartType: ChartType = 'doughnut';
-
   public isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-
   appointmentsPerDay: ChartData<'bar'> = { labels: [], datasets: [] };
   monthlyRevenue: ChartData<'line'> = { labels: [], datasets: [] };
   popularServices: ChartData<'doughnut'> = { labels: [], datasets: [] };
 
-  constructor(){
+  constructor(private sessionStorage: SessionStorageService){
     effect(() => {
        const rol = (this.appSignal.data()?.valor ?? '').toLowerCase();
        const esBarbero = rol === 'barbero' || rol === 'barber';
@@ -34,14 +33,18 @@ export class GraphicsComponent implements OnInit {
     })
   }
 
+  user: any;
   ngOnInit(): void {
-    this.ngZone.run(() => {
-      this.reservationsService.getReservations().subscribe((reservations: any[]) => {
-        this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
-        this.monthlyRevenue = this.buildMonthlyRevenueChart(reservations);
-        this.popularServices = this.buildPopularServicesChart(reservations) as any;
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
+    if(this.user){
+      this.ngZone.run(() => {
+        this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber as any).subscribe((reservations: any[]) => {
+          this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
+          this.monthlyRevenue = this.buildMonthlyRevenueChart(reservations);
+          this.popularServices = this.buildPopularServicesChart(reservations) as any;
+        });
       });
-    });
+    }
   }
 
   buildAppointmentsPerDayChart(reservations: any[]): ChartData<'bar'> {
@@ -71,8 +74,7 @@ export class GraphicsComponent implements OnInit {
       .forEach(r => {
         const date = r.fecha instanceof Timestamp ? r.fecha.toDate() : new Date(r.fecha);
         const monthKey = date.toLocaleString('default', { month: 'short' });
-
-        revenueByMonth[monthKey] = (revenueByMonth[monthKey] || 0) + Number(r.total || 0);
+        revenueByMonth[monthKey] = (revenueByMonth[monthKey] || 0) + Number(this.user?.role === 'admin' ? r.gananciaBarberia : r.gananciaBarbero || 0);
       });
 
     return {

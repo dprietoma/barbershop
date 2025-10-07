@@ -6,6 +6,8 @@ export const MENU_BY_ROLE = {
         { title: 'Servicios', path: '/admin/servicios', icon: 'bi bi-scissors fs-4' },
     ],
     barber: [
-        { title: 'Citas', path: '/barbers/appointments', icon: 'bi bi-calendar-check fs-4' }
+        { title: 'Citas', path: '/barbers/appointments', icon: 'bi bi-calendar-check fs-4' },
+        { title: 'Historial de Citas', path: '/admin/history', icon: 'bi bi-clock-history fs-4' },
+        { title: 'Mi Agenda', path: '/admin/appointments', icon: 'bi bi-calendar-check fs-4' },
     ]
 };

@@ -34,6 +34,7 @@ export class CarouselIndicatorsComponent
   private videoEndedAttached = false;
   contentReady = false;
   isMuted = true;
+  name: string = '';
   @ViewChild('videoPlayer') videoPlayerRef!: ElementRef<HTMLVideoElement>;
 
   constructor(
@@ -42,6 +43,7 @@ export class CarouselIndicatorsComponent
     private sessionStorage: SessionStorageService
   ) {
     this.user = this.sessionStorage.getType('mode');
+    this.name = this.user === 'CRISTIANBARBER' ? 'CRISTIANBARBER' : 'AMATE';
   }
 
   ngOnInit() {
@@ -149,7 +151,7 @@ export class CarouselIndicatorsComponent
 
       setTimeout(() => {
         this.contentReady = true;
-      }, 50); // da tiempo a que el DOM re-renderice antes del fade
+      }, 50);
 
       if (!this.isVideo(this.currentIndex)) {
         this.step = 1;

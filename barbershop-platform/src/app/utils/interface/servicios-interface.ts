@@ -5,7 +5,7 @@ export interface Servicios {
     nombre: string;
     foto: any;
     detalle: string;
-    duracion: string;
+    duracion: any;
     valor: number;
     fecha: Timestamp;
     type: string;

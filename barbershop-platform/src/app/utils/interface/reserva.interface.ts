@@ -1,6 +1,7 @@
 export interface Reserva {
     barberoId: string;
     barberNombre: string,
+    barberPhone: string,
     clienteNombre: string;
     fecha: string;
     hora: string;
@@ -12,5 +13,7 @@ export interface Reserva {
     estado: string;
     duracion: string;
     type: string;
-    id?: string
+    id?: string;
+    gananciaBarberia: number;
+    gananciaBarbero: number;
 }

@@ -20,11 +20,15 @@
                                     <input *ngSwitchCase="'password'" class="form-control"
                                         [formControlName]="input.name" [placeholder]="input.placeholder"
                                         type="password" />
+                                    <textarea *ngSwitchCase="'textarea'" class="form-control"
+                                        [formControlName]="input.name" rows="3" [placeholder]="input.placeholder">
+                                         </textarea>
                                     <select *ngSwitchCase="'select'" class="form-select" [formControlName]="input.name">
                                         <option value="" disabled>{{ input.placeholder }}</option>
                                         <option *ngFor="let opt of input.options" [value]="opt.value">{{ opt.label }}
                                         </option>
                                     </select>
+
                                     <input *ngSwitchCase="'currency'" type="text" class="form-control"
                                         [formControlName]="input.name" [placeholder]="input.placeholder"
                                         [mask]="input.mask" [prefix]="input.prefix"
@@ -43,7 +47,7 @@
                                                     <tr>
                                                         <th>NOMBRE DEL SERVICIO</th>
                                                         <th>DETALLE</th>
-                                                        <th>ACCIONES</th>
+                                                        <th *ngIf="this.user?.rol !== 'barber'">ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -64,14 +68,15 @@
                                                             <p class="fw-normal mb-1">{{item.valor | currency}} </p>
                                                             <p class="text-muted mb-0">{{item.duracion}} Min </p>
                                                         </td>
-                                                        <td>
+                                                        <td *ngIf="this.user?.rol !== 'barber'">
                                                             <button *ngIf="!isSelected(item)" type="button"
                                                                 class="btn btn-primary btn-no-style me-1"
                                                                 (click)="onClickSevice('edit', item); $event.stopPropagation()">
                                                                 <i class="bi bi-plus-circle-fill fs-5"></i>
                                                             </button>
-                                                            <button *ngIf="isSelected(item)" type="button"
-                                                                class="btn btn-danger btn-no-style"
+                                                            <button
+                                                                *ngIf="isSelected(item)"
+                                                                type="button" class="btn btn-danger btn-no-style"
                                                                 (click)="onClickSevice('delete', item); $event.stopPropagation()">
                                                                 <i class="bi bi-trash3 fs-5"></i>
                                                             </button>

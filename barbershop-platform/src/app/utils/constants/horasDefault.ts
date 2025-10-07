@@ -13,3 +13,4 @@ export const HOURS = [
     '08:00 PM'
 ];
 export const DURACION_FRANJA_MIN = 60;
+export const PERCENTAGE = 0.5;
