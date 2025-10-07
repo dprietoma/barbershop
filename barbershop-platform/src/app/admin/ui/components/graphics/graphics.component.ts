@@ -17,7 +17,7 @@ import { SessionStorageService } from '../../../../utils/global/StorageService '
 export class GraphicsComponent implements OnInit {
   ngZone = inject(NgZone);
   reservationsService = inject(StoriesService);
-  appSignal= inject(AppSignalService);
+  appSignal = inject(AppSignalService);
   tipoUse: any;
   public lineChartType: ChartType = 'doughnut';
   public isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -25,18 +25,18 @@ export class GraphicsComponent implements OnInit {
   monthlyRevenue: ChartData<'line'> = { labels: [], datasets: [] };
   popularServices: ChartData<'doughnut'> = { labels: [], datasets: [] };
 
-  constructor(private sessionStorage: SessionStorageService){
+  constructor(private sessionStorage: SessionStorageService) {
     effect(() => {
-       const rol = (this.appSignal.data()?.valor ?? '').toLowerCase();
-       const esBarbero = rol === 'barbero' || rol === 'barber';
-       this.tipoUse = !esBarbero; // mostrar si NO es barbero
+      const rol = (this.appSignal.data()?.valor ?? '').toLowerCase();
+      const esBarbero = rol === 'barbero' || rol === 'barber';
+      this.tipoUse = !esBarbero; // mostrar si NO es barbero
     })
   }
 
   user: any;
   ngOnInit(): void {
     this.user = JSON.parse(this.sessionStorage.getType('user') as any);
-    if(this.user){
+    if (this.user) {
       this.ngZone.run(() => {
         this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber as any).subscribe((reservations: any[]) => {
           this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
@@ -70,7 +70,8 @@ export class GraphicsComponent implements OnInit {
   buildMonthlyRevenueChart(reservations: any[]): ChartData<'line'> {
     const revenueByMonth: Record<string, number> = {};
     reservations
-      .filter(r => r.estado === 'Finalizada')
+      .filter(r => r.estado === 'Finalizada' &&
+        ((this.user?.role || '').toLowerCase() === 'admin' || r.barberPhone === this.user?.phoneNumber))
       .forEach(r => {
         const date = r.fecha instanceof Timestamp ? r.fecha.toDate() : new Date(r.fecha);
         const monthKey = date.toLocaleString('default', { month: 'short' });
