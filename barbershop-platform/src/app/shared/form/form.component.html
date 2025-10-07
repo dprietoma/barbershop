@@ -47,7 +47,7 @@
                                                     <tr>
                                                         <th>NOMBRE DEL SERVICIO</th>
                                                         <th>DETALLE</th>
-                                                        <th *ngIf="this.user?.rol !== 'barber'">ACCIONES</th>
+                                                        <th *ngIf="this.user?.role !== 'barber'">ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -68,7 +68,7 @@
                                                             <p class="fw-normal mb-1">{{item.valor | currency}} </p>
                                                             <p class="text-muted mb-0">{{item.duracion}} Min </p>
                                                         </td>
-                                                        <td *ngIf="this.user?.rol !== 'barber'">
+                                                        <td *ngIf="this.user?.role !== 'barber'">
                                                             <button *ngIf="!isSelected(item)" type="button"
                                                                 class="btn btn-primary btn-no-style me-1"
                                                                 (click)="onClickSevice('edit', item); $event.stopPropagation()">

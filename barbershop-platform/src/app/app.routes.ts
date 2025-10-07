@@ -8,7 +8,6 @@ export const routes: Routes = [
         children: [
             {
                 path: 'login',
-                // ruta pública que monta tu componente de shared
                 loadComponent: () =>
                     import('./shared/login/login.component').then(m => m.LoginComponent),
             },
@@ -21,17 +20,17 @@ export const routes: Routes = [
     },
     {
         path: 'admin',
-        // canMatch: [authGuard, roleGuard],
+        canMatch: [authGuard, roleGuard],
         data: { roles: ['admin'] },
         loadChildren: () =>
             import('./admin/admin-routes').then(m => m.adminRoutes),
     },
     {
         path: 'barbers',
-        // canMatch: [authGuard, roleGuard],
+        canMatch: [authGuard, roleGuard],
         data: { roles: ['barber', 'admin'] },
         loadChildren: () =>
-            import('./barbers/barbers.routes').then(m => m.barbersRoutes),
+            import('./admin/barbers.routes').then(m => m.barbersRoutes),
     },
     {
         path: '',

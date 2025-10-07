@@ -47,7 +47,6 @@ export class DashboardComponent implements OnInit {
     if( this.user){
       this.getAppointments(); 
     }
-
   }
   buildColumns() {
     const keyTotal = this.validateRol();
