@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { ListService } from '../../../../services/listServices.service';
-
+import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-list-services',
   imports: [CommonModule, SteppersComponent,
@@ -27,8 +27,10 @@ export class ListServicesComponent implements OnInit {
   barberoSeleccionado: any = null;
   isCollapsed = false;
   filtroTexto = '';
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   constructor(private loadingService: LoadingService) { }
   ngOnInit(): void {
+    if (!this.isBrowser) return;
     this.getServices();
   }
   getServices() {

@@ -14,12 +14,7 @@ import {FooterComponent} from '../../../../shared/footer/footer.component';
 export class LocationComponent {
 
 
-  constructor(private router: Router, private sessionStorage: SessionStorageService) {
-    if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', '/_flush');
-      window.history.replaceState({}, '', '/');
-    }
-  }
+  constructor(private router: Router, private sessionStorage: SessionStorageService) { }
   navigateToHome(type: string) {
     this.sessionStorage.saveType('mode', type);
     this.router.navigate(['/customer/home']);

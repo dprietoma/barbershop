@@ -13,6 +13,8 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { StoriesService } from '../../../../services/stories.service';
 import { Story } from '../../../../utils/interface/story-interface';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-carousel-indicators',
@@ -36,7 +38,7 @@ export class CarouselIndicatorsComponent
   isMuted = true;
   name: string = '';
   @ViewChild('videoPlayer') videoPlayerRef!: ElementRef<HTMLVideoElement>;
-
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   constructor(
     private storage: Storage,
     private storyImg: StoriesService,
@@ -47,6 +49,7 @@ export class CarouselIndicatorsComponent
   }
 
   ngOnInit() {
+    if (!this.isBrowser) return;
     this.consultStories();
   }
 
