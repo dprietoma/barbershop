@@ -39,7 +39,7 @@
                 <strong>{{ item.title }}</strong>
             </a>
         </div>
-        <div class="menu-section" *ngIf="menuItems.length">
+        <div class="menu-section">
             <div class="menu-title">Settings</div>
             <a class="dropdown-item d-flex align-items-center gap-2" (click)="toggleTheme()">
                 <i [ngClass]="isDarkMode ? 'bi bi-brightness-high-fill fs-3' : 'bi bi-moon-stars-fill fs-4'"></i>
