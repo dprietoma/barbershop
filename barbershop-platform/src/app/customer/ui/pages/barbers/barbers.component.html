@@ -7,7 +7,11 @@
     <div class="col-md-4 mt-2 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
       @for (barbero of barberos | filter:'nombre':filtroTexto; track $index) {
       <div class="barbero-card mb-3" [class.selected]="barberoSeleccionado?.id === barbero.id">
-        <div class="barbero-img" [style.backgroundImage]="'url(' + barbero.foto + ')'"></div>
+        <div class="barbero-img">
+          <img [src]="barbero.foto" alt="{{barbero.nombre}}" loading="lazy" decoding="async" fetchpriority="low"
+            (load)="barbero._loaded = true" (error)="barbero._error = true" [class.loaded]="barbero._loaded" />
+          <div class="img-skeleton" *ngIf="!barbero._loaded"></div>
+        </div>
         <div class="barbero-info">
           <h5>{{ barbero.nombre }}</h5>
           <div class="rating mt-2">
@@ -56,8 +60,8 @@
           <div class="col-4">
             <h6 class="fw-bold">MAÑANA</h6>
             <ng-container *ngIf="horas.manana.length > 0; else sinHorasManana">
-              <div *ngFor="let hora of horas.manana" class="hora-box" [class.selected]="hora.hora === order.horaReserva()"
-                (click)="selectDate(hora)">{{ hora.hora }}</div>
+              <div *ngFor="let hora of horas.manana" class="hora-box"
+                [class.selected]="hora.hora === order.horaReserva()" (click)="selectDate(hora)">{{ hora.hora }}</div>
             </ng-container>
             <ng-template #sinHorasManana>
               <p class="text-muted small">Sin horas para reservar</p>
@@ -67,8 +71,8 @@
           <div class="col-4">
             <h6 class="fw-bold">TARDE</h6>
             <ng-container *ngIf="horas.tarde.length > 0; else sinHorasTarde">
-              <div *ngFor="let hora of horas.tarde" [class.selected]="hora.hora === order.horaReserva()" class="hora-box"
-                (click)="selectDate(hora)">{{ hora.hora }}</div>
+              <div *ngFor="let hora of horas.tarde" [class.selected]="hora.hora === order.horaReserva()"
+                class="hora-box" (click)="selectDate(hora)">{{ hora.hora }}</div>
             </ng-container>
             <ng-template #sinHorasTarde>
               <p class="text-muted small">Sin horas para reservar</p>
@@ -78,8 +82,8 @@
           <div class="col-4">
             <h6 class="fw-bold">NOCHE</h6>
             <ng-container *ngIf="horas.noche.length > 0; else sinHorasNoche">
-              <div *ngFor="let hora of horas.noche" [class.selected]="hora.hora === order.horaReserva()" class="hora-box"
-                (click)="selectDate(hora)">{{ hora.hora }}</div>
+              <div *ngFor="let hora of horas.noche" [class.selected]="hora.hora === order.horaReserva()"
+                class="hora-box" (click)="selectDate(hora)">{{ hora.hora }}</div>
             </ng-container>
             <ng-template #sinHorasNoche>
               <p class="text-muted small">Sin horas para reservar</p>

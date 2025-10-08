@@ -8,7 +8,11 @@
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
             @for (item of servicios| filter:'nombre':filtroTexto; track $index) {
             <div class="barbero-card mb-3">
-                <div class="barbero-img" [style.backgroundImage]="'url(' + item.foto + ')'"></div>
+                <div class="barbero-img">
+                    <img [src]="item.foto" alt="{{item.nombre}}" loading="lazy" decoding="async" fetchpriority="low"
+                        (load)="item._loaded = true" (error)="item._error = true" [class.loaded]="item._loaded" />
+                    <div class="img-skeleton" *ngIf="!item._loaded"></div>
+                </div>
                 <div class="barbero-info">
                     <h5>{{ item.nombre }}</h5>
                     <small>{{ item.descripcion }}</small>
