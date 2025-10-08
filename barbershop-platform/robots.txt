@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://barbershop-1e2aa.web.app/sitemap.xml
