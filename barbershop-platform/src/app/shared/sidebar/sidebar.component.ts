@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { INTERNALCODE } from '../../utils/constants/General-Constants';
 import { AppSignalService } from '../../services/signals.service';
 import { AuthenticationService } from '../../services/authentication.service';
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-sidebar',
@@ -104,32 +105,42 @@ export class SidebarComponent implements OnInit {
       this.router.navigate(['/customer/location']);
     });
   }
+  cleanupOffcanvasBackdrops() {
+    document.querySelectorAll('.offcanvas-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('offcanvas-open', 'modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+  }
   async showKeyPrompt() {
-    const { value: key } = await Swal.fire({
+    const opened = document.querySelector('.offcanvas.show') as HTMLElement | null;
+    if (opened) {
+      const inst = bootstrap.Offcanvas.getInstance(opened) ?? new bootstrap.Offcanvas(opened);
+      inst.hide();
+      await new Promise(r => setTimeout(r, 250));
+    }
+    this.cleanupOffcanvasBackdrops();
+
+    const { value: key, isDismissed } = await Swal.fire({
       title: 'Acceso restringido',
       input: 'password',
       inputLabel: 'Ingresa la llave secreta',
       inputPlaceholder: '********',
-      inputAttributes: {
-        maxlength: '20',
-        autocapitalize: 'off',
-        autocorrect: 'off'
-      },
+      inputAttributes: { maxlength: '20', autocapitalize: 'off', autocorrect: 'off' },
       showCancelButton: true,
       confirmButtonText: 'Ingresar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      returnFocus: false
     });
-    if (key) {
-      if (key?.toLowerCase() === INTERNALCODE.toLowerCase()) {
-        this.router.navigate(['/auth/login']); 
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Llave incorrecta',
-          text: 'La clave que ingresaste no es válida.',
-        });
-      }
+
+    if (isDismissed || key === undefined) return;
+
+    if (key.toLowerCase() === INTERNALCODE.toLowerCase()) {
+      this.router.navigate(['/auth/login']);
+    } else {
+      await Swal.fire({ icon: 'error', title: 'Llave incorrecta', text: 'La clave que ingresaste no es válida.' });
     }
   }
+
+
 
 }
