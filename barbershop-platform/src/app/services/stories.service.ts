@@ -23,25 +23,43 @@ export class StoriesService {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' })
       .format(new Date());
   }
-  getReservationsTodayByStatus(status: string,assistant: string): Observable<any[]> {
+  getReservationsTodayByStatus(
+    status: string,
+    assistantPhone?: string | null,
+    role: string = ''
+  ): Observable<any[]> {
     const today = this.todayBogota();
     const reservasRef = collection(this.firestore, 'reservas');
-    const q = query(
-      reservasRef,
+
+    const constraints = [
       where('fecha', '==', today),
       where('estado', '==', status),
-      where('phoneNumber', '==', assistant)
-    );
+    ];
+    if (role.toLowerCase() === 'barber') {
+      constraints.push(where('phoneNumber', '==', assistantPhone));
+    }
+    const q = query(reservasRef, ...constraints);
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
-  getReservationsByStateAndDate(status: string, date: string, assistant: string): Observable<any[]> {
-    const q = query(
-      collection(this.firestore, 'reservas'),
+
+  getReservationsByStateAndDate(
+    status: string,
+    date: string,
+    assistantPhone: string | null,
+    role: string = ''
+  ): Observable<any[]> {
+    const reservasRef = collection(this.firestore, 'reservas');
+
+    const constraints = [
       where('estado', '==', status),
       where('fecha', '==', date),
-       where('barberPhone', '==', assistant)
-    );
+    ];
+    if (role.toLowerCase() === 'barber') {
+      constraints.push(where('barberPhone', '==', assistantPhone));
+    }
 
+    const q = query(reservasRef, ...constraints);
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
+
 }

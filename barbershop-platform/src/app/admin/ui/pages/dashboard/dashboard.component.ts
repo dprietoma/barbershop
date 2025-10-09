@@ -66,7 +66,7 @@ export class DashboardComponent implements OnInit {
   }
   getAppointments(): void {
     this.loadingService.show();
-    this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber as any).subscribe({
+    this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber, this.user?.role).subscribe({
       next: reservas => {
         this.generateAppointmentsTable(reservas);
         this.loadingService.hide();

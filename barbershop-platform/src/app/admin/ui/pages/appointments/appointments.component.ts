@@ -192,7 +192,8 @@ export class AppointmentsComponent implements OnInit {
   }
   AppointmentsByDate(): void {
     this.loadingService.show();
-    this.storieService.getReservationsByStateAndDate(this.status, this.selectedDate, this.user?.phoneNumber)
+    this.storieService.getReservationsByStateAndDate(this.status, this.selectedDate,
+      this.user?.phoneNumber, this.user?.role)
       .subscribe({
         next: reservas => {
           this.appointmentsTable = reservas;
