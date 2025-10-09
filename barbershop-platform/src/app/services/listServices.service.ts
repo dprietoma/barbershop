@@ -14,9 +14,10 @@ export class ListService {
     ) { }
 
 
-    getAllServices(): Observable<any[]> {
+    getAllServices(type: string): Observable<any[]> {
         const serviciosRef = collection(this.firestore, 'servicios');
-        return collectionData(serviciosRef, { idField: 'id' }) as Observable<any[]>;
+        const q = query(serviciosRef, where('type', '==', type));
+        return collectionData(q, { idField: 'id' }) as Observable<any[]>;
     }
 
     createServicio(servicio: Servicios & { id: string }) {

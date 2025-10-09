@@ -6,7 +6,7 @@ import { DisponibilidadService } from '../../../../services/disponibilidad.servi
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
-
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 
 @Component({
   selector: 'app-shifts',
@@ -27,16 +27,19 @@ export class ShiftsComponent implements OnInit {
   isAvailable: boolean = true;
   titleAvailable: string = '';
   @ViewChild('cerrarBtn') cerrarBtn!: ElementRef<HTMLButtonElement>;
+  user: any;
   constructor(private disponibilidadService: DisponibilidadService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private sessionStorage: SessionStorageService
   ) { }
   ngOnInit(): void {
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     this.loadAvailability();
   }
   async loadAvailability() {
     this.loadingService.show();
     try {
-      this.barbers = await this.disponibilidadService.getAvailabilityByDate(this.selectedDate);
+      this.barbers = await this.disponibilidadService.getAvailabilityByDate(this.selectedDate, this.user?.type);
       if (this.barbers.length === 0) {
         ShowAlert.viewAlert(
           'Oops...',

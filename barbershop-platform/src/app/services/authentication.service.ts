@@ -57,7 +57,8 @@ export class AuthenticationService {
                 uid: user.uid,
                 phoneNumber: user.phoneNumber || '',
                 role: 'barber',
-                createdAt: serverTimestamp() as any
+                createdAt: serverTimestamp() as any,
+                type: 'CRISTIANJBARBERIA'
             };
 
             await setDoc(userRef, newUser);

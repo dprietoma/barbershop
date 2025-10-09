@@ -24,13 +24,15 @@ export class GraphicsComponent implements OnInit {
   monthlyRevenue: ChartData<'line'> = { labels: [], datasets: [] };
   popularServices: ChartData<'doughnut'> = { labels: [], datasets: [] };
   user: any;
-  constructor(private sessionStorage: SessionStorageService) {}
+  constructor(private sessionStorage: SessionStorageService) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     if (this.user) {
       this.ngZone.run(() => {
-        this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber as any).subscribe((reservations: any[]) => {
+        this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber,
+          this.user?.role, this.user?.type
+        ).subscribe((reservations: any[]) => {
           this.appointmentsPerDay = this.buildAppointmentsPerDayChart(reservations);
           this.monthlyRevenue = this.buildMonthlyRevenueChart(reservations);
           this.popularServices = this.buildPopularServicesChart(reservations) as any;

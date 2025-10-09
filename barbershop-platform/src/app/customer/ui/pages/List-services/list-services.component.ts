@@ -11,6 +11,7 @@ import { LoadingService } from '../../../../utils/global/LoadingService';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { ListService } from '../../../../services/listServices.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 @Component({
   selector: 'app-list-services',
   imports: [CommonModule, SteppersComponent,
@@ -28,14 +29,16 @@ export class ListServicesComponent implements OnInit {
   isCollapsed = false;
   filtroTexto = '';
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  constructor(private loadingService: LoadingService) { }
+  mode: string | null = null;
+  constructor(private loadingService: LoadingService, private sessionStorage: SessionStorageService) { }
   ngOnInit(): void {
     if (!this.isBrowser) return;
+    this.mode = this.sessionStorage.getType('mode');
     this.getServices();
   }
   getServices() {
     this.loadingService.show();
-    this.listService.getAllServices().subscribe({
+    this.listService.getAllServices(this.mode as any).subscribe({
       next: (res) => {
         this.servicios = res;
         this.loadingService.hide();

@@ -173,7 +173,7 @@ export class AppointmentsComponent implements OnInit {
   }
   getServices() {
     this.loadingService.show();
-    this.listService.getAllServices().subscribe({
+    this.listService.getAllServices(this.user?.type).subscribe({
       next: (res) => {
         this.servicesData = res;
         this.loadingService.hide();

@@ -26,7 +26,8 @@ export class StoriesService {
   getReservationsTodayByStatus(
     status: string,
     assistantPhone?: string | null,
-    role: string = ''
+    role: string = '',
+    type: string = ''
   ): Observable<any[]> {
     const today = this.todayBogota();
     const reservasRef = collection(this.firestore, 'reservas');
@@ -37,6 +38,8 @@ export class StoriesService {
     ];
     if (role.toLowerCase() === 'barber') {
       constraints.push(where('phoneNumber', '==', assistantPhone));
+    } else {
+      constraints.push(where('type', '==', type));
     }
     const q = query(reservasRef, ...constraints);
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;

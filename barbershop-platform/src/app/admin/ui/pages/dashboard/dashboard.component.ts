@@ -66,16 +66,17 @@ export class DashboardComponent implements OnInit {
   }
   getAppointments(): void {
     this.loadingService.show();
-    this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber, this.user?.role).subscribe({
-      next: reservas => {
-        this.generateAppointmentsTable(reservas);
-        this.loadingService.hide();
-      },
-      error: err => {
-        console.error('Error cargando reservas:', err);
-        this.loadingService.hide();
-      }
-    });
+    this.reservationsService.getReservationsTodayByStatus('Confirmada', this.user?.phoneNumber,
+      this.user?.role, this.user?.type).subscribe({
+        next: reservas => {
+          this.generateAppointmentsTable(reservas);
+          this.loadingService.hide();
+        },
+        error: err => {
+          console.error('Error cargando reservas:', err);
+          this.loadingService.hide();
+        }
+      });
   }
   onItemSelect(item: any) {
     console.log('Seleccionado:', item);

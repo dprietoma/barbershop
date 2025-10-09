@@ -62,8 +62,9 @@ export class DisponibilidadService {
     }
 
 
-    async getAvailabilityByDate(fecha: string): Promise<any[]> {
-        const barberosSnapshot = await getDocs(collection(this.firestore, 'barberos'));
+    async getAvailabilityByDate(fecha: string, type: string): Promise<any[]> {
+        const barberosRef = collection(this.firestore, 'barberos');
+        const barberosSnapshot = await getDocs(query(barberosRef, where('type', '==', type)));
         const barberosDisponibilidad: any[] = [];
 
         for (const barberoDoc of barberosSnapshot.docs) {

@@ -53,7 +53,6 @@ export class BarbersComponent implements OnInit {
 
   ngOnInit() {
     this.mode = this.sessionStorage.getType('mode');
-    // this.historial.forzarRegresoAHOME('/customer/barbers');
     this.getBarber();
     this.diaSeleccionado = new Date();
     const barbero = this.order.barberoSeleccionado();

@@ -16,12 +16,11 @@ interface Breadcrumb {
 })
 export class BreadcrumbComponent {
   @Input() breadcrumbs: Breadcrumb[] = [];
-  constructor( private route: Router){
+  constructor(private route: Router) {
 
   }
 
-  navigate(url: string){
-    debugger;
+  navigate(url: string) {
     this.route.navigate([url]);
   }
 }

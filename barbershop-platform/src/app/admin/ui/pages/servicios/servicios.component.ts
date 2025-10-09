@@ -11,7 +11,7 @@ import { Servicios } from '../../../../utils/interface/servicios-interface';
 import { UploadfileService } from '../../../../services/fileUpload.services';
 import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 import { Timestamp } from '@angular/fire/firestore';
-
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 
 @Component({
   selector: 'app-servicios',
@@ -112,10 +112,12 @@ export class ServiciosComponent implements OnInit {
       ]
     },
   ];
+  user: any;
 
-  constructor() { }
+  constructor(private sessionStorage: SessionStorageService) { }
 
   ngOnInit(): void {
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     this.getServices();
   }
 
@@ -131,7 +133,7 @@ export class ServiciosComponent implements OnInit {
         nombre: event.nombre,
         foto: urlFoto,
         detalle: event.detalle,
-        duracion:  Number(event.duracion),
+        duracion: Number(event.duracion),
         valor: event.valor,
         type: event.type,
         fecha: this.fechaActual,
@@ -148,7 +150,7 @@ export class ServiciosComponent implements OnInit {
   }
 
   async uploadFile(file: any): Promise<string> {
-    return this.uploadfileService.uploadFile(file,'services')
+    return this.uploadfileService.uploadFile(file, 'services')
       .then((url: any) => {
         return url;
       })
@@ -206,7 +208,7 @@ export class ServiciosComponent implements OnInit {
 
   getServices() {
     this.loadingService.show();
-    this.listService.getAllServices().subscribe({
+    this.listService.getAllServices(this.user?.type).subscribe({
       next: (res) => {
         this.servicesData = res;
         this.loadingService.hide();
