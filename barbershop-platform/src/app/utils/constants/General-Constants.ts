@@ -3,9 +3,9 @@ export const AMATE = {
     TITTLE_NAV: 'Amate',
     DESCRIPTION: 'Arte y Cuidado Personal',
     CELULAR: 3108403203,
-    FACE: 'marian vegas',
+    FACE: 'profile.php?id=61580141977311&locale=es_LA',
     TIKTOK: 'The.amate',
-    INSTAGRAM: 'Amate_the',
+    INSTAGRAM: 'amate.the/',
     USUARIO: 'Marian Spa',
     LOGO: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logos%26varios%2FlogoAmate.jpg?alt=media&token=63a6adc4-79b0-45d7-af0d-221c82102f5d',
     COMENTARIO: 'Es un establecimiento especializado en realzar la belleza y el bienestar personal, ofreciendo servicios como diseño de cejas, manicure, pedicure, depilación y otros tratamientos estéticos. Está pensado para brindar una experiencia de cuidado detallado, relajación y estilo, combinando técnicas modernas con atención personalizada para resaltar la imagen y confianza de cada persona.'
