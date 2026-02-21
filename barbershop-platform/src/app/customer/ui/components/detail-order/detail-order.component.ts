@@ -18,8 +18,8 @@ export class DetailOrderComponent {
   @Input() barberoSeleccionado!: Signal<any | null>;
   @Input() fechaReserva!: Signal<string | null>;
   @Input() horaReserva!: Signal<string | null>;
-  @Input() titulo: string;
-  @Input() viewButton: boolean;
+  @Input() titulo!: string;
+  @Input() viewButton!: boolean;
   constructor(public order: OrderStateService, ) {
 
   }

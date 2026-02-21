@@ -15,12 +15,18 @@
 }
 
 .testimonial-card .avatar {
-  width: 120px;
-  margin-top: -60px;
+  width: 160px;
+  height: 160px;
+  margin-top: -80px;
   overflow: hidden;
   border: 5px solid #fff;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000; /* importante para que no se vea blanco alrededor */
 }
+
 
 .typeLetter {
   font-family: 'Dancing Script';
@@ -39,3 +45,4 @@
   color: var(--text-color) !important;
   opacity: 0.6;
 }
+

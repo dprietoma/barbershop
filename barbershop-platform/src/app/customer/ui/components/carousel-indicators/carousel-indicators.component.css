@@ -102,12 +102,15 @@
 }
 
 .story-user .avatar {
-  width: 50px;
-  height: 50px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   border: 2px solid #ff0066;
-  object-fit: cover;
+  padding: 6px;
+  background: #000;
+  object-fit: contain; /* 👈 aquí va */
 }
+
 
 .story-user .username {
   font-size: 17px;

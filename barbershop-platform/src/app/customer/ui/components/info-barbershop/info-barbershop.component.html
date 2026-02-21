@@ -1,28 +1,38 @@
-<div class="card mx-auto bg-dark text-white"
-  style="max-width: 22rem; height: 34rem; overflow: hidden; position: relative;">
-  <img [src]="information?.logo" class="card-img-top img-fluid h-100 object-fit-cover" alt="Profile image"
-    style="object-fit: cover;">
+<div class="card mx-auto text-white custom-card">
 
-  <div class="card-img-overlay d-flex flex-column justify-content-end text-center"
-    style="background: rgba(0, 0, 0, 0.4);">
-    <h5 class="card-title mb-1 fw-bold">{{information?.tittle}}</h5>
-    <div class="d-flex justify-content-center">
-      <a [href]="'https://wa.me/' + information?.celular" target="_blank" class="text-white me-3">
-        <i class="bi bi-whatsapp fs-4"></i>
+  <img
+    [src]="information?.logo"
+    class="card-img"
+    alt="Profile image"
+  />
+
+  <div class="card-overlay d-flex flex-column justify-content-end text-center">
+    
+    <h5 class="fw-bold mb-3 text-dark">
+      {{ information?.tittle }}
+    </h5>
+
+    <div class="social-icons mb-3">
+      <a [href]="'https://wa.me/' + information?.celular" target="_blank">
+        <i class="bi bi-whatsapp"></i>
       </a>
-      <a [href]="'https://instagram.com/' + information?.instagram" target="_blank" class="text-white me-3">
-        <i class="bi bi-instagram fs-4"></i>
+      <a [href]="'https://instagram.com/' + information?.instagram" target="_blank">
+        <i class="bi bi-instagram"></i>
       </a>
-      <a [href]="'https://facebook.com/' + information?.face" target="_blank" class="text-white me-3">
-        <i class="bi bi-facebook fs-4"></i>
+      <a [href]="'https://facebook.com/' + information?.face" target="_blank">
+        <i class="bi bi-facebook"></i>
       </a>
-      <a [href]="'https://www.tiktok.com/@' + information?.tiktok" target="_blank" class="text-white">
-        <i class="bi bi-tiktok fs-4"></i>
+      <a [href]="'https://www.tiktok.com/@' + information?.tiktok" target="_blank">
+        <i class="bi bi-tiktok"></i>
       </a>
     </div>
-    <hr>
-    <button type="button" (click)="navigateToServices()" class="btn btn-dark">
-      <strong>Agendar</strong>
+
+    <button
+      type="button"
+      (click)="navigateToServices()"
+      class="btn btn-premium">
+      Agendar
     </button>
+
   </div>
 </div>

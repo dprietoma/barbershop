@@ -1,5 +1,69 @@
-.card{
-  border: 1px solid;
-  background: white;
-  border-radius: 10px;
+.custom-card {
+  max-width: 22rem;
+  height: 34rem;
+  border-radius: 20px;
+  overflow: hidden;
+  border: none;
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+}
+.custom-card img {
+  width: 135%;              /* 🔥 más grande */
+  height: 135%;
+  object-fit: contain;
+  object-position: center 30%;
+  transform: scale(1.1);    /* pequeño zoom */
+}
+
+.custom-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* porque es logo */
+  object-position: center 35%;
+}
+
+/* 🔥 Degradado SOLO abajo */
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.3) 65%,
+    rgba(0, 0, 0, 0) 85%
+  );
+}
+
+/* Iconos */
+.social-icons a {
+  color: white;
+  font-size: 1.4rem;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+/* Botón premium */
+.btn-premium {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+  border: none;
+  font-weight: bold;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-premium:hover {
+  background: linear-gradient(135deg, #000, #333);
+  transform: scale(1.03);
 }
