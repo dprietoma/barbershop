@@ -46,7 +46,7 @@ export class CarouselIndicatorsComponent
     private sessionStorage: SessionStorageService
   ) {
     this.user = this.sessionStorage.getType('mode');
-    this.name = this.user === 'CRISTIANBARBER' ? 'CRISTIANBARBER' : 'AMATE';
+    this.name = this.user === 'CRISTIANBARBER' ? 'CRISTIANBARBERIA' : 'AMATE';
     this.urlLogoReel = this.user === 'CRISTIANBARBER' ? 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logos%26varios%2FlogoCristianBlack.png?alt=media&token=63fa1c6e-9f40-40bb-abd1-4b7b93cf6457'
       : 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logos%26varios%2FlogoAmateBlack.png?alt=media&token=1cdde7d9-70ba-4b7a-902e-81b87a3602b3';
   }

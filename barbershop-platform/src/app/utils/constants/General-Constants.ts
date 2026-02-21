@@ -14,7 +14,7 @@ export const CRISTIANJBARBER = {
     TYPE: 'CRISTIANBARBER',
     TITTLE_NAV: 'Cristian J Barberia',
     DESCRIPTION: 'Style & Elegance',
-    FACE: 'cristian j barberia',
+    FACE: 'profile.php?id=61568277275204',
     TIKTOK: 'cristianjbarberia',
     CELULAR: 3239335050,
     INSTAGRAM: 'cristianjbarberia',
@@ -22,7 +22,8 @@ export const CRISTIANJBARBER = {
     LOGO: 'https://firebasestorage.googleapis.com/v0/b/barbershop-1e2aa.firebasestorage.app/o/logos%26varios%2FlogoCristian.jpg?alt=media&token=1524b61a-f1b8-4244-81ad-9c5b6c83d951',
     COMENTARIO: 'Es un establecimiento especializado en el cuidado y estilo del cabello y la barba de los hombres. Es un lugar tradicionalmente diseñado para ofrecer servicios de cortes de cabello, afeitados, arreglos de barba, y otros tratamientos relacionados con el cuidado personal masculino.'
 }
-export const INTERNALCODE = 'XXXX01';
+export const INTERNALCODE = 'CRISAMATE01';
+export const BARBERCODE = '2480990';
 export const SUCCESS = 'Registro creado correctamente.';
 export const SUCCESS_DELETE = 'Registro eliminado correctamente.';
 export const SUCCESS_UPDATE = 'Registro actualizado correctamente.';

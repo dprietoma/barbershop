@@ -7,7 +7,7 @@ import { NavButtonsComponent } from '../../utils/nav-buttons/nav-buttons.compone
 import { MENU_BY_ROLE } from '../../utils/constants/menu-config';
 import { Users } from '../../utils/interface/users-interface';
 import Swal from 'sweetalert2';
-import { INTERNALCODE } from '../../utils/constants/General-Constants';
+import { INTERNALCODE, BARBERCODE } from '../../utils/constants/General-Constants';
 import { AppSignalService } from '../../services/signals.service';
 import { AuthenticationService } from '../../services/authentication.service';
 declare const bootstrap: any;
@@ -134,7 +134,7 @@ export class SidebarComponent implements OnInit {
 
     if (isDismissed || key === undefined) return;
 
-    if (key.toLowerCase() === INTERNALCODE.toLowerCase()) {
+    if (key.toLowerCase() === INTERNALCODE.toLowerCase() || key.toLowerCase() === BARBERCODE.toLowerCase()) {
       this.router.navigate(['/auth/login']);
     } else {
       await Swal.fire({ icon: 'error', title: 'Llave incorrecta', text: 'La clave que ingresaste no es válida.' });
