@@ -147,7 +147,11 @@ export class CollaboratorsComponent implements OnInit {
   user: any;
   constructor(private uploadfileService: UploadfileService, private sessionStorage: SessionStorageService) { }
   ngOnInit(): void {
-    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
+    this.sessionStorage.user$.subscribe(user => {
+      if (user) {
+        this.user = user;
+      }
+    });
     this.getBarber();
   }
 
