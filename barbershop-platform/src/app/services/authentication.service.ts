@@ -64,7 +64,7 @@ export class AuthenticationService {
                 phoneNumber: user.phoneNumber || '',
                 role: this.cerradura as 'admin' | 'barber',
                 createdAt: serverTimestamp() as any,
-                type: 'CRISTIANJBARBERIA'
+                type: 'CRISTIANBARBER'
             };
 
             await setDoc(userRef, newUser);

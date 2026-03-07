@@ -4,6 +4,6 @@ export interface Users {
     uid: string,
     phoneNumber: string,
     role: 'admin' | 'barber',
-    type?: 'AMATE' | 'CRISTIANJBARBERIA';
+    type?: 'AMATE' | 'CRISTIANBARBER';
     createdAt: Timestamp
 }

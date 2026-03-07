@@ -12,6 +12,7 @@ import { UploadfileService } from '../../../../services/fileUpload.services';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-collaborators',
@@ -149,8 +150,7 @@ export class CollaboratorsComponent implements OnInit {
   ngOnInit(): void {
     this.sessionStorage.user$.subscribe(user => {
       if (user) {
-        this.user = user;
-        console.log('Usuario en CollaboratorsComponent:', this.user);
+        this.user = JSON.parse(user);
         this.getBarber();
       }
     });
