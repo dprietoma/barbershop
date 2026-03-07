@@ -150,9 +150,10 @@ export class CollaboratorsComponent implements OnInit {
     this.sessionStorage.user$.subscribe(user => {
       if (user) {
         this.user = user;
+        console.log('Usuario en CollaboratorsComponent:', this.user);
+        this.getBarber();
       }
     });
-    this.getBarber();
   }
 
   async saveCollaborators(event: Barbero) {
