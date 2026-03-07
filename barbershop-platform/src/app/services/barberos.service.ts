@@ -22,9 +22,13 @@ export class BarberosService {
         return from(
             runInInjectionContext(this.injector, async () => {
                 const ref = collection(this.firestore, 'barberos');
-                const q = type === 'all' ? ref : query(ref, where('type', '==', type));
+                const q = query(ref, where('type', '==', type));
                 const snapshot = await getDocs(q);
-                return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Barbero));
+
+                return snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                } as Barbero));
             })
         );
     }

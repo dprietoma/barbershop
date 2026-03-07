@@ -9,11 +9,16 @@ export class AuthenticationService {
     private auth = getAuth();
     private confirmationResult!: ConfirmationResult;
     private recaptchaVerifier: RecaptchaVerifier | null = null;
-
+    cerradura: string = '';
     constructor(private firestore: Firestore,
         private sessionStorage: SessionStorageService
     ) {
         this.auth.useDeviceLanguage();
+        this.sessionStorage.key$.subscribe(key => {
+            if (key) {
+                this.cerradura = key;
+            }
+        });
     }
 
     initializeRecaptcha(containerId: string = 'recaptcha-container'): RecaptchaVerifier {
@@ -47,7 +52,7 @@ export class AuthenticationService {
         return result.user;
     }
     async getOrCreateUser(user: User): Promise<Users> {
-        
+
         const userRef = doc(this.firestore, 'users', user.uid);
         const snap = await getDoc(userRef);
 
@@ -57,7 +62,7 @@ export class AuthenticationService {
             const newUser: Users = {
                 uid: user.uid,
                 phoneNumber: user.phoneNumber || '',
-                role: (this.sessionStorage.getType('cerradura') as 'admin' | 'barber'),
+                role: this.cerradura as 'admin' | 'barber',
                 createdAt: serverTimestamp() as any,
                 type: 'CRISTIANJBARBERIA'
             };

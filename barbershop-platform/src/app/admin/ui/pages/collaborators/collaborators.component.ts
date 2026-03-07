@@ -11,6 +11,7 @@ import { Barbero } from '../../../../utils/interface/barbero-interface';
 import { UploadfileService } from '../../../../services/fileUpload.services';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 
 @Component({
   selector: 'app-collaborators',
@@ -143,8 +144,10 @@ export class CollaboratorsComponent implements OnInit {
   private barberService = inject(BarberosService);
   private loadingService = inject(LoadingService);
   barberos: Barbero[] = [];
-  constructor(private uploadfileService: UploadfileService) { }
+  user: any;
+  constructor(private uploadfileService: UploadfileService, private sessionStorage: SessionStorageService) { }
   ngOnInit(): void {
+    this.user = JSON.parse(this.sessionStorage.getType('user') as any);
     this.getBarber();
   }
 
@@ -232,7 +235,7 @@ export class CollaboratorsComponent implements OnInit {
 
   getBarber() {
     this.loadingService.show();
-    this.barberService.GetBarbersByType('all').subscribe(data => {
+    this.barberService.GetBarbersByType(this.user?.type).subscribe(data => {
       this.barberos = data;
       this.loadingService.hide();
     });
