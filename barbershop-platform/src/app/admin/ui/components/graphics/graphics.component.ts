@@ -63,13 +63,21 @@ export class GraphicsComponent implements OnInit {
 
   buildMonthlyRevenueChart(reservations: any[]): ChartData<'line'> {
     const revenueByMonth: Record<string, number> = {};
+    const role = (this.user?.role || '').toLowerCase();
     reservations
-      .filter(r => r.estado === 'Finalizada' &&
-        ((this.user?.role || '').toLowerCase() === 'admin' || r.barberPhone === this.user?.phoneNumber))
+      .filter(r =>
+        r.estado === 'Finalizada' &&
+        (role === 'admin' || r.barberPhone === this.user?.phoneNumber)
+      )
       .forEach(r => {
-        const date = r.fecha instanceof Timestamp ? r.fecha.toDate() : new Date(r.fecha);
+        const date = r.fecha instanceof Timestamp
+          ? r.fecha.toDate()
+          : new Date(r.fecha);
         const monthKey = date.toLocaleString('default', { month: 'short' });
-        revenueByMonth[monthKey] = (revenueByMonth[monthKey] || 0) + Number(this.user?.role === 'admin' ? r.gananciaBarberia : r.gananciaBarbero || 0);
+        const income = this.calculateIncome(r);
+        revenueByMonth[monthKey] =
+          (revenueByMonth[monthKey] || 0) + income;
+
       });
 
     return {
@@ -90,7 +98,22 @@ export class GraphicsComponent implements OnInit {
       ]
     };
   }
-
+  calculateIncome(reserva: any): number {
+    const role = (this.user?.role || '').toLowerCase();
+    const type = this.user?.type;
+    const barberia = Number(reserva.gananciaBarberia || 0);
+    const barbero = Number(reserva.gananciaBarbero || 0);
+    if (role === 'admin' && type === 'CRISTIANBARBER') {
+      return barberia;
+    }
+    if (role === 'admin' && type === 'AMATE') {
+      return barberia + barbero;
+    }
+    if (reserva.barberPhone === this.user?.phoneNumber) {
+      return barbero;
+    }
+    return 0;
+  }
   buildPopularServicesChart(reservations: any[]): ChartData<'bar'> {
     const serviceCount: Record<string, number> = {};
 

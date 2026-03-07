@@ -125,19 +125,35 @@ export class SidebarComponent implements OnInit {
       input: 'password',
       inputLabel: 'Ingresa la llave secreta',
       inputPlaceholder: '********',
-      inputAttributes: { maxlength: '20', autocapitalize: 'off', autocorrect: 'off' },
+      inputAttributes: {
+        maxlength: '20',
+        autocapitalize: 'off',
+        autocorrect: 'off'
+      },
       showCancelButton: true,
       confirmButtonText: 'Ingresar',
       cancelButtonText: 'Cancelar',
       returnFocus: false
     });
 
-    if (isDismissed || key === undefined) return;
+    if (isDismissed || !key) return;
+    const normalizedKey = key.toLowerCase();
+    const accessCodes: Record<string, string> = {
+      [INTERNALCODE.toLowerCase()]: 'admin',
+      [BARBERCODE.toLowerCase()]: 'barber'
+    };
+    const accessType = accessCodes[normalizedKey];
 
-    if (key.toLowerCase() === INTERNALCODE.toLowerCase() || key.toLowerCase() === BARBERCODE.toLowerCase()) {
+    if (accessType) {
+      this.sessionStorage.saveType('cerradura', accessType);
       this.router.navigate(['/auth/login']);
     } else {
-      await Swal.fire({ icon: 'error', title: 'Llave incorrecta', text: 'La clave que ingresaste no es válida.' });
+      await Swal.fire({
+        icon: 'error',
+        title: 'Llave incorrecta',
+        text: 'La clave que ingresaste no es válida.'
+      });
+
     }
   }
 

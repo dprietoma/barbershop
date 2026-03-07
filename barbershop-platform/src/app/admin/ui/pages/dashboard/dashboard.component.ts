@@ -61,8 +61,13 @@ export class DashboardComponent implements OnInit {
     ];
   }
   validateRol(): string {
-    const role = (this.user?.role || '').toLowerCase();
-    return role === 'admin' ? 'gananciaBarberia' : 'gananciaBarbero';
+    if (this.user?.role === 'admin' && this.user?.type === 'CRISTIANBARBER') {
+      return 'gananciaBarberia';
+    }
+    if (this.user?.role === 'admin' && this.user?.type === 'AMATE') {
+      return 'totalGanancia';
+    }
+    return 'gananciaBarbero';
   }
   getAppointments(): void {
     this.loadingService.show();
@@ -88,18 +93,53 @@ export class DashboardComponent implements OnInit {
     }
   }
   generateAppointmentsTable(reservations: Reserva[]) {
+
     this.appointmentsTable = reservations;
-    const totalAppointments =
-      reservations.filter(r => r.estado === 'Confirmada' && ((this.user?.role || '').toLowerCase() === 'admin' || r.barberPhone === this.user?.phoneNumber));
+
+    const role = (this.user?.role || '').toLowerCase();
+    const type = this.user?.type;
+
+    const totalAppointments = reservations.filter(r =>
+      r.estado === 'Confirmada' &&
+      (role === 'admin' || r.barberPhone === this.user?.phoneNumber)
+    );
+
     const income = reservations
       .filter(r => r.estado === 'Confirmada')
-      .reduce((acc, r) => acc + Number(this.user?.role === 'admin' ? r.gananciaBarberia : r.gananciaBarbero || 0), 0);
+      .reduce((acc, r) => {
+
+        const barberia = Number(r.gananciaBarberia || 0);
+        const barbero = Number(r.gananciaBarbero || 0);
+
+        // ADMIN BARBERIA
+        if (role === 'admin' && type === 'CRISTIANBARBER') {
+          return acc + barberia;
+        }
+
+        // ADMIN AMATE
+        if (role === 'admin' && type === 'AMATE') {
+          return acc + barberia + barbero;
+        }
+
+        // BARBEROS
+        if (r.barberPhone === this.user?.phoneNumber) {
+          return acc + barbero;
+        }
+
+        return acc;
+
+      }, 0);
     const services = reservations.reduce((acc, r) => {
       const currentServices = Array.isArray(r.servicio) ? r.servicio.length : 1;
       return acc + currentServices;
     }, 0);
     const uniqueClients = new Set(reservations.map(r => r.docNumberCustomer)).size;
-    this.validateItemsByRole(totalAppointments.length, income, services, uniqueClients);
+    this.validateItemsByRole(
+      totalAppointments.length,
+      income,
+      services,
+      uniqueClients
+    );
 
   }
   validateItemsByRole(

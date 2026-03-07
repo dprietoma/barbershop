@@ -10,6 +10,8 @@ export class SessionStorageService {
     public mode$;
     private userSubject: BehaviorSubject<string | null>;
     public user$;
+     private keySubject: BehaviorSubject<string | null>;
+    public key$;
 
     constructor() {
         this.isBrowser = typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
@@ -19,6 +21,9 @@ export class SessionStorageService {
         const initialUser = this.isBrowser ? sessionStorage.getItem('user') : null;
         this.userSubject = new BehaviorSubject<string | null>(initialUser);
         this.user$ = this.userSubject.asObservable();
+        const initialKey = this.isBrowser ? sessionStorage.getItem('cerradura') : null;
+        this.keySubject = new BehaviorSubject<string | null>(initialKey);
+        this.key$ = this.keySubject.asObservable();
     }
 
     saveType(key: string, value: string): void {
@@ -29,6 +34,9 @@ export class SessionStorageService {
             }
             if (key === 'user') {
                 this.userSubject.next(value);
+            }
+            if (key === 'cerradura') {
+                this.keySubject.next(value);
             }
         }
     }
@@ -49,6 +57,9 @@ export class SessionStorageService {
             if (key === 'user') {
                 this.userSubject.next(null);
             }
+            if (key === 'cerradura') {
+                this.keySubject.next(null);
+            }  
         }
     }
     clearAll() {
@@ -56,6 +67,7 @@ export class SessionStorageService {
             sessionStorage.clear();
             this.modeSubject.next(null);
             this.userSubject.next(null);
+            this.keySubject.next(null);
         }
     }
 

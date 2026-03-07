@@ -47,6 +47,7 @@ export class AuthenticationService {
         return result.user;
     }
     async getOrCreateUser(user: User): Promise<Users> {
+        
         const userRef = doc(this.firestore, 'users', user.uid);
         const snap = await getDoc(userRef);
 
@@ -56,7 +57,7 @@ export class AuthenticationService {
             const newUser: Users = {
                 uid: user.uid,
                 phoneNumber: user.phoneNumber || '',
-                role: 'barber',
+                role: (this.sessionStorage.getType('cerradura') as 'admin' | 'barber'),
                 createdAt: serverTimestamp() as any,
                 type: 'CRISTIANJBARBERIA'
             };
