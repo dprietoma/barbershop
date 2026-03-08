@@ -7,24 +7,38 @@
             [placeHolder]="'Buscar servicio...'"></app-search-filter>
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
             @for (item of servicios| filter:'nombre':filtroTexto; track $index) {
-            <div class="barbero-card mb-3">
-                <div class="barbero-img">
-                    <img [src]="item.foto" alt="{{item.nombre}}" loading="lazy" decoding="async" fetchpriority="low"
-                        (load)="item._loaded = true" (error)="item._error = true" [class.loaded]="item._loaded" />
-                    <div class="img-skeleton" *ngIf="!item._loaded"></div>
-                </div>
-                <div class="barbero-info">
-                    <h5>{{ item.nombre }}</h5>
-                    <small>{{ item.descripcion }}</small>
-                    <h6 class="text-success"> {{item.valor | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
-                    </h6>
 
-                    <button class="btn btn-sm mt-2 custom-btn" type="button" [ngClass]="{
+            <div class="card mb-3 card-servicio">
+                <div class="row g-0 h-100">
+                    <div class="col-md-4 img-container">
+                        <img [src]="item.foto" alt="{{item.nombre}}" loading="lazy" (load)="item._loaded = true"
+                            [class.loaded]="item._loaded" class="service-img" />
+
+                        <div class="img-skeleton" *ngIf="!item._loaded"></div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.nombre }}</h5>
+
+                            <p class="card-text">
+                                {{ item.detalle.length > 100 ? (item.detalle | slice:0:100) + '...' : item.detalle }}
+                            </p>
+
+                            <h6 class="text-success">
+                                {{item.valor | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
+                            </h6>
+
+                            <button class="btn btn-sm mt-2 custom-btn" type="button" [ngClass]="{
                         'btn-dark': isSeleccionado(item.nombre),
                         'btn-outline-primary': !isSeleccionado(item.nombre)
                     }" (click)="toggleServicio(item)">
-                        <i [ngClass]="isSeleccionado(item.nombre) ? 'bi bi-dash fs-3' : 'bi bi-plus fs-3'"></i>
-                    </button>
+
+                                <i [ngClass]="isSeleccionado(item.nombre) ? 'bi bi-dash fs-3' : 'bi bi-plus fs-3'"></i>
+
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             }
