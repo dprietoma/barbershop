@@ -4,11 +4,16 @@ import { ServiciosComponent } from "./ui/pages/servicios/servicios.component";
 import { ShiftsComponent } from "./ui/pages/shifts/shifts.component";
 import { AppointmentsComponent } from "./ui/pages/appointments/appointments.component";
 import { CollaboratorsComponent } from "./ui/pages/collaborators/collaborators.component";
+import { LoansComponent } from "./ui/pages/loans/loans.component";
 
 export const adminRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'servicios', component: ServiciosComponent },
     { path: 'shifts', component: ShiftsComponent },
     { path: 'appointments', component: AppointmentsComponent },
-    { path: 'collaborators', component: CollaboratorsComponent }
+    { path: 'collaborators', component: CollaboratorsComponent },
+    {
+        path: 'loans',
+        component: LoansComponent
+    }
 ];

@@ -12,7 +12,7 @@ import { UploadfileService } from '../../../../services/fileUpload.services';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
-import { Console } from 'console';
+
 
 @Component({
   selector: 'app-collaborators',

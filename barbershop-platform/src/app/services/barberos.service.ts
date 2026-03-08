@@ -36,4 +36,24 @@ export class BarberosService {
         const barberRef = doc(this.firestore, `barberos/${id}`);
         await deleteDoc(barberRef);
     }
+    saveLoan(data: any) {
+        const ref = collection(this.firestore, 'prestamos');
+        return addDoc(ref, data);
+    }
+    getLoans(): Observable<any[]> {
+        const ref = collection(this.firestore, 'prestamos');
+        return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
+    }
+
+    updateLoans(id: string, data: any) {
+        const ref = doc(this.firestore, `prestamos/${id}`);
+        return updateDoc(ref, data);
+    }
+
+    deleteLoans(id: string) {
+        const ref = doc(this.firestore, `prestamos/${id}`);
+        return deleteDoc(ref);
+    }
+
+
 }
