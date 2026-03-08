@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
       return 'gananciaBarberia';
     }
     if (this.user?.role === 'admin' && this.user?.type === 'AMATE') {
-      return 'totalGanancia';
+      return 'gananciaBarberia';
     }
     return 'gananciaBarbero';
   }
@@ -93,12 +93,9 @@ export class DashboardComponent implements OnInit {
     }
   }
   generateAppointmentsTable(reservations: Reserva[]) {
-
     this.appointmentsTable = reservations;
-
     const role = (this.user?.role || '').toLowerCase();
     const type = this.user?.type;
-
     const totalAppointments = reservations.filter(r =>
       r.estado === 'Confirmada' &&
       (role === 'admin' || r.barberPhone === this.user?.phoneNumber)
@@ -110,24 +107,14 @@ export class DashboardComponent implements OnInit {
 
         const barberia = Number(r.gananciaBarberia || 0);
         const barbero = Number(r.gananciaBarbero || 0);
-
-        // ADMIN BARBERIA
-        if (role === 'admin' && type === 'CRISTIANBARBER') {
+        const ADMIN_TYPES = ['CRISTIANBARBER', 'AMATE'];
+        if (role === 'admin' && ADMIN_TYPES.includes(type)) {
           return acc + barberia;
         }
-
-        // ADMIN AMATE
-        if (role === 'admin' && type === 'AMATE') {
-          return acc + barberia + barbero;
-        }
-
-        // BARBEROS
         if (r.barberPhone === this.user?.phoneNumber) {
           return acc + barbero;
         }
-
         return acc;
-
       }, 0);
     const services = reservations.reduce((acc, r) => {
       const currentServices = Array.isArray(r.servicio) ? r.servicio.length : 1;

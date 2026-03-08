@@ -48,14 +48,6 @@ export class ConfirmationComponent implements OnInit {
           Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/),
         ],
       ],
-      email: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/),
-          this.allowedDomainValidator(['gmail.com', 'hotmail.com', 'outlook.com']),
-        ]
-      ],
       country: ['+57', Validators.required],
       number: [
         '',
@@ -70,8 +62,8 @@ export class ConfirmationComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(/^1\d{9}$/),
-          Validators.minLength(10),
+          Validators.pattern(/^[1-9]\d{5,9}$/),
+          Validators.minLength(6),
           Validators.maxLength(10),
         ]
       ],
@@ -141,14 +133,14 @@ export class ConfirmationComponent implements OnInit {
       barberNombre: this.order.barberoSeleccionado()?.nombre,
       barberPhone: this.order.barberoSeleccionado()?.numCelular,
       clienteNombre: this.formDataPeople.controls['name'].value,
-      emailCustomer: this.formDataPeople.controls['email'].value,
+      //emailCustomer: this.formDataPeople.controls['email'].value,
       docNumberCustomer: this.formDataPeople.controls['numDoc'].value,
       phoneCustomer: this.formDataPeople.controls['number'].value,
       fecha: fecha ? this.formatearFechaLocal(fecha as any) : '',
       hora: this.order.horaReserva() ?? '',
       servicio: this.order.serviciosSeleccionados(),
       total,
-      gananciaBarberia:Number((total * PERCENTAGE).toFixed(2)),
+      gananciaBarberia: Number((total * PERCENTAGE).toFixed(2)),
       gananciaBarbero: Number((total * PERCENTAGE).toFixed(2)),
       estado: 'Confirmada',
       duracion: this.getTimeServices(),

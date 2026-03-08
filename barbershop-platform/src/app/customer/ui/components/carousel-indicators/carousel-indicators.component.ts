@@ -68,7 +68,6 @@ export class CarouselIndicatorsComponent
       !this.videoEndedAttached
     ) {
       this.videoPlayerRef.nativeElement.onended = () => {
-        console.log('Video terminó (ViewChild)');
         this.onVideoEnded();
       };
       this.videoEndedAttached = true;

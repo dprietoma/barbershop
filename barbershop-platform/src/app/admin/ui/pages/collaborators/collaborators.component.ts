@@ -128,8 +128,8 @@ export class CollaboratorsComponent implements OnInit {
       placeholder: 'Ingrese Documento',
       validation: [
         Validators.required,
-        Validators.pattern(/^\d{7,10}$/),
-        Validators.minLength(7),
+        Validators.pattern(/^\d{6,10}$/),
+        Validators.minLength(6),
         Validators.maxLength(10),
       ],
       icon: 'bi-person-vcard icon-color fs-5',

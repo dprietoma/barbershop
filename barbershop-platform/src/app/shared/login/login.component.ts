@@ -40,7 +40,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.formLogin = this.formBuilder.group({
       phone: ['', [Validators.required, Validators.minLength(10),
-      Validators.maxLength(10), Validators.pattern(/^3\d{9}$/),]]
+      Validators.maxLength(10), Validators.pattern(/^3\d{9}$/),]],
+      type: ['', Validators.required]
     })
   }
   sendCode(fromOtp: boolean = false) {
@@ -79,71 +80,46 @@ export class LoginComponent implements OnInit {
     }
   }
 
-
-  // verifyCode() {
-  //   this.loadingService.show();
-  //   this.errorMessage = '';
-  //   const fullCode = this.code.join('');
-  //   this.authService.verifyCode(fullCode)
-  //     .then(user => {
-  //       if (user) {
-  //         this.authService.getOrCreateUser(user).then((userData: Users) => {
-  //           this.sessionStorage.saveType('user', JSON.stringify(userData));
-  //           if(userData?.role === "admin"){
-  //             this.router.navigate(['/admin/dashboard']);
-  //           } else {
-  //              this.router.navigate(['/barbers/dashboard-barbers']);
-  //           }
-  //         });
-  //       }
-  //     })
-  //     .catch(err => {
-  //       const friendly = this.errorHandler.AuthError(err);
-  //       this.showAlert(friendly.message, friendly.type);
-  //     }).finally(() => {
-  //       this.loadingService.hide();
-  //     })
-  // }
-
-async verifyCode() {
-  const fullCode = (this.code ?? []).join('');
-  if (!fullCode || fullCode.length < 6) {
-    this.showAlert('Ingresa el código completo.', 'warning');
-    return;
-  }
-
-  this.loadingService.show();
-  this.errorMessage = '';
-
-  try {
-    const fbUser = await this.authService.verifyCode(fullCode);
-    if (!fbUser) throw new Error('No fue posible verificar el código');
-    const userData: Users = await this.authService.getOrCreateUser(fbUser);
-    this.sessionStorage.saveType('user', JSON.stringify(userData));
-    const path = this.getLandingPathByRole(userData?.role);
-    if (!path) {
-      this.showAlert('Tu cuenta no tiene permisos para acceder. Contacta al admin.', 'danger');
+  async verifyCode() {
+    const fullCode = (this.code ?? []).join('');
+    if (!fullCode || fullCode.length < 6) {
+      this.showAlert('Ingresa el código completo.', 'warning');
       return;
     }
 
-    await this.router.navigate([path], { replaceUrl: true });
+    this.loadingService.show();
+    this.errorMessage = '';
 
-  } catch (err: any) {
-    const friendly = this.errorHandler.AuthError(err);
-    this.showAlert(friendly.message, friendly.type);
-  } finally {
-    this.loadingService.hide();
+    try {
+      const fbUser = await this.authService.verifyCode(fullCode);
+      if (!fbUser) throw new Error('No fue posible verificar el código');
+      const type = this.formLogin.controls['type'].value;
+      const userData: Users = await this.authService.getOrCreateUser(fbUser, type);
+      this.sessionStorage.saveType('user', JSON.stringify(userData));
+      const path = this.getLandingPathByRole(userData?.role);
+      if (!path) {
+        this.showAlert('Tu cuenta no tiene permisos para acceder. Contacta al admin.', 'danger');
+        return;
+      }
+
+      await this.router.navigate([path], { replaceUrl: true });
+
+    } catch (err: any) {
+      const friendly = this.errorHandler.AuthError(err);
+      this.showAlert(friendly.message, friendly.type);
+    } finally {
+      this.loadingService.hide();
+    }
   }
-}
-private getLandingPathByRole(role?: string | null): string | null {
- const tipoUser = role === 'barber' ? 'barber' : 'admin';
- this.appSignal.set({ tipo: 'role', valor: tipoUser });
-  switch (role) {
-    case 'admin':  return '/admin/dashboard';
-    case 'barber': return '/barbers/dashboard-barbers';
-    default:       return null;
+  private getLandingPathByRole(role?: string | null): string | null {
+    const tipoUser = role === 'barber' ? 'barber' : 'admin';
+    this.appSignal.set({ tipo: 'role', valor: tipoUser });
+    switch (role) {
+      case 'admin': return '/admin/dashboard';
+      case 'barber': return '/barbers/dashboard-barbers';
+      default: return null;
+    }
   }
-}
 
 
   isInputEnabled(index: number): boolean {

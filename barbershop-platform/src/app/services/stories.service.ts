@@ -20,6 +20,7 @@ export class StoriesService {
     return collectionData(reservationsRef, { idField: 'id' }) as Observable<any[]>;
   }
   private todayBogota(): string {
+
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' })
       .format(new Date());
   }
@@ -29,19 +30,26 @@ export class StoriesService {
     role: string = '',
     type: string = ''
   ): Observable<any[]> {
+
     const today = this.todayBogota();
     const reservasRef = collection(this.firestore, 'reservas');
 
-    const constraints = [
-      where('fecha', '==', today),
+    const constraints: any[] = [
       where('estado', '==', status),
     ];
-    if (role.toLowerCase() === 'barber') {
+
+    const roleNormalized = role?.toLowerCase();
+
+    if (roleNormalized === 'barber' && assistantPhone) {
       constraints.push(where('phoneNumber', '==', assistantPhone));
-    } else {
+    }
+
+    if (roleNormalized !== 'barber' && type) {
       constraints.push(where('type', '==', type));
     }
+
     const q = query(reservasRef, ...constraints);
+
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
 
@@ -49,13 +57,15 @@ export class StoriesService {
     status: string,
     date: string,
     assistantPhone: string | null,
-    role: string = ''
+    role: string = '',
+    type: string = ''
   ): Observable<any[]> {
     const reservasRef = collection(this.firestore, 'reservas');
 
     const constraints = [
       where('estado', '==', status),
       where('fecha', '==', date),
+      where('type', '==', type)
     ];
     if (role.toLowerCase() === 'barber') {
       constraints.push(where('barberPhone', '==', assistantPhone));

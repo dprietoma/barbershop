@@ -40,21 +40,6 @@
                                 El nombre es obligatorio, sin espacios al inicio/final ni caracteres especiales.
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <label for="validationCustom03" class="form-label"> <strong>Correo
-                                    Electrónico*</strong></label>
-                            <input type="text" class="form-control" id="validationCustom03" formControlName="email"
-                                [ngClass]="{
-                            'is-valid': formDataPeople.get('email')?.valid &&
-                            formDataPeople.get('email')?.touched,
-                            'is-invalid': formDataPeople.get('email')?.invalid &&
-                            formDataPeople.get('email')?.touched
-                            }" />
-
-                            <div class="invalid-feedback">
-                                El correo es obligatorio y debe tener un formato válido.
-                            </div>
-                        </div>
                         <div class="col-md-3">
                             <label for="validationCustom04" class="form-label"> <strong>País*</strong> </label>
                             <select class="form-select" id="validationCustom04" formControlName="country" [ngClass]="{
@@ -99,15 +84,15 @@
                             }" />
 
                             <div class="invalid-feedback">
-                                El número es obligatorio, debe tener 10 dígitos y comenzar con 1.
+                                El número es obligatorio, debe tener 10 dígitos.
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-check">
-                                <input class="form-check-input"  type="checkbox" formControlName="terms" >
+                                <input class="form-check-input" type="checkbox" formControlName="terms">
                                 <label class="form-check-label" for="terms" role="button" data-bs-toggle="modal"
                                     data-bs-target="#termsModal" style="text-decoration: underline; cursor: pointer;">
-                                    <strong>Aceptar términos y condiciones</strong> 
+                                    <strong>Aceptar términos y condiciones</strong>
                                 </label>
                                 <div class="invalid-feedback">
                                     You must agree before submitting.

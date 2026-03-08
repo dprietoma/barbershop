@@ -27,7 +27,6 @@ export class FormComponent implements OnInit, OnChanges {
   }
   ngOnInit(): void {
     this.user = JSON.parse(this.sessionStorage.getType('user') as any);
-    console.log(this.user);
     this.form = this.fb.group({});
     this.ListForms.forEach(input => {
       if (input.type === 'table') {

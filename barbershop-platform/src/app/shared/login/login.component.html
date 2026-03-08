@@ -8,28 +8,59 @@
             <h2 class="text-center fw-bold">Inicia Sesión</h2>
             <p class="text-center fw-semibold mt-3 mb-1">Ingresa tu número de celular</p>
             <p class="text-center text-uppercase small">Te enviaremos un código de confirmación</p>
-            <form [formGroup]="formLogin" (ngSubmit)="sendCode()" class="row g-3">
+            <form [formGroup]="formLogin" (ngSubmit)="sendCode()" class="d-grid gap-3 mt-4">
 
-                <div class="input-group my-4 shadow-sm rounded-pill t px-3">
-                    <span class="input-group-text border-0 bg-transparent">
-                        <i class="bi bi-telephone-fill text-warning fs-5"></i>
-                    </span>
-                    <input formControlName="phone" class="form-control border-0 bg-transparent"
-                        placeholder="Número de teléfono" [ngClass]="{
-                            'is-valid': formLogin.get('phone')?.valid && 
-                            formLogin.get('phone')?.touched,
-                            'is-invalid': formLogin.get('phone')?.invalid && 
-                            formLogin.get('phone')?.touched
-                            }" />
-                    <div class="invalid-feedback">
-                        <strong> El número es obligatorio, debe tener 10 dígitos y comenzar con 1.</strong>
+                <!-- TELEFONO -->
+                <div class="form-group">
+                    <label class="fw-semibold mb-1">Número de celular</label>
+
+                    <div class="input-group shadow-sm rounded-3">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-telephone-fill text-warning"></i>
+                        </span>
+
+                        <input type="tel" formControlName="phone" class="form-control border-start-0"
+                            placeholder="Ej: 3001234567" [ngClass]="{
+                    'is-valid': formLogin.get('phone')?.valid && formLogin.get('phone')?.touched,
+                    'is-invalid': formLogin.get('phone')?.invalid && formLogin.get('phone')?.touched
+                }" />
+                    </div>
+
+                    <div class="invalid-feedback d-block"
+                        *ngIf="formLogin.get('phone')?.invalid && formLogin.get('phone')?.touched">
+                        El número es obligatorio (10 dígitos y no puede iniciar en 0)
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="fw-semibold mb-1">Tipo de acceso</label>
 
+                    <div class="input-group shadow-sm rounded-3">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-person-badge-fill text-success"></i>
+                        </span>
+
+                        <select class="form-select border-start-0" formControlName="type" [ngClass]="{
+                    'is-valid': formLogin.get('type')?.valid && formLogin.get('type')?.touched,
+                    'is-invalid': formLogin.get('type')?.invalid && formLogin.get('type')?.touched
+                }">
+                            <option value="" disabled selected>Selecciona tipo</option>
+                            <option value="CRISTIANBARBER">Cristian Barber</option>
+                            <option value="AMATE">Amate</option>
+                            <option value="BARBER">Barbero</option>
+
+                        </select>
+                    </div>
+
+                    <div class="invalid-feedback d-block"
+                        *ngIf="formLogin.get('type')?.invalid && formLogin.get('type')?.touched">
+                        Debes seleccionar un tipo de acceso
+                    </div>
+                </div>
                 <button type="submit" [disabled]="formLogin.invalid"
-                    class="btn btn-success w-100 py-2 rounded-pill text-white fw-bold">
-                    Iniciar Sesión
+                    class="btn btn-success py-2 rounded-3 fw-bold mt-2">
+                    Iniciar sesión
                 </button>
+
             </form>
         </ng-container>
         <ng-template #otpSection>

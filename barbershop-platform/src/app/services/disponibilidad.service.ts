@@ -39,7 +39,6 @@ export class DisponibilidadService {
                 horas: horasConEstado
             });
         } else {
-            console.log(`Ya existe disponibilidad para ${fecha}`);
             return Promise.resolve();
         }
     }

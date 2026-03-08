@@ -28,13 +28,11 @@ export class AuthenticationService {
             this.recaptchaVerifier = new RecaptchaVerifier(this.auth, container, {
                 size: 'invisible',
                 callback: (response: any) => {
-                    console.log('reCAPTCHA verificado:', response);
                 }
             });
 
             this.recaptchaVerifier.render()
                 .then(widgetId => {
-                    console.log('reCAPTCHA renderizado con ID:', widgetId);
                 })
                 .catch(err => console.error('Error al renderizar reCAPTCHA:', err));
         }
@@ -51,7 +49,7 @@ export class AuthenticationService {
         const result = await this.confirmationResult.confirm(code);
         return result.user;
     }
-    async getOrCreateUser(user: User): Promise<Users> {
+    async getOrCreateUser(user: User, type: string): Promise<Users> {
 
         const userRef = doc(this.firestore, 'users', user.uid);
         const snap = await getDoc(userRef);
@@ -64,7 +62,7 @@ export class AuthenticationService {
                 phoneNumber: user.phoneNumber || '',
                 role: this.cerradura as 'admin' | 'barber',
                 createdAt: serverTimestamp() as any,
-                type: 'CRISTIANBARBER'
+                type: type as 'AMATE' | 'CRISTIANBARBER'
             };
 
             await setDoc(userRef, newUser);
