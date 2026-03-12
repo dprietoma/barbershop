@@ -16,4 +16,6 @@ export interface Reserva {
     id?: string;
     gananciaBarberia: number;
     gananciaBarbero: number;
+    pago?: boolean;
+    tipoPago?: string;
 }

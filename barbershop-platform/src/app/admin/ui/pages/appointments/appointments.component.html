@@ -1,5 +1,14 @@
 <app-breadcrumb [breadcrumbs]="breadcrumbRoutes"></app-breadcrumb>
 <div class="container">
+    @if (appointmentsTable.length === 0) {
+    <div class=" mt-3">
+        <div class="alert alert-dark alert-dismissible fade show" role="alert">
+            Sin reservas disponibles para esta fecha
+            <a href="#" class="alert-link">{{this.selectedDate}}</a>.
+            con estado {{this.status}}. Intenta cambiar los filtros o revisar en otra fecha.
+        </div>
+    </div>
+    }
     <div class="d-flex justify-content-between align-items-center px-4 position-relative" style="margin: 2rem 0;">
         <ng-container *ngFor="let tab of tabs; let i = index">
             <div class="text-center position-relative flex-fill">
@@ -29,7 +38,8 @@
     <div class="card shadow-sm rounded-4 mt-4" *ngIf="servicesData.length > 0">
         <app-table [data]="this.appointmentsTable" [columns]="cols" (selectItem)="onItemSelect($event)"
             (actionClick)="handleAction($event)" [showInputFilter]="true" [configFilter]="filtroConfig"
-            [nameTable]="'Citas para hoy'" [ListForms]="ListFormAppointments" (formsValue)="editAppointments($event)" [tittle]="'Actulizar Cita'">
+            [nameTable]="'Citas para hoy'" [ListForms]="ListFormAppointments" (formsValue)="editAppointments($event)"
+            [tittle]="'Actulizar Cita'">
         </app-table>
     </div>
 </div>

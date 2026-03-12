@@ -35,7 +35,6 @@ export class AppointmentsComponent implements OnInit {
   status: string = 'Confirmada';
   tabs = [
     { icon: 'bi-check-circle-fill', color: 'green', label: 'Confirmadas', statusValue: 'Confirmada' },
-    { icon: 'bi-play-circle-fill', color: 'yellow', label: 'En Curso', statusValue: 'En Curso' },
     { icon: 'bi-flag-fill', color: 'blue', label: 'Finalizadas', statusValue: 'Finalizada' }
   ];
   selectedTab = 0;
@@ -61,6 +60,8 @@ export class AppointmentsComponent implements OnInit {
       { key: 'fecha', label: 'Fecha' },
       { key: 'hora', label: 'Hora' },
       { key: 'estado', label: 'Estado', type: 'badge' },
+      { key: 'tipoPago', label: 'Tipo de Pago' },
+      { key: 'pago', label: 'Pago', type: 'badge' },
       { key: keyTotal, label: 'Total', type: 'currency' },
       { key: '', label: '', type: 'actions' }
     ];
@@ -70,8 +71,13 @@ export class AppointmentsComponent implements OnInit {
     ];
   }
   validateRol(): string {
-    const role = (this.user?.role || '').toLowerCase();
-    return role === 'admin' ? 'gananciaBarberia' : 'gananciaBarbero';
+    if (this.user?.role === 'admin' && this.user?.type === 'CRISTIANBARBER') {
+      return 'gananciaBarberia';
+    }
+    if (this.user?.role === 'admin' && this.user?.type === 'AMATE') {
+      return 'total';
+    }
+    return 'gananciaBarbero';
   }
   buildFormFields() {
     this.ListFormAppointments = [
@@ -133,6 +139,33 @@ export class AppointmentsComponent implements OnInit {
         disabled: true,
       },
       {
+        title: 'Tipo de pago',
+        name: 'tipoPago',
+        type: 'select',
+        placeholder: 'Seleccione Tipo de Pago',
+        validation: [Validators.required],
+        icon: 'bi-list icon-color fs-5',
+        class: 'col-md-3',
+        options: [
+          { label: 'Nequi', value: 'NEQUI' },
+          { label: 'Transferencia', value: 'TRNSFER' },
+          { label: 'Efectivo', value: 'EFECTIVO' },
+        ]
+      },
+      {
+        title: 'Cancelado?',
+        name: 'pago',
+        type: 'select',
+        placeholder: 'Seleccione Cancelado',
+        validation: [Validators.required],
+        icon: 'bi-list icon-color fs-5',
+        class: 'col-md-3',
+        options: [
+          { label: 'SI', value: true },
+          { label: 'NO', value: false },
+        ]
+      },
+      {
         title: 'Estado',
         name: 'estado',
         type: 'select',
@@ -142,7 +175,6 @@ export class AppointmentsComponent implements OnInit {
         class: 'col-md-3',
         options: [
           { label: 'Confirmada', value: 'Confirmada' },
-          { label: 'En Curso', value: 'En Curso' },
           { label: 'Finalizada', value: 'Finalizada' },
         ]
       },
@@ -199,13 +231,6 @@ export class AppointmentsComponent implements OnInit {
           this.appointmentsTable = reservas;
           this.getServices();
           this.loadingService.hide();
-          if (this.appointmentsTable.length === 0) {
-            ShowAlert.viewAlert(
-              'Sin reservas disponibles',
-              `No se encontraron reservas para la fecha ${this.selectedDate} con estado ${this.status}. Intenta cambiar los filtros o revisar en otra fecha.`,
-              'info'
-            );
-          }
         },
         error: err => {
           console.error('Error consultando las reservas', err);

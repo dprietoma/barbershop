@@ -1,124 +1,135 @@
 <app-steppers [currentStep]="4"></app-steppers>
 <div class="container">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                            <strong>TU RESERVA</strong>
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <app-appointment [serviciosSeleccionados]="order.serviciosSeleccionados"
-                                [totalServicios]="order.totalServicios"
-                                [barberoSeleccionado]="order.barberoSeleccionado" [fechaReserva]="order.fechaReserva"
-                                [horaReserva]="order.horaReserva" [showService]="true"></app-appointment>
+    <div class=" mt-3">
+        <div class="alert alert-dark alert-dismissible fade show" role="alert">
+            Recuerda que las reservas para sábado y domingo requieren
+            <a href="#" class="alert-link">pago anticipado</a>.
+            Muy pronto la barbería se comunicará contigo para confirmar tu cita y ayudarte con el proceso de pago.
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>TU RESERVA</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <app-appointment [serviciosSeleccionados]="order.serviciosSeleccionados"
+                                    [totalServicios]="order.totalServicios"
+                                    [barberoSeleccionado]="order.barberoSeleccionado"
+                                    [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva"
+                                    [showService]="true"></app-appointment>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card mt-4">
-                <div class="card-header">
-                    <strong>NECESITAMOS ALGUNOS DATOS</strong>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="formDataPeople" (ngSubmit)="onReserve()" class="row g-3 needs-validation ">
-                        <div class="col-md-12">
-                            <label for="validationCustom01" class="form-label"><strong>Nombre Completo*</strong></label>
-                            <input type="text" class="form-control" id="validationCustom01" formControlName="name"
-                                [ngClass]="{
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <strong>NECESITAMOS ALGUNOS DATOS</strong>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="formDataPeople" (ngSubmit)="onReserve()" class="row g-3 needs-validation ">
+                            <div class="col-md-12">
+                                <label for="validationCustom01" class="form-label"><strong>Nombre
+                                        Completo*</strong></label>
+                                <input type="text" class="form-control" id="validationCustom01" formControlName="name"
+                                    [ngClass]="{
                             'is-valid': formDataPeople.get('name')?.valid &&
                             formDataPeople.get('name')?.touched,
                             'is-invalid': formDataPeople.get('name')?.invalid &&
                             formDataPeople.get('name')?.touched
                             }" />
 
-                            <div class="invalid-feedback">
-                                El nombre es obligatorio, sin espacios al inicio/final ni caracteres especiales.
+                                <div class="invalid-feedback">
+                                    El nombre es obligatorio, sin espacios al inicio/final ni caracteres especiales.
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="validationCustom04" class="form-label"> <strong>País*</strong> </label>
-                            <select class="form-select" id="validationCustom04" formControlName="country" [ngClass]="{
+                            <div class="col-md-3">
+                                <label for="validationCustom04" class="form-label"> <strong>País*</strong> </label>
+                                <select class="form-select" id="validationCustom04" formControlName="country" [ngClass]="{
                             'is-valid': formDataPeople.get('country')?.valid &&
                             formDataPeople.get('country')?.touched,
                             'is-invalid': formDataPeople.get('country')?.invalid &&
                             formDataPeople.get('country')?.touched
                             }">
-                                @for (item of listIndicatorCountry; track $index) {
-                                <option [value]="item.code">
-                                    {{ item.code + ' '+ item.name }}
-                                </option>
+                                    @for (item of listIndicatorCountry; track $index) {
+                                    <option [value]="item.code">
+                                        {{ item.code + ' '+ item.name }}
+                                    </option>
 
-                                }
-                            </select>
+                                    }
+                                </select>
 
-                            <div class="invalid-feedback">El país es obligatorio.</div>
-                        </div>
-                        <div class="col-md-9">
-                            <label for="validationCustom05" class="form-label"><strong>Teléfono Celular*</strong>
-                            </label>
-                            <input type="text" class="form-control" id="validationCustom05" formControlName="number"
-                                [ngClass]="{
+                                <div class="invalid-feedback">El país es obligatorio.</div>
+                            </div>
+                            <div class="col-md-9">
+                                <label for="validationCustom05" class="form-label"><strong>Teléfono Celular*</strong>
+                                </label>
+                                <input type="text" class="form-control" id="validationCustom05" formControlName="number"
+                                    [ngClass]="{
                             'is-valid': formDataPeople.get('number')?.valid &&
                             formDataPeople.get('number')?.touched,
                             'is-invalid': formDataPeople.get('number')?.invalid &&
                             formDataPeople.get('number')?.touched
                             }" />
 
-                            <div class="invalid-feedback">
-                                El número es obligatorio, debe tener 10 dígitos y comenzar con 3.
+                                <div class="invalid-feedback">
+                                    El número es obligatorio, debe tener 10 dígitos y comenzar con 3.
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label for="validationCustom06" class="form-label"><strong>Cédula*</strong> </label>
-                            <input type="text" class="form-control" id="validationCustom06" formControlName="numDoc"
-                                [ngClass]="{
+                            <div class="col-md-12">
+                                <label for="validationCustom06" class="form-label"><strong>Cédula*</strong> </label>
+                                <input type="text" class="form-control" id="validationCustom06" formControlName="numDoc"
+                                    [ngClass]="{
                             'is-valid': formDataPeople.get('numDoc')?.valid && 
                             formDataPeople.get('numDoc')?.touched,
                             'is-invalid': formDataPeople.get('numDoc')?.invalid && 
                             formDataPeople.get('numDoc')?.touched
                             }" />
 
-                            <div class="invalid-feedback">
-                                El número es obligatorio, debe tener 10 dígitos.
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" formControlName="terms">
-                                <label class="form-check-label" for="terms" role="button" data-bs-toggle="modal"
-                                    data-bs-target="#termsModal" style="text-decoration: underline; cursor: pointer;">
-                                    <strong>Aceptar términos y condiciones</strong>
-                                </label>
                                 <div class="invalid-feedback">
-                                    You must agree before submitting.
+                                    El número es obligatorio, debe tener 10 dígitos.
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" type="submit"
-                                    [disabled]="formDataPeople.invalid">Enviar</button>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" formControlName="terms">
+                                    <label class="form-check-label" for="terms" role="button" data-bs-toggle="modal"
+                                        data-bs-target="#termsModal"
+                                        style="text-decoration: underline; cursor: pointer;">
+                                        <strong>Aceptar términos y condiciones</strong>
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        You must agree before submitting.
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                    </form>
+                            <div class="col-12">
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" type="submit"
+                                        [disabled]="formDataPeople.invalid">Enviar</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <app-detail-order [serviciosSeleccionados]="order.serviciosSeleccionados"
-                [totalServicios]="order.totalServicios" [barberoSeleccionado]="order.barberoSeleccionado"
-                [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva" [titulo]="'TU ORDEN'"
-                [viewButton]="false">
-            </app-detail-order>
+            <div class="col-sm-6">
+                <app-detail-order [serviciosSeleccionados]="order.serviciosSeleccionados"
+                    [totalServicios]="order.totalServicios" [barberoSeleccionado]="order.barberoSeleccionado"
+                    [fechaReserva]="order.fechaReserva" [horaReserva]="order.horaReserva" [titulo]="'TU ORDEN'"
+                    [viewButton]="false">
+                </app-detail-order>
+            </div>
         </div>
     </div>
-</div>
-<app-footer></app-footer>
-<app-modal-terms></app-modal-terms>
+    <app-footer></app-footer>
+    <app-modal-terms></app-modal-terms>

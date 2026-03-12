@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChildren, ElementRef, OnInit } from '@angular/core';
+import { Component, QueryList, ViewChildren, ElementRef, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -19,7 +19,7 @@ import { AppSignalService } from '../../services/signals.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   codeSent = false;
   phoneNumber: string = '';
   code: string[] = ['', '', '', '', '', ''];
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string = '';
   private errorHandler = new ErrorAuth();
   alertType: 'success' | 'danger' | 'warning' | 'info' | '' = '';
+  recaptchaVerifier: any;
   @ViewChildren('inputRef') inputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   constructor(private authService: AuthenticationService,
@@ -44,6 +45,14 @@ export class LoginComponent implements OnInit {
       type: ['', Validators.required]
     })
   }
+  ngAfterViewInit() {
+    this.recaptchaVerifier = this.authService.initializeRecaptcha('recaptcha-container');
+  }
+  ngOnDestroy() {
+    if (this.recaptchaVerifier) {
+      this.recaptchaVerifier.clear();
+    }
+  }
   sendCode(fromOtp: boolean = false) {
     this.errorMessage = '';
     this.loadingService.show();
@@ -58,7 +67,7 @@ export class LoginComponent implements OnInit {
     }
 
     try {
-      const verifier = this.authService.initializeRecaptcha(containerId);
+      const verifier = this.recaptchaVerifier;
       this.phoneNumber = `+57${this.formLogin.controls['phone'].value}`;
       this.authService.sendCode(this.phoneNumber, verifier)
         .then(() => {

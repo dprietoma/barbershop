@@ -144,8 +144,10 @@ export class ConfirmationComponent implements OnInit {
       gananciaBarbero: Number((total * PERCENTAGE).toFixed(2)),
       estado: 'Confirmada',
       duracion: this.getTimeServices(),
-      type: this.sessionStorage.getType('mode') as string
-    }
+      type: this.sessionStorage.getType('mode') as string,
+      pago: false,
+      tipoPago: 'NO DEFINIDO'
+      }
     return item
   }
   navigate() {

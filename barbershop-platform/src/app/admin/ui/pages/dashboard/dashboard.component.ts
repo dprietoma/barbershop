@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
       return 'gananciaBarberia';
     }
     if (this.user?.role === 'admin' && this.user?.type === 'AMATE') {
-      return 'gananciaBarberia';
+      return 'total';
     }
     return 'gananciaBarbero';
   }
