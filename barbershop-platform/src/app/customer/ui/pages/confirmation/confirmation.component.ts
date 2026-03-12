@@ -145,7 +145,7 @@ export class ConfirmationComponent implements OnInit {
       estado: 'Confirmada',
       duracion: this.getTimeServices(),
       type: this.sessionStorage.getType('mode') as string,
-      pago: false,
+      pago: 'NO',
       tipoPago: 'NO DEFINIDO'
       }
     return item

@@ -9,6 +9,7 @@ import { BarberosService } from '../../../../services/barberos.service';
 import { ShowAlert } from '../../../../utils/global/sweetalert';
 import { SUCCESS, SUCCESS_DELETE, SUCCESS_UPDATE } from '../../../../utils/constants/General-Constants';
 import { LoadingService } from '../../../../utils/global/LoadingService';
+import { SessionStorageService } from '../../../../utils/global/StorageService ';
 @Component({
   selector: 'app-loans',
   imports: [CommonModule, ReactiveFormsModule, FooterComponent,
@@ -21,7 +22,9 @@ export class LoansComponent implements OnInit {
   private barberService = inject(BarberosService);
   prestamoForm: FormGroup;
   prestamos: any[] = [];
+  user: any;
   private loadingService = inject(LoadingService);
+  private sessionStorageService = inject(SessionStorageService);
   breadcrumbRoutes = [
     { label: 'Panel de Administración', url: 'admin/dashboard' },
     { label: 'Prestamos', url: 'admin/loans' },
@@ -100,7 +103,10 @@ export class LoansComponent implements OnInit {
 
   ];
   ngOnInit(): void {
-    this.getLoans();
+    this.user = JSON.parse(this.sessionStorageService.getType('user') as any);
+    if (this.user) {
+      this.getLoans();
+    }
   }
   constructor(private fb: FormBuilder) {
     this.prestamoForm = this.fb.group({
@@ -111,7 +117,7 @@ export class LoansComponent implements OnInit {
     });
   }
   getLoans() {
-    this.barberService.getLoans().subscribe(data => {
+    this.barberService.getLoans(this.user?.type).subscribe(data => {
       this.prestamos = data;
     });
   }

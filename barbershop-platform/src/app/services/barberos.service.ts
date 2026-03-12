@@ -40,9 +40,10 @@ export class BarberosService {
         const ref = collection(this.firestore, 'prestamos');
         return addDoc(ref, data);
     }
-    getLoans(): Observable<any[]> {
+    getLoans(type: string): Observable<any[]> {
         const ref = collection(this.firestore, 'prestamos');
-        return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
+        const q = query(ref, where('tipo', '==', type));
+        return collectionData(q, { idField: 'id' }) as Observable<any[]>;
     }
 
     updateLoans(id: string, data: any) {

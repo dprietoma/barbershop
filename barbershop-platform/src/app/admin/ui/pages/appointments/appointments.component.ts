@@ -150,20 +150,22 @@ export class AppointmentsComponent implements OnInit {
           { label: 'Nequi', value: 'NEQUI' },
           { label: 'Transferencia', value: 'TRNSFER' },
           { label: 'Efectivo', value: 'EFECTIVO' },
-        ]
+        ],
+         disabled: this.user?.role === 'admin' ? false : true,
       },
       {
         title: 'Cancelado?',
         name: 'pago',
         type: 'select',
-        placeholder: 'Seleccione Cancelado',
+        placeholder: 'Cancelado',
         validation: [Validators.required],
         icon: 'bi-list icon-color fs-5',
         class: 'col-md-3',
         options: [
-          { label: 'SI', value: true },
-          { label: 'NO', value: false },
-        ]
+          { label: 'SI', value: 'SI' },
+          { label: 'NO', value: 'NO' },
+        ],
+        disabled: this.user?.role === 'admin' ? false : true,
       },
       {
         title: 'Estado',
