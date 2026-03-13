@@ -19,7 +19,7 @@ import { AppSignalService } from '../../services/signals.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
+export class LoginComponent implements OnInit, OnDestroy {
   codeSent = false;
   phoneNumber: string = '';
   code: string[] = ['', '', '', '', '', ''];
@@ -60,24 +60,29 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.codeSent = false;
   }
-  ngAfterViewInit() {
-    this.recaptchaVerifier = this.authService.initializeRecaptcha('recaptcha-container');
-  }
+
   ngOnDestroy() {
     if (this.recaptchaVerifier) {
       this.recaptchaVerifier.clear();
     }
   }
   sendCode(fromOtp: boolean = false) {
+
     this.errorMessage = '';
     this.loadingService.show();
 
     const containerId = 'recaptcha-container';
 
-    // 🔥 RECREAR SIEMPRE EL RECAPTCHA
-    if (!this.recaptchaVerifier) {
-      this.recaptchaVerifier = this.authService.initializeRecaptcha(containerId);
+    // 🔥 destruir recaptcha viejo
+    if (this.recaptchaVerifier) {
+      try {
+        this.recaptchaVerifier.clear();
+      } catch (e) { }
+      this.recaptchaVerifier = null;
     }
+
+    // 🔥 crear recaptcha nuevo
+    this.recaptchaVerifier = this.authService.initializeRecaptcha(containerId);
 
     this.phoneNumber = `+57${this.formLogin.controls['phone'].value}`;
 
