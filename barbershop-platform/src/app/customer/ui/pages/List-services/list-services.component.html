@@ -7,39 +7,34 @@
             [placeHolder]="'Buscar servicio...'"></app-search-filter>
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
             @for (item of servicios| filter:'nombre':filtroTexto; track $index) {
+            <div class="container">
+                <section class="mx-auto my-5" style="max-width: 23rem;">
 
-            <div class="card mb-3 card-servicio">
-                <div class="row g-0 h-100">
-                    <div class="col-md-4 img-container">
-                        <img [src]="item.foto" alt="{{item.nombre}}" loading="lazy" (load)="item._loaded = true"
-                            [class.loaded]="item._loaded" class="service-img" />
+                    <div class="card">
+                        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                            <img [src]="item.foto" alt="{{item.nombre}}" loading="lazy" (load)="item._loaded = true"
+                                class="img-fluid img-custom" />
 
-                        <div class="img-skeleton" *ngIf="!item._loaded"></div>
-                    </div>
-
-                    <div class="col-md-8">
+                        </div>
                         <div class="card-body">
-                            <h5 class="card-title">{{ item.nombre }}</h5>
-
+                            <h5 class="card-title font-weight-bold"><a>{{ item.nombre }}</a></h5>
+                            <p class="lead"><strong>
+                                    <h6 class="text-success">
+                                        {{item.valor | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
+                                    </h6>
+                                </strong></p>
                             <p class="card-text">
-                                {{ item.detalle.length > 100 ? (item.detalle | slice:0:100) + '...' : item.detalle }}
+                                {{ item.detalle }}
                             </p>
-
-                            <h6 class="text-success">
-                                {{item.valor | currency:'$':'symbol':'1.0-0'}} - {{item.duracion}} Min
-                            </h6>
-
-                            <button class="btn btn-sm mt-2 custom-btn" type="button" [ngClass]="{
-                        'btn-dark': isSeleccionado(item.nombre),
-                        'btn-outline-primary': !isSeleccionado(item.nombre)
-                    }" (click)="toggleServicio(item)">
-
-                                <i [ngClass]="isSeleccionado(item.nombre) ? 'bi bi-dash fs-3' : 'bi bi-plus fs-3'"></i>
-
+                            <button type="button" class="btn btn-primary btn-floating" [ngClass]="{
+    'btn-dark': isSeleccionado(item.nombre),
+    'btn-outline-primary': !isSeleccionado(item.nombre)
+  }" (click)="toggleServicio(item)">
+                                <i class="bi fs-3" [ngClass]="isSeleccionado(item.nombre) ? 'bi-dash' : 'bi-plus'"></i>
                             </button>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
             }
         </div>
