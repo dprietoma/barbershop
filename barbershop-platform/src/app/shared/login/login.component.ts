@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private appSignal: AppSignalService
   ) { }
   ngOnInit(): void {
-    debugger
     this.resetRecaptcha();
     this.formLogin = this.formBuilder.group({
       phone: ['', [Validators.required, Validators.minLength(10),
