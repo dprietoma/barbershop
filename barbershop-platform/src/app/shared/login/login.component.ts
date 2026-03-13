@@ -39,11 +39,27 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private appSignal: AppSignalService
   ) { }
   ngOnInit(): void {
+    debugger
+    this.resetRecaptcha();
     this.formLogin = this.formBuilder.group({
       phone: ['', [Validators.required, Validators.minLength(10),
       Validators.maxLength(10), Validators.pattern(/^3\d{9}$/),]],
       type: ['', Validators.required]
     })
+  }
+  resetRecaptcha() {
+    if (this.recaptchaVerifier) {
+      try {
+        this.recaptchaVerifier.clear();
+      } catch (e) { }
+
+      this.recaptchaVerifier = null;
+    }
+
+    const container = document.getElementById('recaptcha-container');
+    if (container) container.innerHTML = '';
+
+    this.codeSent = false;
   }
   ngAfterViewInit() {
     this.recaptchaVerifier = this.authService.initializeRecaptcha('recaptcha-container');
@@ -56,37 +72,28 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   sendCode(fromOtp: boolean = false) {
     this.errorMessage = '';
     this.loadingService.show();
+
     const containerId = 'recaptcha-container';
-    const container = document.getElementById(containerId);
 
-    if (!container) {
-      const friendly = this.errorHandler.notFoundCAPTCHA();
-      this.showAlert(friendly.message, friendly.type);
-      this.loadingService.hide();
-      return;
+    // 🔥 RECREAR SIEMPRE EL RECAPTCHA
+    if (!this.recaptchaVerifier) {
+      this.recaptchaVerifier = this.authService.initializeRecaptcha(containerId);
     }
 
-    try {
-      const verifier = this.recaptchaVerifier;
-      this.phoneNumber = `+57${this.formLogin.controls['phone'].value}`;
-      this.authService.sendCode(this.phoneNumber, verifier)
-        .then(() => {
-          if (!fromOtp) this.codeSent = true;
-          setTimeout(() => this.inputs.get(0)?.nativeElement.focus(), 100);
-        })
-        .catch((err: any) => {
-          const friendly = this.errorHandler.AuthError(err);
-          this.showAlert(friendly.message, friendly.type);
-        })
-        .finally(() => {
-          this.loadingService.hide();
-        });
+    this.phoneNumber = `+57${this.formLogin.controls['phone'].value}`;
 
-    } catch (err: any) {
-      const friendly = this.errorHandler.unexpectedError();
-      this.showAlert(friendly.message, friendly.type);
-      this.loadingService.hide();
-    }
+    this.authService.sendCode(this.phoneNumber, this.recaptchaVerifier)
+      .then(() => {
+        if (!fromOtp) this.codeSent = true;
+        setTimeout(() => this.inputs.get(0)?.nativeElement.focus(), 100);
+      })
+      .catch((err: any) => {
+        const friendly = this.errorHandler.AuthError(err);
+        this.showAlert(friendly.message, friendly.type);
+      })
+      .finally(() => {
+        this.loadingService.hide();
+      });
   }
 
   async verifyCode() {
