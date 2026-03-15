@@ -21,23 +21,19 @@ export class AuthenticationService {
         });
     }
 
-    initializeRecaptcha(containerId: string = 'recaptcha-container'): RecaptchaVerifier {
-        if (!this.recaptchaVerifier) {
-            const container = document.getElementById(containerId) as HTMLElement;
-
-            this.recaptchaVerifier = new RecaptchaVerifier(this.auth, container, {
-                size: 'invisible',
-                callback: (response: any) => {
-                }
-            });
-
-            this.recaptchaVerifier.render()
-                .then(widgetId => {
-                })
-                .catch(err => console.error('Error al renderizar reCAPTCHA:', err));
+    initializeRecaptcha(containerId: string) {
+        if ((window as any).recaptchaVerifier) {
+            return (window as any).recaptchaVerifier;
         }
+        (window as any).recaptchaVerifier = new RecaptchaVerifier(
+            this.auth,
+            containerId,
+            {
+                size: 'invisible'
+            }
+        );
 
-        return this.recaptchaVerifier;
+        return (window as any).recaptchaVerifier;
     }
 
     async sendCode(phone: string, verifier: RecaptchaVerifier): Promise<void> {

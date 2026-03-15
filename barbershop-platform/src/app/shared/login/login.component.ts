@@ -19,7 +19,7 @@ import { AppSignalService } from '../../services/signals.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   codeSent = false;
   phoneNumber: string = '';
   code: string[] = ['', '', '', '', '', ''];
@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private appSignal: AppSignalService
   ) { }
   ngOnInit(): void {
-    this.resetRecaptcha();
     this.formLogin = this.formBuilder.group({
       phone: ['', [Validators.required, Validators.minLength(10),
       Validators.maxLength(10), Validators.pattern(/^3\d{9}$/),]],
@@ -55,10 +54,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.recaptchaVerifier = null;
     }
 
-    const container = document.getElementById('recaptcha-container');
-    if (container) container.innerHTML = '';
-
     this.codeSent = false;
+
+    if (this.formLogin) {
+      this.formLogin.reset();
+    }
   }
 
   ngOnDestroy() {
@@ -71,18 +71,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.loadingService.show();
 
-    const containerId = 'recaptcha-container';
-
-    // 🔥 destruir recaptcha viejo
-    if (this.recaptchaVerifier) {
-      try {
-        this.recaptchaVerifier.clear();
-      } catch (e) { }
-      this.recaptchaVerifier = null;
+    if (!this.recaptchaVerifier) {
+      this.showAlert('Error inicializando captcha', 'danger');
+      this.loadingService.hide();
+      return;
     }
-
-    // 🔥 crear recaptcha nuevo
-    this.recaptchaVerifier = this.authService.initializeRecaptcha(containerId);
 
     this.phoneNumber = `+57${this.formLogin.controls['phone'].value}`;
 
@@ -99,7 +92,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loadingService.hide();
       });
   }
-
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.recaptchaVerifier =
+        this.authService.initializeRecaptcha('recaptcha-container');
+    }, 0);
+  }
   async verifyCode() {
     const fullCode = (this.code ?? []).join('');
     if (!fullCode || fullCode.length < 6) {

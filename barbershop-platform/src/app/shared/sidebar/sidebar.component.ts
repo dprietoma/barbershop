@@ -102,6 +102,7 @@ export class SidebarComponent implements OnInit {
     this.authService.logout().then(() => {
       this.user = null;
       this.menuItems = [];
+      sessionStorage.setItem('close', 'YES');
       this.router.navigate(['/customer/location']);
     });
   }
