@@ -30,11 +30,18 @@ export class ListServicesComponent implements OnInit {
   filtroTexto = '';
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   mode: string | null = null;
+  hiddenServiceIds: string[] = [
+    'yrj2Ro9HvPJ594HJwcec',
+    'qdTnphbqYVgXmtbceJeh'
+  ];
   constructor(private loadingService: LoadingService, private sessionStorage: SessionStorageService) { }
   ngOnInit(): void {
     if (!this.isBrowser) return;
     this.mode = this.sessionStorage.getType('mode');
     this.getServices();
+  }
+  isVisible(item: any): boolean {
+    return !this.hiddenServiceIds.includes(item.id);
   }
   getServices() {
     this.loadingService.show();

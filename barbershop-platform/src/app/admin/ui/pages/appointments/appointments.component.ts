@@ -62,7 +62,8 @@ export class AppointmentsComponent implements OnInit {
       { key: 'estado', label: 'Estado', type: 'badge' },
       { key: 'tipoPago', label: 'Tipo de Pago' },
       { key: 'pago', label: 'Pago', type: 'badge' },
-      { key: keyTotal, label: 'Total', type: 'currency' },
+      { key: keyTotal, label: 'Ganancia', type: 'currency' },
+      { key: 'total', label: 'Valor Total', type: 'currency' },
       { key: '', label: '', type: 'actions' }
     ];
     this.breadcrumbRoutes = [
@@ -151,7 +152,7 @@ export class AppointmentsComponent implements OnInit {
           { label: 'Transferencia', value: 'TRNSFER' },
           { label: 'Efectivo', value: 'EFECTIVO' },
         ],
-         disabled: this.user?.role === 'admin' ? false : true,
+        disabled: this.user?.role === 'admin' ? false : true,
       },
       {
         title: 'Cancelado?',

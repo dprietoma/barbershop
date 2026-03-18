@@ -7,6 +7,7 @@
             [placeHolder]="'Buscar servicio...'"></app-search-filter>
         <div class="col-md-6 ocultar-scroll" style="max-height: 600px; overflow-y: auto;">
             @for (item of servicios| filter:'nombre':filtroTexto; track $index) {
+            @if(isVisible(item)){
             <div class="container">
                 <section class="mx-auto my-5" style="max-width: 23rem;">
 
@@ -27,15 +28,17 @@
                                 {{ item.detalle }}
                             </p>
                             <button type="button" class="btn btn-primary btn-floating" [ngClass]="{
-    'btn-dark': isSeleccionado(item.nombre),
-    'btn-outline-primary': !isSeleccionado(item.nombre)
-  }" (click)="toggleServicio(item)">
+            'btn-dark': isSeleccionado(item.nombre),
+            'btn-outline-primary': !isSeleccionado(item.nombre)
+          }" (click)="toggleServicio(item)">
                                 <i class="bi fs-3" [ngClass]="isSeleccionado(item.nombre) ? 'bi-dash' : 'bi-plus'"></i>
                             </button>
                         </div>
                     </div>
                 </section>
             </div>
+
+            }
             }
         </div>
         <div class="col-sm-6">
