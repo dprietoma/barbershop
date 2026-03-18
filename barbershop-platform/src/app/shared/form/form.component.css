@@ -82,3 +82,7 @@
     border-color: #f5c6cb;
     color: #721c24;
 }
+.selected-item td {
+  background-color: #A8E6CF !important;
+  color: black;
+}

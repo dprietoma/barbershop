@@ -52,7 +52,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let item of input?.options"
-                                                        [ngStyle]="isSelected(item) ? {'background': '#d4edda'} : {}">
+                                                        [ngClass]="{'selected-item': selectedIds.has(item.id)}">
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <img [src]="item.foto" alt=""
@@ -69,14 +69,13 @@
                                                             <p class="text-muted mb-0">{{item.duracion}} Min </p>
                                                         </td>
                                                         <td *ngIf="this.user?.role !== 'barber'">
-                                                            <button *ngIf="!isSelected(item)" type="button"
+                                                            <button *ngIf="!selectedIds.has(item.id)" type="button"
                                                                 class="btn btn-primary btn-no-style me-1"
                                                                 (click)="onClickSevice('edit', item); $event.stopPropagation()">
                                                                 <i class="bi bi-plus-circle-fill fs-5"></i>
                                                             </button>
-                                                            <button
-                                                                *ngIf="isSelected(item)"
-                                                                type="button" class="btn btn-danger btn-no-style"
+                                                            <button *ngIf="selectedIds.has(item.id)" type="button"
+                                                                class="btn btn-danger btn-no-style"
                                                                 (click)="onClickSevice('delete', item); $event.stopPropagation()">
                                                                 <i class="bi bi-trash3 fs-5"></i>
                                                             </button>
@@ -87,8 +86,6 @@
                                             </table>
                                         </div>
                                     </ng-container>
-
-
                                 </ng-container>
                             </div>
                             <small class="text-danger"

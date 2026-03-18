@@ -19,6 +19,7 @@ export class FormComponent implements OnInit, OnChanges {
   previewUrl: string | null = null;
   editMode: boolean = false;
   user: any;
+  selectedIds = new Set<number>();
   constructor(private fb: FormBuilder, private sessionStorage: SessionStorageService) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['IsEdit']) {
@@ -45,6 +46,9 @@ export class FormComponent implements OnInit, OnChanges {
       this.form.patchValue(this.dataEdit);
       this.form.get('foto')?.setValue(this.dataEdit.foto);
     }
+    this.selectedIds = new Set(
+      this.dataEdit?.servicio?.map((s: any) => s.id) || []
+    );
   }
   onClickSevice(key: string, row: any) {
     if (key === 'edit') {
@@ -67,6 +71,7 @@ export class FormComponent implements OnInit, OnChanges {
 
   }
   isSelected(service: any): boolean {
+    debugger
     return this.dataEdit?.servicio?.some(
       (s: any) => s.id === service.id
     );
