@@ -30,7 +30,6 @@ export class StoriesService {
     role: string = '',
     type: string = ''
   ): Observable<any[]> {
-
     const today = this.todayBogota();
     const reservasRef = collection(this.firestore, 'reservas');
 
@@ -41,7 +40,7 @@ export class StoriesService {
     const roleNormalized = role?.toLowerCase();
 
     if (roleNormalized === 'barber' && assistantPhone) {
-      constraints.push(where('phoneNumber', '==', assistantPhone));
+      constraints.push(where('barberPhone', '==', assistantPhone));
     }
 
     if (roleNormalized !== 'barber' && type) {
