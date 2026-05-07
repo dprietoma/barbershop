@@ -15,6 +15,8 @@ import { FilterPipe } from '../../../../utils/pipes/filter.pipe';
 import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
+import { ListService } from '../../../../services/listServices.service';
+
 
 
 @Component({
@@ -31,7 +33,7 @@ export class BarbersComponent implements OnInit {
   private availableService = inject(DisponibilidadService);
   private barberosService = inject(BarberosService);
   private loadingService = inject(LoadingService);
-
+  private listService = inject(ListService);
   Stepper: number = 2;
   barberos: Barbero[] = [];
   horas: HorasDisponibles = {
@@ -45,7 +47,9 @@ export class BarbersComponent implements OnInit {
   diaSeleccionado: Date | null = null;
   filtroTexto: string = '';
   mode: string | null = null;
-
+  newTiem: number[] = [];
+  slotBase: number = 15;
+  servicios: any[] = [];
   private readonly filterPipe = new FilterPipe();
   constructor(private sessionStorage: SessionStorageService
   ) { }
@@ -58,6 +62,7 @@ export class BarbersComponent implements OnInit {
     const barbero = this.order.barberoSeleccionado();
     const fecha = this.order.fechaReserva();
     const hora = this.order.horaReserva();
+    this.order.setSlotBase(15);
     if (barbero && fecha && hora) {
       this.barberoSeleccionado = barbero;
       this.generarSemana(barbero, fecha ? new Date(fecha) : new Date());
@@ -66,7 +71,48 @@ export class BarbersComponent implements OnInit {
       this.Stepper = 3;
     }
   }
+  getDurationService() {
+    this.listService.getAllServices(this.mode as any).subscribe({
+      next: (res) => {
+        this.servicios = res;
+        const duracionesUnicas = [
+          ...new Set(
+            this.servicios.map(servicio => servicio.duracion)
+          )
+        ].sort((a: number, b: number) => a - b);
+        this.slotBase = Math.min(...duracionesUnicas);
 
+      },
+
+      error: (err) => {
+        console.error('Error fetching services:', err);
+      }
+    });
+  }
+  generateHours(): string[] {
+    const hours: string[] = [];
+    let start = 9 * 60; // 9:00 AM
+    let end = 19 * 60 + 30; // 7:30 PM
+    while (start <= end) {
+
+      let hour = Math.floor(start / 60);
+      let minutes = start % 60;
+
+      const period = hour >= 12 ? 'PM' : 'AM';
+
+      if (hour > 12) hour -= 12;
+
+      hours.push(
+        `${hour.toString().padStart(2, '0')}:${minutes
+          .toString()
+          .padStart(2, '0')} ${period}`
+      );
+
+      start += this.slotBase;
+    }
+
+    return hours;
+  }
   filterUpdate(text: string) {
     this.filtroTexto = text;
   }
@@ -77,6 +123,7 @@ export class BarbersComponent implements OnInit {
     this.loadingService.show();
     this.barberosService.GetBarbersByType(this.mode as string).subscribe(data => {
       this.barberos = data;
+      this.getDurationService();
       this.loadingService.hide();
     });
   }
@@ -116,7 +163,8 @@ export class BarbersComponent implements OnInit {
       }
       this.semanaVisible.push(dia);
       const fechaStr = dia.toISOString().split('T')[0];
-      this.availableService.createAvailabilityIfNotExists(barber.id, fechaStr, HOURS, barber.foto, barber.numCelular, barber.nombre)
+      const horasDisponibles = this.generateHours();
+      this.availableService.createAvailabilityIfNotExists(barber.id, fechaStr, horasDisponibles, barber.foto, barber.numCelular, barber.nombre)
         .then(() => console.log(`Disponibilidad creada para ${fechaStr}`))
         .catch(err => console.error(`Error creando disponibilidad:`, err));
     }

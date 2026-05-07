@@ -9,4 +9,5 @@ export interface Servicios {
     valor: number;
     fecha: Timestamp;
     type: string;
+    adicional?: string;
 }

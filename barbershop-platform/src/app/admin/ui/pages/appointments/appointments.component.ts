@@ -55,7 +55,9 @@ export class AppointmentsComponent implements OnInit {
     const keyTotal = this.validateRol();
     this.cols = [
       { key: 'clienteNombre', label: 'Cliente' },
-      { key: 'phoneCustomer', label: 'Celular', type: 'phone' },
+      ...(this.user?.role !== 'barber'
+        ? [{ key: 'phoneCustomer', label: 'Celular', type: 'phone' }]
+        : []),
       { key: 'barberNombre', label: 'Barbero' },
       { key: 'fecha', label: 'Fecha' },
       { key: 'hora', label: 'Hora' },
@@ -93,21 +95,23 @@ export class AppointmentsComponent implements OnInit {
         class: 'col-md-4',
         disabled: true,
       },
-      {
-        title: 'Celular',
-        name: 'phoneCustomer',
-        type: 'text',
-        placeholder: 'Ingrese Celular',
-        validation: [
-          Validators.required,
-          Validators.pattern(/^3\d{9}$/),
-          Validators.minLength(10),
-          Validators.maxLength(10),
-        ],
-        icon: 'bi-telephone icon-color fs-5',
-        class: 'col-md-4',
-        disabled: true,
-      },
+      ...(this.user?.role !== 'barber'
+      ? [{
+          title: 'Celular',
+          name: 'phoneCustomer',
+          type: 'text',
+          placeholder: 'Ingrese Celular',
+          validation: [
+            Validators.required,
+            Validators.pattern(/^3\d{9}$/),
+            Validators.minLength(10),
+            Validators.maxLength(10),
+          ],
+          icon: 'bi-telephone icon-color fs-5',
+          class: 'col-md-4',
+          disabled: true,
+        }]
+      : []),
       {
         title: 'Barbero',
         name: 'barberNombre',

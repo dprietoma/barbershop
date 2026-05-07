@@ -49,7 +49,11 @@ export class DashboardComponent implements OnInit {
     const keyTotal = this.validateRol();
     this.cols = [
       { key: 'clienteNombre', label: 'Cliente' },
-      { key: 'phoneCustomer', label: 'Celular' },
+
+      ...(this.user?.role !== 'barber'
+        ? [{ key: 'phoneCustomer', label: 'Celular' }]
+        : []),
+
       { key: 'barberNombre', label: 'Barbero' },
       { key: 'fecha', label: 'Fecha' },
       { key: 'hora', label: 'Hora' },

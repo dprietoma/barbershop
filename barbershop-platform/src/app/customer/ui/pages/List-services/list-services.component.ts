@@ -45,14 +45,39 @@ export class ListServicesComponent implements OnInit {
   }
   getServices() {
     this.loadingService.show();
+
     this.listService.getAllServices(this.mode as any).subscribe({
       next: (res) => {
-        this.servicios = res;
+
+        this.servicios = res
+          .filter((item: any) => item.adicional === 'NO')
+          .sort((a: any, b: any) => {
+
+            const aEsPremium =
+              a.nombre?.toLowerCase().includes('premium') ||
+              a.nombre?.toLowerCase().includes('premiun');
+
+            const bEsPremium =
+              b.nombre?.toLowerCase().includes('premium') ||
+              b.nombre?.toLowerCase().includes('premiun');
+
+            if (aEsPremium && !bEsPremium) return -1;
+            if (!aEsPremium && bEsPremium) return 1;
+
+            return 0;
+          });
+
         this.loadingService.hide();
       },
+
       error: (err) => {
         this.loadingService.hide();
-        ShowAlert.viewAlert('Oops...', 'Algo salio mal en la consulta', 'error');
+
+        ShowAlert.viewAlert(
+          'Oops...',
+          'Algo salio mal en la consulta',
+          'error'
+        );
       }
     });
   }

@@ -111,6 +111,19 @@ export class ServiciosComponent implements OnInit {
         { label: 'Amate', value: 'AMATE' },
       ]
     },
+    {
+      title: 'Servicio Adicional',
+      name: 'adicional',
+      type: 'select',
+      placeholder: 'Seleccione',
+      validation: [Validators.required],
+      icon: 'bi-list icon-color fs-5',
+      class: 'col-md-4',
+      options: [
+        { label: 'SI', value: 'SI' },
+        { label: 'NO', value: 'NO' },
+      ]
+    },
   ];
   user: any;
 
@@ -137,6 +150,7 @@ export class ServiciosComponent implements OnInit {
         valor: event.valor,
         type: event.type,
         fecha: this.fechaActual,
+        adicional: event.adicional
 
       };
       await this.listService.createServicio(data);
@@ -180,6 +194,7 @@ export class ServiciosComponent implements OnInit {
         valor: event.valor,
         type: event.type,
         fecha: this.fechaActual,
+        adicional: event.adicional
       };
       await this.listService.updateServices(data.id, data);
       ShowAlert.viewAlert('info', SUCCESS_UPDATE, 'success');

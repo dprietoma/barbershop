@@ -92,6 +92,7 @@ export class ConfirmationComponent implements OnInit {
     return match ? parseInt(match[1], 10) : 0;
   }
   onReserve() {
+    debugger
     if (this.formDataPeople.invalid) {
       this.formDataPeople.markAllAsTouched();
       return;
@@ -104,7 +105,8 @@ export class ConfirmationComponent implements OnInit {
           informationReserve.barberoId,
           informationReserve.fecha,
           informationReserve.hora,
-          this.extractMinutes(informationReserve.duracion)
+          this.extractMinutes(informationReserve.duracion),
+          this.order.getSlotBase()
         ).then(rs => {
           this.navigate();
         })

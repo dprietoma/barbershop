@@ -94,7 +94,8 @@ export class ReservasService {
         barberoId: string,
         fecha: string,
         horaObjetivo: string,
-        duracion: number
+        duracion: number,
+        slotBase: number
     ) {
         const ref = doc(this.firestore, `disponibilidadBarberos/${barberoId}/fechas/${fecha}`);
         const snap = await getDoc(ref);
@@ -105,7 +106,6 @@ export class ReservasService {
         }
         const data = snap.data();
         const horasOriginal = data['horas'] as { hora: string; disponible: boolean }[];
-        const bloquesNecesarios = Math.ceil(duracion / DURACION_FRANJA_MIN);
         const horaInicio = this.convertirHoraATime(horaObjetivo);
         const horasOrdenadas = [...horasOriginal].sort((a, b) =>
             this.convertirHoraATime(a.hora).getTime() - this.convertirHoraATime(b.hora).getTime()
@@ -115,7 +115,7 @@ export class ReservasService {
             const horaActual = this.convertirHoraATime(item.hora);
 
             if (horaActual >= horaInicio && minutosConsumidos < duracion) {
-                minutosConsumidos += 30;
+                minutosConsumidos += slotBase;
                 return { ...item, disponible: false };
             }
             return item;

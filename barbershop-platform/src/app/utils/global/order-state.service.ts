@@ -14,6 +14,9 @@ export class OrderStateService {
   private _hora = signal<string | null>(null);
   horaReserva = this._hora.asReadonly();
 
+  private _slotBase = signal<number>(15);
+  slotBase = this._slotBase.asReadonly();
+
   totalServicios = computed(() =>
     this._serviciosSeleccionados().reduce((acc, s) => acc + s.valor, 0)
   );
@@ -31,7 +34,13 @@ export class OrderStateService {
       this._serviciosSeleccionados.set([...actuales, servicio]);
     }
   }
+  setSlotBase(valor: number) {
+    this._slotBase.set(valor);
+  }
 
+  getSlotBase() {
+    return this._slotBase();
+  }
   setBarbero(barbero: any) {
     this._barbero.set(barbero);
   }
