@@ -4,7 +4,6 @@ import { SteppersComponent } from '../../components/steppers/steppers.component'
 import { Router } from '@angular/router';
 import { DisponibilidadService } from '../../../../services/disponibilidad.service';
 import { HorasDisponibles } from '../../../../utils/interface/availableHours-interface';
-import { HOURS } from '../../../../utils/constants/horasDefault';
 import { BarberosService } from '../../../../services/barberos.service';
 import { Barbero } from '../../../../utils/interface/barbero-interface';
 import { FormsModule } from '@angular/forms';
@@ -12,20 +11,23 @@ import { OrderStateService } from '../../../../utils/global/order-state.service'
 import { LoadingService } from '../../../../utils/global/LoadingService';
 import { SearchFilterComponent } from '../../../../shared/search-filter/search-filter.component';
 import { FilterPipe } from '../../../../utils/pipes/filter.pipe';
-import { HistorialForzadoService } from '../../../../utils/global/route-history.service';
 import { SessionStorageService } from '../../../../utils/global/StorageService ';
 import { FooterComponent } from '../../../../shared/footer/footer.component';
 import { ListService } from '../../../../services/listServices.service';
-
-
+import { ShowAlert } from '../../../../utils/global/sweetalert';
 
 @Component({
   selector: 'app-barbers',
-  imports: [CommonModule, SteppersComponent,
-    FormsModule, SearchFilterComponent, FilterPipe,
-    FooterComponent],
+  imports: [
+    CommonModule,
+    SteppersComponent,
+    FormsModule,
+    SearchFilterComponent,
+    FilterPipe,
+    FooterComponent,
+  ],
   templateUrl: './barbers.component.html',
-  styleUrl: './barbers.component.css'
+  styleUrl: './barbers.component.css',
 })
 export class BarbersComponent implements OnInit {
   public order = inject(OrderStateService);
@@ -39,7 +41,7 @@ export class BarbersComponent implements OnInit {
   horas: HorasDisponibles = {
     manana: [],
     tarde: [],
-    noche: []
+    noche: [],
   };
   barberoSeleccionado: any = null;
   mesActual = new Date();
@@ -51,9 +53,7 @@ export class BarbersComponent implements OnInit {
   slotBase: number = 15;
   servicios: any[] = [];
   private readonly filterPipe = new FilterPipe();
-  constructor(private sessionStorage: SessionStorageService
-  ) { }
-
+  constructor(private sessionStorage: SessionStorageService) {}
 
   ngOnInit() {
     this.mode = this.sessionStorage.getType('mode');
@@ -76,17 +76,14 @@ export class BarbersComponent implements OnInit {
       next: (res) => {
         this.servicios = res;
         const duracionesUnicas = [
-          ...new Set(
-            this.servicios.map(servicio => servicio.duracion)
-          )
+          ...new Set(this.servicios.map((servicio) => servicio.duracion)),
         ].sort((a: number, b: number) => a - b);
         this.slotBase = Math.min(...duracionesUnicas);
-
       },
 
       error: (err) => {
         console.error('Error fetching services:', err);
-      }
+      },
     });
   }
   generateHours(): string[] {
@@ -94,7 +91,6 @@ export class BarbersComponent implements OnInit {
     let start = 9 * 60; // 9:00 AM
     let end = 19 * 60 + 30; // 7:30 PM
     while (start <= end) {
-
       let hour = Math.floor(start / 60);
       let minutes = start % 60;
 
@@ -105,7 +101,7 @@ export class BarbersComponent implements OnInit {
       hours.push(
         `${hour.toString().padStart(2, '0')}:${minutes
           .toString()
-          .padStart(2, '0')} ${period}`
+          .padStart(2, '0')} ${period}`,
       );
 
       start += this.slotBase;
@@ -117,31 +113,97 @@ export class BarbersComponent implements OnInit {
     this.filtroTexto = text;
   }
   get quantityResults(): number {
-    return this.filterPipe.transform(this.barberos, 'nombre', this.filtroTexto).length;
+    return this.filterPipe.transform(this.barberos, 'nombre', this.filtroTexto)
+      .length;
   }
   getBarber() {
     this.loadingService.show();
-    this.barberosService.GetBarbersByType(this.mode as string).subscribe(data => {
-      this.barberos = data;
-      this.getDurationService();
-      this.loadingService.hide();
-    });
+    this.barberosService
+      .GetBarbersByType(this.mode as string)
+      .subscribe((data) => {
+        this.barberos = data;
+        this.getDurationService();
+        this.loadingService.hide();
+      });
   }
   seleccionar(barbero: any) {
     this.barberoSeleccionado = barbero;
     this.order.setBarbero(this.barberoSeleccionado);
     this.Stepper = 3;
-    this.generarSemana(this.barberoSeleccionado)
+    this.generarSemana(this.barberoSeleccionado);
   }
 
-  selectDate(hora: any) {
-    this.order.setHora(hora.hora);
-    this.router.navigate(['/customer/confirmation']);
+  async selectDate(hora: any) {
+    if (!this.order.serviciosSeleccionados()?.length) {
+      ShowAlert.viewAlert(
+        'Selecciona un servicio ✂️',
+        'Debes seleccionar al menos un servicio antes de elegir una hora de reserva.',
+        'warning',
+      );
+      return;
+    }
+    this.loadingService.show();
+    try {
+      const fecha = this.formatearFechaLocal(this.order.fechaReserva() as any);
+      const reservas: any =
+        await this.barberosService.getReservasByBarberoFecha(
+          this.barberoSeleccionado.id,
+          fecha,
+        );
+
+      const duracionSeleccionada = this.order
+        .serviciosSeleccionados()
+        .reduce(
+          (acc: number, servicio: any) => acc + Number(servicio.duracion || 0),
+          0,
+        );
+
+      const inicioSeleccionado = this.horaToMinutos(hora.hora);
+      const finSeleccionado = inicioSeleccionado + duracionSeleccionada;
+      for (const reserva of reservas) {
+        const inicioReserva = this.horaToMinutos(reserva.hora);
+        const duracionReserva = parseInt(reserva.duracion);
+        const finReserva = inicioReserva + duracionReserva;
+        const hayCruce =
+          inicioSeleccionado < finReserva && finSeleccionado > inicioReserva;
+        if (hayCruce) {
+          const ultimaHoraValida = inicioReserva - duracionSeleccionada;
+          ShowAlert.viewAlert(
+            'Horario ocupado ⏰',
+            `Ya existe una reserva entre ${reserva.hora} y ${this.minutosAHora(finReserva)}.
+
+Para este servicio la última hora disponible antes de esa reserva es ${this.minutosAHora(ultimaHoraValida)}.
+
+También puedes reservar después de ${this.minutosAHora(finReserva)}.`,
+            'warning',
+          );
+          return;
+        }
+      }
+      this.order.setHora(hora.hora);
+      this.router.navigate(['/customer/confirmation']);
+    } finally {
+      this.loadingService.hide();
+    }
+  }
+  minutosAHora(minutos: number): string {
+    let horas = Math.floor(minutos / 60);
+    let mins = minutos % 60;
+    const periodo = horas >= 12 ? 'PM' : 'AM';
+    if (horas > 12) {
+      horas -= 12;
+    }
+    if (horas === 0) {
+      horas = 12;
+    }
+    return `${horas.toString().padStart(2, '0')}:${mins
+      .toString()
+      .padStart(2, '0')} ${periodo}`;
   }
   mostrarRetroceder(): boolean {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
-    return !this.semanaVisible.some(dia => {
+    return !this.semanaVisible.some((dia) => {
       const d = new Date(dia);
       d.setHours(0, 0, 0, 0);
       return d.getTime() === hoy.getTime();
@@ -164,9 +226,17 @@ export class BarbersComponent implements OnInit {
       this.semanaVisible.push(dia);
       const fechaStr = dia.toISOString().split('T')[0];
       const horasDisponibles = this.generateHours();
-      this.availableService.createAvailabilityIfNotExists(barber.id, fechaStr, horasDisponibles, barber.foto, barber.numCelular, barber.nombre)
+      this.availableService
+        .createAvailabilityIfNotExists(
+          barber.id,
+          fechaStr,
+          horasDisponibles,
+          barber.foto,
+          barber.numCelular,
+          barber.nombre,
+        )
         .then(() => console.log(`Disponibilidad creada para ${fechaStr}`))
-        .catch(err => console.error(`Error creando disponibilidad:`, err));
+        .catch((err) => console.error(`Error creando disponibilidad:`, err));
     }
   }
 
@@ -202,7 +272,9 @@ export class BarbersComponent implements OnInit {
       });
     }
 
-    const horasFiltradas = horasDisponibles.filter((hora: any) => hora.disponible === true);
+    const horasFiltradas = horasDisponibles.filter(
+      (hora: any) => hora.disponible === true,
+    );
     this.horas = {
       manana: horasFiltradas.filter((h: string) => this.esManana(h)),
       tarde: horasFiltradas.filter((h: string) => this.esTarde(h)),
@@ -213,15 +285,17 @@ export class BarbersComponent implements OnInit {
     this.diaSeleccionado = dia;
     this.order.setFecha(this.diaSeleccionado as any);
     const fechaStr = this.formatearFechaLocal(dia);
-    this.availableService.getAvailableHours(this.barberoSeleccionado.id, fechaStr).subscribe({
-      next: (disponibilidad) => {
-        if (!disponibilidad?.disponible) {
-          this.horas = { manana: [], tarde: [], noche: [] };
-          return;
-        }
-        this.showHours(disponibilidad, dia);
-      }
-    });
+    this.availableService
+      .getAvailableHours(this.barberoSeleccionado.id, fechaStr)
+      .subscribe({
+        next: (disponibilidad) => {
+          if (!disponibilidad?.disponible) {
+            this.horas = { manana: [], tarde: [], noche: [] };
+            return;
+          }
+          this.showHours(disponibilidad, dia);
+        },
+      });
   }
   convertirHoraATime(hora: string): Date {
     const [horaMin, meridiano] = hora.split(' ');
@@ -236,7 +310,11 @@ export class BarbersComponent implements OnInit {
     return resultado;
   }
 
-  obtenerFranjasOcupadas(horaInicio: string, duracion: number, todasLasFranjas: string[]): string[] {
+  obtenerFranjasOcupadas(
+    horaInicio: string,
+    duracion: number,
+    todasLasFranjas: string[],
+  ): string[] {
     const inicioMin = this.horaToMinutos(horaInicio);
     const finMin = inicioMin + duracion;
 
@@ -282,6 +360,4 @@ export class BarbersComponent implements OnInit {
     if (modifier === 'AM' && h === 12) h = 0;
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
   }
-
-
 }

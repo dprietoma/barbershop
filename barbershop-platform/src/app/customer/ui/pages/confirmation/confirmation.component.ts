@@ -1,7 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SteppersComponent } from '../../components/steppers/steppers.component';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { DetailOrderComponent } from '../../components/detail-order/detail-order.component';
 import { OrderStateService } from '../../../../utils/global/order-state.service';
 import { AppointmentComponent } from '../../components/appointment/appointment.component';
@@ -16,11 +23,17 @@ import { ReservasService } from '../../../../services/ReservasService.service';
 import { PERCENTAGE } from '../../../../utils/constants/horasDefault';
 @Component({
   selector: 'app-confirmation',
-  imports: [CommonModule, SteppersComponent,
-    AppointmentComponent, ReactiveFormsModule,
-    DetailOrderComponent, FooterComponent, ModalTermsComponent],
+  imports: [
+    CommonModule,
+    SteppersComponent,
+    AppointmentComponent,
+    ReactiveFormsModule,
+    DetailOrderComponent,
+    FooterComponent,
+    ModalTermsComponent,
+  ],
   templateUrl: './confirmation.component.html',
-  styleUrl: './confirmation.component.css'
+  styleUrl: './confirmation.component.css',
 })
 export class ConfirmationComponent implements OnInit {
   listIndicatorCountry = [
@@ -32,20 +45,23 @@ export class ConfirmationComponent implements OnInit {
   ];
 
   formDataPeople!: FormGroup;
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     public order: OrderStateService,
     private route: Router,
     private reservasService: ReservasService,
     private loadingService: LoadingService,
-    private sessionStorage: SessionStorageService) {
-  }
+    private sessionStorage: SessionStorageService,
+  ) {}
   ngOnInit(): void {
     this.formDataPeople = this.fb.group({
       name: [
         '',
         [
           Validators.required,
-          Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/),
+          Validators.pattern(
+            /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/,
+          ),
         ],
       ],
       country: ['+57', Validators.required],
@@ -65,12 +81,10 @@ export class ConfirmationComponent implements OnInit {
           Validators.pattern(/^[1-9]\d{5,9}$/),
           Validators.minLength(6),
           Validators.maxLength(10),
-        ]
+        ],
       ],
-      terms: [false, Validators.requiredTrue]
+      terms: [false, Validators.requiredTrue],
     });
-
-
   }
 
   allowedDomainValidator(allowedDomains: string[]) {
@@ -92,29 +106,30 @@ export class ConfirmationComponent implements OnInit {
     return match ? parseInt(match[1], 10) : 0;
   }
   onReserve() {
-    debugger
     if (this.formDataPeople.invalid) {
       this.formDataPeople.markAllAsTouched();
       return;
     }
     this.loadingService.show();
     const informationReserve = this.information();
-    this.reservasService.createReservation(informationReserve).then(rs => {
+    this.reservasService.createReservation(informationReserve).then((rs) => {
       if (rs.ok) {
-        this.reservasService.marcarHoraComoNoDisponible(
-          informationReserve.barberoId,
-          informationReserve.fecha,
-          informationReserve.hora,
-          this.extractMinutes(informationReserve.duracion),
-          this.order.getSlotBase()
-        ).then(rs => {
-          this.navigate();
-        })
+        this.reservasService
+          .marcarHoraComoNoDisponible(
+            informationReserve.barberoId,
+            informationReserve.fecha,
+            informationReserve.hora,
+            this.extractMinutes(informationReserve.duracion),
+            this.order.getSlotBase(),
+          )
+          .then((rs) => {
+            this.navigate();
+          });
       } else {
         ShowAlert.viewAlert('Oops...', rs.mensaje, 'error');
       }
       this.loadingService.hide();
-    })
+    });
   }
   formatearFechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('sv-SE');
@@ -148,9 +163,9 @@ export class ConfirmationComponent implements OnInit {
       duracion: this.getTimeServices(),
       type: this.sessionStorage.getType('mode') as string,
       pago: 'NO',
-      tipoPago: 'NO DEFINIDO'
-      }
-    return item
+      tipoPago: 'NO DEFINIDO',
+    };
+    return item;
   }
   navigate() {
     const data = this.information();

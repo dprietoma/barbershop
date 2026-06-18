@@ -1,11 +1,7 @@
 {
   "hosting": {
     "public": "dist/customer/browser",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "headers": [
       {
         "source": "/sitemap.xml",
@@ -22,8 +18,6 @@
         ]
       }
     ],
-    "rewrites": [
-      { "source": "**", "destination": "/index.html" }
-    ]
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
   }
 }

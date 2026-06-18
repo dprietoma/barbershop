@@ -1,60 +1,95 @@
-import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, addDoc, doc, setDoc, collectionData, getDocs, query, where, deleteDoc, updateDoc } from '@angular/fire/firestore';
+import {
+  inject,
+  Injectable,
+  Injector,
+  runInInjectionContext,
+} from '@angular/core';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  collectionData,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { Barbero } from '../utils/interface/barbero-interface';
 import { from, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BarberosService {
-    private firestore = inject(Firestore);
-    private injector = inject(Injector);
+  private firestore = inject(Firestore);
+  private injector = inject(Injector);
 
-    createBarber(barbero: Barbero & { id: string }) {
-        const ref = doc(this.firestore, `barberos/${barbero.id}`);
-        const { id, ...data } = barbero;
-        return setDoc(ref, data);
-    }
-    updateBarber(id: string, partialData: Partial<Barbero>) {
-        const ref = doc(this.firestore, `barberos/${id}`);
-        return updateDoc(ref, partialData);
-    }
+  createBarber(barbero: Barbero & { id: string }) {
+    const ref = doc(this.firestore, `barberos/${barbero.id}`);
+    const { id, ...data } = barbero;
+    return setDoc(ref, data);
+  }
+  updateBarber(id: string, partialData: Partial<Barbero>) {
+    const ref = doc(this.firestore, `barberos/${id}`);
+    return updateDoc(ref, partialData);
+  }
 
-    GetBarbersByType(type: string): Observable<Barbero[]> {
-        return from(
-            runInInjectionContext(this.injector, async () => {
-                const ref = collection(this.firestore, 'barberos');
-                const q = query(ref, where('type', '==', type));
-                const snapshot = await getDocs(q);
+  GetBarbersByType(type: string): Observable<Barbero[]> {
+    return from(
+      runInInjectionContext(this.injector, async () => {
+        const ref = collection(this.firestore, 'barberos');
+        const q = query(ref, where('type', '==', type));
+        const snapshot = await getDocs(q);
 
-                return snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                } as Barbero));
-            })
+        return snapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            }) as Barbero,
         );
-    }
-    async deleteBarberById(id: string): Promise<void> {
-        const barberRef = doc(this.firestore, `barberos/${id}`);
-        await deleteDoc(barberRef);
-    }
-    saveLoan(data: any) {
-        const ref = collection(this.firestore, 'prestamos');
-        return addDoc(ref, data);
-    }
-    getLoans(type: string): Observable<any[]> {
-        const ref = collection(this.firestore, 'prestamos');
-        const q = query(ref, where('tipo', '==', type));
-        return collectionData(q, { idField: 'id' }) as Observable<any[]>;
-    }
+      }),
+    );
+  }
+  async deleteBarberById(id: string): Promise<void> {
+    const barberRef = doc(this.firestore, `barberos/${id}`);
+    await deleteDoc(barberRef);
+  }
+  saveLoan(data: any) {
+    const ref = collection(this.firestore, 'prestamos');
+    return addDoc(ref, data);
+  }
+  getLoans(type: string): Observable<any[]> {
+    const ref = collection(this.firestore, 'prestamos');
+    const q = query(ref, where('tipo', '==', type));
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
 
-    updateLoans(id: string, data: any) {
-        const ref = doc(this.firestore, `prestamos/${id}`);
-        return updateDoc(ref, data);
-    }
+  updateLoans(id: string, data: any) {
+    const ref = doc(this.firestore, `prestamos/${id}`);
+    return updateDoc(ref, data);
+  }
 
-    deleteLoans(id: string) {
-        const ref = doc(this.firestore, `prestamos/${id}`);
-        return deleteDoc(ref);
-    }
+  deleteLoans(id: string) {
+    const ref = doc(this.firestore, `prestamos/${id}`);
+    return deleteDoc(ref);
+  }
+  async getReservasByBarberoFecha(barberoId: string, fecha: string) {
+    const reservasRef = collection(this.firestore, 'reservas');
 
+    const q = query(
+      reservasRef,
+      where('barberoId', '==', barberoId),
+      where('fecha', '==', fecha),
+      where('estado', '==', 'Confirmada'),
+    );
 
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
 }
